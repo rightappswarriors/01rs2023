@@ -1,7 +1,6 @@
 # 01rs2023 - The Revised DOH OLRS 2023
 
-'This is project for DOH OLRS SYSTEM to computerize the process of licensing from CON, PTC, LTO, COA, COR, ATO, Monitoring, Surveillance, Request for Assistance, Complaints, and Request for Change.'
-
+`This is project for DOH OLRS SYSTEM to computerize the process of licensing from CON, PTC, LTO, COA, COR, ATO, Monitoring, Surveillance, Request for Assistance, Complaints, and Request for Change.`
 
 ## Application Types / Stages
 - Certificate of Need (CON)
