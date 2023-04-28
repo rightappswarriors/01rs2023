@@ -51,9 +51,5 @@ This is project for DOH OLRS SYSTEM to computerize the process of licensing from
 		- Full Name
 
 
-
-## Quarterly Update
-- April 30
-- June 30 
-	- Renewal Update
-- Sept 30
+- May 30 - Finalization
+- June - Target Turn Over.
