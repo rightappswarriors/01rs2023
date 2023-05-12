@@ -48,7 +48,7 @@
                               <td class="text-left">{{$data->uid}}</td>
                               <td scope="row" style="text-align:left">
                                 @if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} 
-                                @else <span style="color:orange;">{{ 'Not Officially Applied Yet' }}</span> @endif 
+                                @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif 
                               </td>
                               <td scope="row" style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">
                                 @if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
