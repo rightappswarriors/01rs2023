@@ -48,7 +48,7 @@
 										<td scope="row" class="text-center">{{$apply->hfser_id.'R'.$apply->rgnid.'-'.$apply->appid}}</td>
 										<td scope="row" class="text-left">{{$apply->facilityname}}</td>
 										<td scope="row" class="">@php $strdates = str_replace('<br>' , '', $apply->proposedWeek); echo str_replace('"' , '', $strdates); @endphp</td>
-										<td scope="row" style="text-align:left">@if(isset($apply->CashierApproveformattedDate)){{$apply->CashierApproveformattedDate}} @else <span style="color:orange;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
+										<td scope="row" style="text-align:left">@if(isset($apply->CashierApproveformattedDate)){{$apply->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
 										<td scope="row" style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($apply->CashierApproveformattedDate)){{date("F j, Y", strtotime($apply->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
 										<td scope="row" style="text-align:left">@if(isset($apply->formattedInspectedDate)){{$apply->formattedInspectedDate}} @endif </td>
 										<td scope="row" style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">

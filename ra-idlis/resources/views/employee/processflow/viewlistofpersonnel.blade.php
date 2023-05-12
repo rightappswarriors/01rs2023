@@ -124,7 +124,7 @@
           var status = '';
           // var paid = appid_payment;
           // if (statusX == 'P') {
-          //     status = '<span style="color:orange">Pending</span>';
+          //     status = '<span style="color:red">Pending</span>';
           // } 
           $('#PreAssessButton').attr('onclick', '');
           $('#PreAssessButton').attr('onclick', "location.href='{{ asset('/employee/dashboard/lps/preassessment') }}/"+uid+"'");

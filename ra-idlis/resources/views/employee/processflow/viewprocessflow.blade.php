@@ -57,8 +57,8 @@
                           <td style="text-align:center">{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}</td>
                           <td style="text-align:left"><strong>{{$data->facilityname}}</strong></td>
                           <td style="text-align:left">{{( $data->hgpdesc ?? 'NOT FOUND')}} </td>
-                          <td style="text-align:left">@if(isset($data->t_date)){{date("F j, Y", strtotime($data->t_date)) }} @else <span style="color:orange;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
-                          <td style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:orange;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
+                          <td style="text-align:left">@if(isset($data->t_date)){{date("F j, Y", strtotime($data->t_date)) }} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
+                          <td style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
                           <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
                           <td style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
                           <td style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 44 days')) }} @endif </td>
@@ -210,7 +210,7 @@
           var status = '';
           // var paid = appid_payment;
           // if (statusX == 'P') {
-          //     status = '<span style="color:orange">Pending</span>';
+          //     status = '<span style="color:red">Pending</span>';
           // } 
           $('#PreAssessButton').attr('onclick', '');
           $('#PreAssessButton').attr('onclick', "location.href='{{ asset('/employee/dashboard/lps/preassessment') }}/"+uid+"'");

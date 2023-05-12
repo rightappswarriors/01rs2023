@@ -47,7 +47,7 @@
                             <td class="text-center">{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}</td>
                             <td class="text-left"><strong>{{$data->facilityname}}</strong></td>
                             <td class="text-left">{{$data->hgpdesc ?? 'NOT FOUND'}}</td>
-                            <td scope="row" style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:orange;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
+                            <td scope="row" style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
 										        <td scope="row" style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 56 days')) }} @endif </td>
 										        <td scope="row" style="text-align:left">@if(isset($data->formattedApprovedDate)){{$data->formattedApprovedDate}} @endif </td>
                             <td class="text-left" style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">{{$data->trns_desc}}</td>
