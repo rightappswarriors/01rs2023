@@ -703,7 +703,7 @@
 
                              <span class="PF013_allow">
 
-                                <li><a href="{{asset('employee/dashboard/processflow/evaluation')}}">&nbsp;&nbsp;&nbsp;&nbsp;Checklist for review of Floor Plan</a></li>
+                                <li><a href="{{asset('employee/dashboard/processflow/evaluation')}}">&nbsp;&nbsp;&nbsp;&nbsp;Evaluation Tool</a></li>
 
                             </span>
 

@@ -67,8 +67,8 @@
           <div class="form-group">
             <label>Applied Dates Within</label>            
             <div class="row">
-              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_1" id="fo_date_1" value="2022-01-01"></div>
-              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_2" id="fo_date_2" value="2022-12-31"></div>
+              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_1" id="fo_date_1" value="<?=date('Y-m-d')?>"></div>
+              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_2" id="fo_date_2" value="<?=date('Y-m-d')?>"></div>
             </div>
           </div>         
 
