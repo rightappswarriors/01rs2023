@@ -12,8 +12,8 @@
 	            	<img class="w-50" src="{{asset('ra-idlis/public/img/doh2.png')}}" alt="DOH LOGO">
 	          	</div>
 				<div class="col-6 text-center">
-					<p style="font-size: 30px;"> Republic of the Philippines</p>
-					<p style="font-size: 20px;"> DEPARTMENT OF HEALTH</p>
+					<p style="font-size: 30px;">Republic of the Philippines</p>
+					<p style="font-size: 20px;">DEPARTMENT OF HEALTH</p>
 					<p style="font-size:25px;">HEALTH FACLITIES AND SERVICES REGULATORY BUREAU</p>
 				</div>
 				<div class="col-3">
