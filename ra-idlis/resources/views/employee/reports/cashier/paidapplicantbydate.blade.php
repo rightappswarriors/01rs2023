@@ -9,7 +9,7 @@
   <div class="content p-4">
   	<div class="card" style="width: 165vh;" >
   		<div class="card-header bg-white font-weight-bold">
-        <h3> {{$pg_title}} </h3>
+        <h3> {{$pg_title}} Report</h3>
       </div>
         @include('employee.reports.cashier.rptCashierFilter') 
       <div class="card-body table-responsive">
