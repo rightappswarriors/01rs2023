@@ -34,13 +34,14 @@
                                     <td colspan="2">No Services selected.</td>
                                 </tr>
                             </tbody>
+                            @if ($hfser != 'PTC')
                             <tr ><td colspan="2"><center><b>Ambulance Fee</b></center></td></tr>
                             <tbody id="serv_chg_not">
-                            <tr>
+                                <tr>
                                     <td colspan="2">No Ambulance</td>
                                 </tr>
                             </tbody>
-
+                            @endif
                             <tbody id="totalfees" style="display:none;"">
                                 <tr>
                                     <td colspan="2"><br/><center><b style="font-size:150%;">TOTAL FEES: ₱0.00</b></center></td>
