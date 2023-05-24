@@ -27,7 +27,7 @@
                       <td scope="col" class="text-center">Type of Facility</td>
                       <td scope="col" class="text-center">Applied Date</td>
                       <td scope="col" class="text-center">Payment Confirmation Date</td>
-                      <td scope="col" class="text-center">Current Status</td>
+                      <td scope="col" class="text-center">Payment Confirmatio Status<br><small>If status is <strong>"For Payment"</strong> if payment is NOT YET <strong>accepted and confirmed</strong>, otherwise it is <strong>"Paid"</strong>.</small></td>
                       <td scope="col" class="text-center">Options</td>
                     </tr>
                   </thead>

@@ -238,8 +238,8 @@
     function getServicesCap(data, selected) {
 
         data.map((it) => {
-            if(it.facid != 'ASC' && it.facid != 'H-S-TPO' && it.facid != 'H-S-TPS' && it.facid != 'H-S-TPSP'){
-
+            if(it.facid != 'ASC' && it.facid != 'H-S-TPO' && it.facid != 'H-S-TPS' && it.facid != 'H-S-TPSP' && it.facid != 'BH-REGIS'  && it.facid != 'INY-REGIS'){
+            
                var newDiv = document.createElement("div");
                newDiv.setAttribute("class", "custom-control custom-radio mr-sm-2");
                newDiv.setAttribute("id", "otherServe-" + it.facid);
