@@ -241,7 +241,7 @@
                         <div class="col-md-6">
                           <span class="">
                           
-                            <button type="button" class="btn btn-outline-warning text-center" data-toggle="modal" data-target="#GodModal" onclick="showData('{{$element->id}}','{{$element->ORRef}}'/*,'{{$element->otherRef}}'*/,'{{$element->amount}}', '{{$element->m04IDA}}')">
+                            <button type="button" class="btn btn-outline-warning text-center" data-toggle="modal" data-target="#GodModal" onclick="showData('{{$element->id}}','{{$element->paymentMode}}','{{$element->chg_desc}}','{{$element->ORRef}}'/*,'{{$element->otherRef}}'*/,'{{$element->amount}}', '{{$element->m04IDA}}')">
                               <i class="fa fa-fw fa-edit"></i>
                             </button>
                           </span>
@@ -710,15 +710,15 @@
     
   }
 
-  function showData(id, or/*,ref*/,amt, nat){
+  function showData(id, mp_code, mp_desc, or/*,ref*/,amt, nat){
     $('#EditBody').empty();
   
     $('#EditBody').append(
 
-      '<div class="col-12 pt-2">Mode of Payment:</div>' +
+      '<div class="col-12 pt-2">Current Mode of Payment: <input type="hidden" name="mp_code" value="'+mp_code+'"> '+mp_desc+' </div>' +
         '<div class="col-12">' +
           '<select required class="form-control" name="mPay">' +
-            '<option value="">Select one</option>' +
+            '<option value="">--- <i>Select Mode of Payment to Update</i> ---</option>' +
             @foreach($paymentMethod as $meth)
                 '<option value="{{$meth->chg_code}}">{{$meth->chg_desc}}</option>' +
             @endforeach

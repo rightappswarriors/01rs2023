@@ -177,7 +177,7 @@
                     Swal.fire({
                       type: 'success',
                       title: 'Success',
-                      text: 'Successfully Accepted Documents',
+                      text: '',  //Successfully Accepted Documents
                       timer: 2000,
                     }).then(() => {
                       window.location.href = '{{ asset('/employee/dashboard/processflow/evaluate') }}/'+id;
