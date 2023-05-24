@@ -13124,6 +13124,7 @@ namespace App\Http\Controllers;
 					$Cur_useData = AjaxController::getCurrentUserAllData();
 					
 					$update = array(
+					'paymentMode'=> $request->mPay, 
 					"ORRef"=>$request->or, 
 					"depositNum"=>$request->slip,  //$request->slip, 
 					"otherRef"=>$request->ref,  //$request->ref,
