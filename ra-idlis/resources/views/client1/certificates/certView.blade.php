@@ -356,56 +356,56 @@ function($matches) {
 				</div>
 				@endisset -->
 				@if(strtolower($retTable[0]->hfser_id) == 'lto')
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						License Validity
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-					{{Date('F j, Y',strtotime($retTable[0]->validDateFrom))}} - {{date('F j, Y', strtotime("Last day of December", strtotime($retTable[0]->validDate)))}}
-					
-					<!-- {{((isset($otherDetails->valto)) ? $otherDetails->valto : "NOT DEFINED")}} -->
-					</div>	
-				</div>
-					@isset($addons)
-					@if(count($addons) > 0)
-					<div class="row">
+					<div class="row">	
 						<div class="col-md-2" style="">&nbsp;</div>
 						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-							Other Services
+							License Validity
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-2" style="">&nbsp;</div>
-						<div class="col-md-3 pl-5 mt-3 font-weight-bold" style="font-family: Century Gothic; font-size: 11pt">
-							@foreach($addons as $add)
-								{{$add}}
-							@endforeach
+						<div class="col-md-1 hide-div">
+							<center>:</center>
 						</div>
+						<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+						{{Date('F j, Y',strtotime($retTable[0]->validDateFrom))}} - {{date('F j, Y', strtotime("Last day of December", strtotime($retTable[0]->validDate)))}}
+						
+						<!-- {{((isset($otherDetails->valto)) ? $otherDetails->valto : "NOT DEFINED")}} -->
+						</div>	
 					</div>
-					@endif
+					@isset($addons)
+						@if(count($addons) > 0)
+						<div class="row">
+							<div class="col-md-2" style="">&nbsp;</div>
+							<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+								Other Services
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-2" style="">&nbsp;</div>
+							<div class="col-md-3 pl-5 mt-3 font-weight-bold" style="font-family: Century Gothic; font-size: 11pt">
+								@foreach($addons as $add)
+									{{$add}}
+								@endforeach
+							</div>
+						</div>
+						@endif
 					@endisset
 
 				@endif
 
 				@if(strtolower($retTable[0]->hfser_id) == 'con')
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-					Proposed number of beds
-						<!-- Number of Beds -->
+					<div class="row">	
+						<div class="col-md-2" style="">&nbsp;</div>
+						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+						Proposed number of beds
+							<!-- Number of Beds -->
+						</div>
+						<div class="col-md-1 hide-div">
+							<center>:</center>
+						</div>
+						<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+							{{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($otherDetails->noofbed) ? $otherDetails->noofbed : ''))}}
+							<!-- {{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($retTable[0]->noofbed) ? $retTable[0]->noofbed : ''))}} -->
+						</div>	
 					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($otherDetails->noofbed) ? $otherDetails->noofbed : ''))}}
-						<!-- {{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($retTable[0]->noofbed) ? $retTable[0]->noofbed : ''))}} -->
-					</div>	
-				</div>
 					<div class="row">	
 						<div class="col-md-2" style="">&nbsp;</div>
 						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
@@ -460,6 +460,22 @@ function($matches) {
 					</div>
 
 				@endif
+
+
+				<div class="row">	
+					<div class="col-md-2" style="">&nbsp;</div>
+					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+						Date Issued
+					</div>
+					<div class="col-md-1 hide-div">
+						<center>:</center>
+					</div>
+					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+						
+						{{((isset($issued_date)) ? $issued_date : 'Not Specified')}}
+					</div>	
+				</div>
+
 			</div>
 			<div class="card-footer">
 				<p class="text-muted text-small" style="float: right; padding: 0; margin: 0;">© All Rights Reserved {{date('Y')}}</p>

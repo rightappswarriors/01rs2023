@@ -1611,8 +1611,9 @@ class NewClientController extends Controller {
 			$x08_ft = 0;
 			$arrayFaci = $arrayserv = array();
 			$retTable = FunctionsClientController::getUserDetailsByAppform($appid);
-			//dd(empty($retTable));
-			if(!empty($retTable)){
+
+			if(!empty($retTable))
+			{
 				switch ($retTable[0]->hfser_id) {
 					case 'PTC':
 						$otherDetails = DB::table('hferc_evaluation')->join('hferc_team', 'hferc_evaluation.HFERC_evalBy', '=', 'hferc_team.uid')
@@ -1700,6 +1701,7 @@ class NewClientController extends Controller {
 			$servname = '';
 			$servname_new ='';
 			
+			//to be corrected. need to placed on db
 			if(!is_null($check)){
 				$servname = $check->facname;
 				$servname_new = $check->facname;
@@ -1762,7 +1764,6 @@ class NewClientController extends Controller {
 
 				$servname = $data[$check->facname];
 			}
-			
 			$arrData = [
 				'facname'=>$facname,
 				'servname'=>$servname_new,
@@ -1808,6 +1809,8 @@ class NewClientController extends Controller {
 			$serviceId = null;
 			$servname = '';
 			$facname = "No Health Facility";
+			//approvedDate  for date issued
+			$issued_date = ((isset($retTable[0]->approvedDate)) ? date_format(date_create($retTable[0]->approvedDate),"F d, Y ")  : 'Not Specified');
 			
 			switch ($retTable[0]->hfser_id) {
 				case 'PTC':
@@ -1878,6 +1881,7 @@ class NewClientController extends Controller {
 				'serviceId'=>$serviceId,
 				'newservices' => $servname,
 				'facname' => $facname,
+				'issued_date' => $issued_date
 			];
 			// dd($arrData['retTable'][0]->office);
 			return view('client1.certificates.certView', $arrData);

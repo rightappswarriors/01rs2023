@@ -75,17 +75,16 @@
         <div class="container-fluid border mb-3">
             <div class="row">
               @if($AppData->isCashierApprove != 1)
-              @if($canAdd)
-                <button type="button" onclick="insert()" data-toggle="modal" data-target="#bd-example-modal-sm" class="btn btn-primary p-2 m-1">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Accept Payment
-                </button>
+                @if($canAdd)
+                  <button type="button" onclick="insert()" data-toggle="modal" data-target="#bd-example-modal-sm" class="btn btn-primary p-2 m-1">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Accept Payment
+                  </button>
+                @endif
+                <!-- <button type="button" onclick="insert()" data-toggle="modal" data-target="#add-discount" class="btn btn-primary p-2 m-1">
+                  <i class="fa fa-plus" aria-hidden="true"></i> Add Discount
+                </button> -->
               @endif
-              <!-- <button type="button" onclick="insert()" data-toggle="modal" data-target="#add-discount" class="btn btn-primary p-2 m-1">
-                <i class="fa fa-plus" aria-hidden="true"></i> Add Discount
-              </button> -->
 
-
-              @endif
               @if($AppData->isCashierApprove == 1)
               <button type="button" onclick="window.location.href='{{asset('employee/dashboard/processflow/printor/').'/'.$APPID}}'" class="btn btn-primary p-2 m-1">
                 <i class="fa fa-print" aria-hidden="true"></i> Print Official Receipt
@@ -351,7 +350,8 @@
                     <button type="button" class="close" onclick="$('#EditErrorAlert').hide(1000);" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </div>
+                </div>               
+
                 <span id="EditBody">
                 </span>
                
@@ -714,6 +714,17 @@
     $('#EditBody').empty();
   
     $('#EditBody').append(
+
+      '<div class="col-12 pt-2">Mode of Payment:</div>' +
+        '<div class="col-12">' +
+          '<select required class="form-control" name="mPay">' +
+            '<option value="">Select one</option>' +
+            @foreach($paymentMethod as $meth)
+                '<option value="{{$meth->chg_code}}">{{$meth->chg_desc}}</option>' +
+            @endforeach
+          '</select>' + 
+        '</div>' +
+      '</div>' +
       '<input type="hidden" id="id" class="form-control" ata-parsley-required-message="<strong>*</strong>Description <strong>Required</strong>" value="'+id+'" required>' +
         '<div class="col-sm-7">OR Reference:</div>' +
         '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +

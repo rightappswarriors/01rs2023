@@ -1034,7 +1034,7 @@
                           Swal.fire({
                             type: 'success',
                             title: 'Success',
-                            text: 'Successfully set application to Accepted',
+                            text: '',  //Successfully set application to Accepted
                           }).then(() => {
                             //@if(($AppData->hfser_id == 'PTC' && $AppData->isAcceptedFP != 1 && $forhfsrb) || (!$forhfsrb || $redirect))
                             //location.reload();
