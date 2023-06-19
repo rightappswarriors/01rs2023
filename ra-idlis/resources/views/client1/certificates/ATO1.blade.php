@@ -10,7 +10,7 @@
 			height: 100%;
 			top: 0px;
 			left: 0px;
-			background-image: url("{{asset('ra-idlis/public/img/watermark/watermark.hfsrb.2023.png')}}");
+			background-image: url("{{asset('ra-idlis/public/img/watermark/doh.watermark.horizontal.noborder.png')}}");
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 			<div class="card-body">
-			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': ''}}">
+			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': 'watermarked'}}">
 				<br><br><br>
 				<span class="card-title text-center" style="font-family: Arial;font-size: 36pt"><center><strong>AUTHORITY TO OPERATE</strong></center></span><br>
 				<br>

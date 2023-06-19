@@ -121,29 +121,34 @@ class NewClientController extends Controller {
 
 	public function __changePass(Request $request) {
 		if(session()->has('uData')){
-			try {
-				$uDetails = session()->get('uData');
-				$chck = $pwd = null;
-				if ($request->isMethod('get')) 
-				{
-					try 
+			if ($request->isMethod('get')) 
+			{
+				try {
+					$uDetails = session()->get('uData');
+					$chck = $pwd = null;
+					if ($request->isMethod('get')) 
 					{
-						if (DB::table('x08')->where('uid',$uDetails->uid)->exists()) {
-							return view('client1.reset');
+						try 
+						{
+							if (DB::table('x08')->where('uid',$uDetails->uid)->exists()) {
+								return view('client1.reset');
+							}
+						} 
+						catch (Exception $e) 
+						{
+							dd($e);
 						}
-					} 
-					catch (Exception $e) 
-					{
-						dd($e);
 					}
+					if ($request->isMethod('post')) 
+					{
+						return AjaxController::processExpired($uDetails->uid,$request->pwd,$request->pass);
+					}
+					
+				} catch(Exception $e) {
+					return redirect('client1')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Forgot. Contact the admin']);
 				}
-				if ($request->isMethod('post')) 
-				{
-					return AjaxController::processExpired($uDetails->uid,$request->pwd,$request->pass);
-				}
-			} catch(Exception $e) {
-				return redirect('client1')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Forgot. Contact the admin']);
 			}
+
 		} else {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Action not allowed']);
 		}
@@ -166,6 +171,7 @@ class NewClientController extends Controller {
 			//dd($appGet);
 			//$appGet[$key][0] => appform values
 			//$appGet[$key][1]
+			
 			foreach ($appGet as $key => $value) {
 				switch ($value[0]->hfser_id) {
 					case 'PTC':
@@ -183,7 +189,6 @@ class NewClientController extends Controller {
 						break;
 				}
 			}
-
 			//dd($appGet);
 			$arrRet = [
 				'appDet'=>$appGet,
@@ -2221,6 +2226,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on Order of Payment Module. Contact the admin.']);
 		}
 	}
+
 	public function __applyhfsrb(Request $request, $hfser, $appid, $hideExtensions = NULL) {
 		try {
 			if($request->isMethod('get')){
@@ -2344,7 +2350,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$required1 = false;
 					$required2 = false;
 					$required3 = false;
-
 
 					foreach ($requiredQualifications as $requiredQualification) {
 						$professions = json_decode($requiredQualification->profession);

@@ -15,6 +15,7 @@
                   <tr>
                     <th class="text-center">Charge Name</th>
                     <th>Amount per Count</th>
+                    <th>Renewal Amount per Count</th>
                     <th>Options</th>
                   </tr>
                 </thead>
@@ -23,9 +24,10 @@
                   <tr>
                     <td>{{$charges->chargeName}}</td>
                     <td>{{$charges->price}}</td>
+                    <td>{{$charges->price_renew}}</td>
                     <td>
                       <span class="FD005_update">
-                        <button type="button" class="btn btn-outline-warning" onclick="showData('{{$charges->chargeID}}', '{{$charges->chargeName}}','{{$charges->price}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-edit"></i></button>
+                        <button type="button" class="btn btn-outline-warning" onclick="showData('{{$charges->chargeID}}', '{{$charges->chargeName}}','{{$charges->price}}','{{$charges->price_renew}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-edit"></i></button>
                       </span>
                     </td>
                   </tr>
@@ -128,14 +130,20 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() { $('#example').DataTable();});
-    function showData(id,desc,price){
+    function showData(id,desc,price, price_renew){
             $('#EditBody').empty();
             $('#EditBody').append(
               '<input type="hidden" id="eid" value="'+id+'" data-parsley-required-message="*<strong>ID</strong> required" class="form-control"  required>'+
-               ' <div class="col-sm-9">'+desc+':</div>'+
+               ' <div class="col-sm-9">'+desc+' Initial New Charge:</div>'+
                  ' <div class="col-sm-12" style="margin:0 0 .8em 0;">'+
-                 ' <input type="text" id="ename" name="ename" value="'+price+'" id="name" data-parsley-required-message="*<strong>FDA Pharmacy Charges Name</strong> required" class="form-control"  required>'+
+                 ' <input type="text" id="ename" name="ename" value="'+price+'" id="name" data-parsley-required-message="*<strong>FDA Pharmacy Initial New Charges Name</strong> required" class="form-control"  required>'+
                   '</div>'+
+
+                  ' <div class="col-sm-9">'+desc+' Renewal Charge:</div>'+
+                 ' <div class="col-sm-12" style="margin:0 0 .8em 0;">'+
+                 ' <input type="text" id="ename_renew" name="ename_renew" value="'+price_renew+'" id="name" data-parsley-required-message="*<strong>FDA Pharmacy Renewal Charges Name</strong> required" class="form-control"  required>'+
+                  '</div>'+
+
                  ' <input type="hidden" name="action" value="edit">'
               );
           }
@@ -146,6 +154,7 @@
               form.parsley().validate();
                if (form.parsley().isValid()) {
                  var desc = $('#ename').val();
+                 var desc_renew = $('#ename_renew').val();
                  var id = $("#eid").val();
                  $.ajax({
                     method: 'POST',
@@ -154,6 +163,7 @@
                       _token:$('#token').val(),
                       id:id,
                       ename:desc,
+                      ename_renew:desc_renew,
                       mod_id : $('#CurrentPage').val(), 
                       action: 'edit'
                   },

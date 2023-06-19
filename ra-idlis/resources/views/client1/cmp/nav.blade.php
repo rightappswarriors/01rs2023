@@ -199,134 +199,127 @@
 <div class="modal fade" id="userInfModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" style="color: #84929f;">User Information</h5>
-        <button type="button" style="width: 45px; height: 45px; line-height: 45px; text-align: center;
-    padding: 0;  border-radius: 50%;color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;margin: -8px;" class="close" data-dismiss="modal" aria-label="Close">
-          {{-- <span aria-hidden="true">&times;</span> --}}<i aria-hidden="true" class="fa fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body uinfo">
+      
+      <form id="ClientUserInfoUpdate" class="login-form" data-parsley-validate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" style="color: #84929f;">User Information</h5>
+          <button type="button" style="width: 45px; height: 45px; line-height: 45px; text-align: center;
+            padding: 0;  border-radius: 50%;color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;margin: -8px;" class="close" data-dismiss="modal" aria-label="Close">
+            {{-- <span aria-hidden="true">&times;</span> --}}<i aria-hidden="true" class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body uinfo">
+          @if(session()->has('fornav')) @foreach(session()->get('fornav') AS $each)
+          
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Username:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <p style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848;"><strong>{{$each->uid}}</strong></p>
+              <input type="hidden" id="uid" value="{{$each->uid}}" hidden>
+            </div>
+          </div>
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Recovery Email Address:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <input type="text" value="{{$each->email}}" name="email" id="email" class="form-control" style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848; width:100%; border:0; font-size:13px;"  required>
+            </div>
+          </div>
 
-        @if(session()->has('fornav')) @foreach(session()->get('fornav') AS $each)
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Approving Authority:</p>
+          <hr>
+          <p>Default Information</p>
+
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Name of Company/Owner:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <p><strong>{{$each->nameofcompany}}</strong></p>
+            </div>
           </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848;"><strong>{{$each->authorizedsignature}}</strong></p>
+
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Approving Authority:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <input type="text" value="{{$each->authorizedsignature}}" name="authorizedsignature" id="authorizedsignature" class="form-control" style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848; width:100%; border:0; font-size:13px;" required>
+            </div>
           </div>
+
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Position/Designation:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <input type="text" value="{{$each->assign}}" name="assign" id="assign" class="form-control" style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848; width:100%; border:0; font-size:13px;" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Mobile Phone Number:</p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <input type="text" value="{{$each->contact}}" name="contact" id="contact" class="form-control" style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848; width:100%; border:0; font-size:13px;" required>
+            </div>
+          </div>
+          {{--
+          <hr>
+           <div class="row">
+            <div style="padding-right: 0;" class="col-sm-4">
+              <p>Last Password Changed:  </p>
+            </div>
+            <div style="padding-left: 0" class="col-sm-8">
+              <p><strong>@if(isset($each->lastChangePassDate)){{$each->lastChangePassDate}} @endif @if(isset($each->lastChangePassTime)) {{$each->lastChangePassTime}} @endif</strong></p>
+              <p><a href="client1/changePass">Change Password</a></p>
+            </div>
+          </div>
+           <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Edit email"><i class="fa fa-edit"></i></button> 
+          --}}
+          @endforeach @endisset
         </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Username:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848;"><strong>{{$each->uid}}</strong></p>
-            <input type="hidden" id="uid" value="{{$each->uid}}" hidden>
-          </div>
+        <div class="modal-footer" style="    padding: .5rem;">
+          <button type="button" class="btn btn-md btn-secondary" data-dismiss="modal">Close</button>&nbsp;&nbsp;
+          <button type="submit" class="btn btn-md btn-primary" data-dismiss="modal">Save</button>&nbsp;&nbsp;
         </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Official Email Address:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p style="padding: 3px; margin-bottom: 0; border-bottom: 1px solid #484848;"><strong>{{$each->email}}</strong></p>
-          </div>
-          {{-- <div class="col-sm-2">
-            <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Edit email"><i class="fa fa-edit"></i></button>
-          </div> --}}
-        </div>
-        <hr>
-        <p>Information</p>
-        {{-- <p>Address information:</p> --}}
-        {{-- <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Region:  </p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->rgn_desc}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Province:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->provname}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>City/Municipality:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->cmname}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Barangay:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->brgyname}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>House No./Street Name:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->houseno}} {{$each->streetname}}</strong></p>
-          </div>
-        </div>
-         <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>ZipCode:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->zipcode}}</strong></p>
-          </div>
-        </div> --}}
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Position/Designation:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->assign}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Name of Company:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->nameofcompany}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Name of Applicant/Personnel:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->authorizedsignature}}</strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div style="padding-right: 0;" class="col-sm-4">
-            <p>Mobile Phone Number:</p>
-          </div>
-          <div style="padding-left: 0" class="col-sm-8">
-            <p><strong>{{$each->contact}}</strong></p>
-          </div>
-        </div>
-        @endforeach @endisset
-      </div>
-      <div class="modal-footer" style="    padding: .5rem;">
-        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
+
+
+  <script type="text/javascript">
+	
+    $('#ClientUserInfoUpdate').on('submit', function(event){
+		event.preventDefault();
+        var form = $(this);
+        form.parsley().validate();
+        
+        if (form.parsley().isValid()) {
+        	
+          $.ajax({
+            method : 'POST',
+            data : $(this).serialize(),
+            success : function(data){
+              if (data == 'DONE') {
+                alert('Successfully updated your information.');
+                //window.location.href = "{{ asset('/client1') }}";
+              } else if (data == 'ERROR') {
+                $('#NOACCOUNTINEMAIL').show(100);
+              } else {
+                alert(data);
+              }
+            },
+            error : function (a, b, c){
+              $('#NOACCOUNTINEMAIL').show();
+            }
+          });
+        }
+	});
+  </script>

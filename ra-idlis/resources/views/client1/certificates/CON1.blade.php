@@ -20,7 +20,7 @@
 			height: 100%;
 			top: 0px;
 			left: 0px;
-			background-image: url("{{asset('ra-idlis/public/img/watermark/watermark.hfsrb.2023.png')}}");
+			background-image: url("{{asset('ra-idlis/public/img/watermark/doh.watermark.horizontal.noborder.png')}}");
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -84,7 +84,8 @@
 				</div>
 			</div>
 			<div class="card-body">			
-			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': ''}}">
+			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': 'watermarked
+				'}}">
 				
 				<p class="headDetR" style="float: left; font-size: 20px; padding-left: 30px"><strong>CON No. {{date('Y')}}-{{str_pad(((isset($retTable[0]->appid)) ? $retTable[0]->appid : '_1'), 3, '0', STR_PAD_LEFT)}}</strong></p><br><br>
 				<p class="text-center font-mong tit">CERTIFICATE OF NEED</p>

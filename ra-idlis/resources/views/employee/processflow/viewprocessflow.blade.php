@@ -21,26 +21,29 @@
           <table class="table table-hover" style="font-size:13px;" id="1example">
             <thead>
               <tr style="font-weight:bold;">
-                  <td scope="col" style="text-align: center;">These are Options</td>
-                  <td scope="col" style="text-align: center;">Process / Type</td>
-                  <td scope="col" style="text-align: center;">Application Code</td>
-                  <td scope="col" style="text-align: center;">Name of the Facility</td>
-                  <td scope="col" style="text-align: center;">Type of Facility</td>
-                  <td scope="col" style="text-align: center;">Applied Date</td>
-                  <td scope="col" style="text-align: center;">Payment Confirmation Date</td>
-                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Inspection/ Evaluation</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Inspection/ Evaluation </td>
-                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Client Compliance</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Client Compliance</td>
-                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Issuance/ Nonissuance</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Issuance/ Nonissuance</td>
-                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Status</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Options</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Process Types /<br/> Application Code</td>
+                  <td scope="col" style="text-align: center;"  rowspan="2">Name of the Facility</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Type of Facility</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Applied Date/<br/>Payment Confirmation Date</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Inspection/ Evaluation</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Client Compliance</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Issuance/ Nonissuance</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">Status</td>
                   {{-- <td scope="col" style="text-align:center">Evaluated</td>
                   <td scope="col" style="text-align: center;">Inspected</td>
                   <td scope="col" style="text-align: center;">Approved</td> --}}
-                  <td scope="col" style="text-align: center;">Region</td>
-                  <td scope="col" style="text-align: center;">Assigned Region Office</td>                 
+                  <td scope="col" style="text-align: center;" rowspan="2">Region</td>
+                  <td scope="col" style="text-align: center;"  rowspan="2">Assigned Region Office</td>                 
                   
+              </tr>
+              <tr style="font-weight:bold;">
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
               </tr>
             </thead>
             <tbody id="FilterdBody">
@@ -53,24 +56,29 @@
                               <button type="button" title="View detailed information for {{$data->facilityname}}" class="btn btn-info form-control" onclick="showData({{$data->appid}},'{{$data->aptdesc}}', '{{$data->authorizedsignature}}','{{$data->brgyname}}', '{{$data->classname}}' ,'{{$data->cmname}}', '{{$data->email}}', '{{$data->facilityname}}','{{$data->hgpdesc}}', '{{$data->formattedDate}}', '{{$data->formattedTime}}', '{{$data->hfser_desc}}','{{$data->ocdesc}} - {{$data->classname}} - {{$data->subclassname}}', '{{$data->provname}}','{{$data->rgn_desc}}', '{{$data->street_name}}', '{{$data->zipcode}}', '{{$data->isrecommended}}', '{{$data->hfser_id}}', '{{$data->status}}', '{{$data->uid}}', '{{$data->trns_desc}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-eye"></i></button>
                             </center>
                           </td>
-                          <td style="text-align:center">{{$data->aptdesc}} <br/><strong>{{$data->hfser_id}}</strong></td>
-                          <td style="text-align:center">{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}</td>
-                          <td style="text-align:left"><strong>{{$data->facilityname}}</strong></td>
+                          <td style="text-align:center">{{$data->aptdesc}} {{$data->hfser_id}} <br/><strong>{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}</strong></td>
+                          <td style="text-align:left; font-family: 'Open Sans';"><strong>{{$data->facilityname}}</strong></td>
                           <td style="text-align:left">{{( $data->hgpdesc ?? 'NOT FOUND')}} </td>
-                          <td style="text-align:left">@if(isset($data->t_date)){{date("F j, Y", strtotime($data->t_date)) }} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
-                          <td style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
+                          <td style="text-align:left">
+                              @if(isset($data->t_date))<I>Applied on</I> {{date("F j, Y", strtotime($data->t_date)) }} @else <span style="color:red;">{{ 'Not Officially Applied Yet.' }}</span> @endif <br/> <br/>
+                              @if(isset($data->CashierApproveformattedDate))<I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'No Payment Confirmation Yet.' }}</span> @endif 
+                          </td>
                           <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
                           <td style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
                           <td style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 44 days')) }} @endif </td>
                           <td style="text-align:left">@if(isset($data->formattedInspectedDate)) {{$data->formattedInspectedDate }} @endif </td>
                           <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 56 days')) }} @endif </td>
                           <td style="text-align:left">@if(isset($data->formattedApprovedDate)) {{$data->formattedApprovedDate }} @endif </td>
-                          <td style="color:black;font-weight:bolder;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">{{$data->trns_desc}}<br/>
+                          <td style="color:black;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">
+                          
+                              <span style="font-weight:bolder;">{{$data->trns_desc}} </span><br/>
                               @if(isset($data->submittedReq)) 
 
                               @else 
-                                <span style="color: red">No attachment for basic requirements submitted yet.</span><br/>
-                              @endif
+                                <span style="color: red; font-weight:bolder;">No attachment for basic requirements submitted yet.</span><br/>
+                              @endif   
+
+                              <br/> @if(isset($data->formattedUpdatedDate)) <span style="color: black;font-weight:normal; font-size: small;"><i>Last updated on {{ $data->formattedUpdatedDate }}  @if(isset($data->formattedUpatedTime)) {{ $data->formattedUpatedTime }}  @endif.</i></span> @endif
                           </td>
                           {{-- <td>
                             <center> 
@@ -124,26 +132,29 @@
 
             <tfoot>
               <tr style="font-weight:bold;">
-                  <td scope="col" style="text-align: center;">Options</td>
-                  <td scope="col" style="text-align: center;">Process / Type</td>
-                  <td scope="col" style="text-align: center;">Code</td>
-                  <td scope="col" style="text-align: center;">Name of the Facility</td>
-                  <td scope="col" style="text-align: center;">Type of Facility</td>
-                  <td scope="col" style="text-align: center;">Applied Date</td>
-                  <td scope="col" style="text-align: center;">Payment Confirmation Date</td>
-                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Inspection/ Evaluation</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Inspection/ Evaluation </td>
-                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Client Compliance</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Client Compliance</td>
-                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day of Issuance/ Nonissuance</td>
-                  <td scope="col" style="text-align: center;">Actual Date of Issuance/ Nonissuance</td>
-                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Status</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Options</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Process Types /<br/> Application Code</td>
+                  <td scope="col" style="text-align: center;"  rowspan="2">Name of the Facility</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Type of Facility</td>
+                  <td scope="col" style="text-align: center;" rowspan="2">Applied Date/<br/>Payment Confirmation Date</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Inspection/ Evaluation</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Client Compliance</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Issuance/ Nonissuance</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">Status</td>
                   {{-- <td scope="col" style="text-align:center">Evaluated</td>
                   <td scope="col" style="text-align: center;">Inspected</td>
                   <td scope="col" style="text-align: center;">Approved</td> --}}
-                  <td scope="col" style="text-align: center;">Region</td>
-                  <td scope="col" style="text-align: center;">Assigned Region Office</td>                 
+                  <td scope="col" style="text-align: center;" rowspan="2">Region</td>
+                  <td scope="col" style="text-align: center;"  rowspan="2">Assigned Region Office</td>                 
                   
+              </tr>
+              <tr style="font-weight:bold;">
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
+                  <td scope="col" style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
+                  <td scope="col" style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
+                  <td scope="col" style="text-align: center;">Actual Date</td>
               </tr>
             </tfoot>
           </table>
