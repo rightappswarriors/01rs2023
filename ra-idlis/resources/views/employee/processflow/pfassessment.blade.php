@@ -53,7 +53,11 @@
                               <td scope="row" style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">
                                 @if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
                               <td scope="row" style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
-                              <td style="color:{{$color}};font-weight:bold;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;" class="text-left">{{$data->trns_desc}}</td>
+                              <td style="color:{{$color}};font-weight:bold;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;" class="text-left">
+                                {{$data->trns_desc}}
+                              
+                                <br/> @if(isset($data->formattedUpdatedDate)) <span style="color: black;font-weight:normal; font-size: small;"><i>Last updated on {{ $data->formattedUpdatedDate }}  @if(isset($data->formattedUpatedTime)) {{ $data->formattedUpatedTime }}  @endif.</i></span> @endif
+                              </td>
                               <td>
                                   <center>
                                     <button type="button" title="Assess {{$data->facilityname}}" class="btn btn-outline-primary" onclick="window.location.href='{{asset('employee/dashboard/processflow/parts')}}/{{$data->appid}}'"><i class="fa fa-fw fa-check"></i></button>

@@ -48,7 +48,10 @@
 						$initial_period_1 =  date("Y")."-01-01 00:00:00";
 						$initial_period_2 =  date("Y")."-11-15 23:59:59";
 						$renewal_period_1 =  date("Y")."-10-01 00:00:00";
-						$renewal_period_2 =  date("Y")."-12-15 23:59:59";					
+						$renewal_period_2 =  date("Y")."-12-15 23:59:59";				
+						
+						$late_renewal_period_1 =  date("Y")."-01-01 00:00:00";
+						$late_renewal_period_2 =  date("Y")."-03-31 23:59:59";	
 					?>
 					<p>Application period for Initial / New health facility is from the 1st working day of the year to November 15 of the same year based on the <a href="https://hfsrb.doh.gov.ph/wp-content/uploads/2021/12/ao2019-0004.pdf">A.O. 2019-0004</a>.</p>
 					<p></p>
@@ -57,12 +60,20 @@
 						Create New Application
 					</button>
 					@endif
-					<!-- @if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)  --->					
-					<!-- @endif  --->
-					<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
-						Create Renewal Application
-					</button>
-
+					@if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)
+						
+						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
+							Create Renewal Application
+						</button>
+									
+					@endif
+					@if($late_renewal_period_1 <= $todays_date &&  $late_renewal_period_2 >= $todays_date)
+						
+						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
+							Create Late Renewal Application
+						</button>
+									
+					@endif
 					
 				</div>
 				<div class="col-sm-4">

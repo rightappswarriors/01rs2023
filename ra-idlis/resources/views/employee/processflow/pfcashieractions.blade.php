@@ -296,13 +296,11 @@
             @if(count($discounts) > 0)
 
 						@for($i = 0; $i < count($discounts); $i++)
-
-
 						@php
 
-						$discountdecimal = floatval(floatval($discounts[$i]->percentage) / 100);
-						$discountprice = $discountdecimal * floatval($Amount);
-						$discountedtotal = floatval($Amount) - floatval($discountprice);
+              $discountdecimal = floatval(floatval($discounts[$i]->percentage) / 100);
+              $discountprice = $discountdecimal * floatval($Amount);
+              $discountedtotal = floatval($Amount) - floatval($discountprice);
 
 						@endphp
 						<tr class="text-center">
@@ -312,9 +310,7 @@
 							<td style="text-align:left"> -PHP {{number_format($discountprice, 2)}}</td>
 						</tr>
 
-
-
-						@endfor 
+            @endfor 
 
 						@endif
             @if($DiscountPrice !== '')
@@ -479,6 +475,7 @@
                             <input type="date" name="pDate" value="{{$loggedIn['date']}}" class="form-control">
                           </div>
                         </div> --}}
+
                         <div class="row">
                           <div class="col-6 pt-2">Mode of Payment:</div>
                           <div class="col-6">
@@ -490,6 +487,7 @@
                             </select>
                           </div>
                         </div>
+
                         {{-- <div class="row forCheck" hidden>
                           <div class="col-6 pt-2">Attached File:</div>
                           <div class="col">
@@ -706,8 +704,7 @@
           alert('Error! Please try again later');
         }
       }
-    })
-    
+    })    
   }
 
   function showData(id, mp_code, mp_desc, or/*,ref*/,amt, nat){
@@ -742,83 +739,79 @@
       );
 
       console.log("nat")
-  console.log(nat)
-document.getElementById('UACS_dataed').value = nat;
+    console.log(nat)
+    document.getElementById('UACS_dataed').value = nat;
   }
  
- 
-
-
-    $('#EditNow').on('submit',function(event){
-        event.preventDefault();
-          var form = $(this);
-          form.parsley().validate();
-           if (form.parsley().isValid()) {
-             var x = $('#or').val();
-             var y = $('#slip').val();
-             var z = $('#ref').val();
-             var a = $('#amt').val();
-             var b = $('#id').val();
-             var nat = $('#UACS_dataed').val();
-             $.ajax({
-                url: '{{asset('employee/cashier/actions')}}',
-                method: 'POST',
-                data : {_token:$('#token').val(),or:x,slip:y,ref:z,amt:a,id:b,action:"edit",nat:nat},
-                success: function(data){
-                    if (data == "SUCCESS") {
-                        alert('Successfully Edited Payment');
-                        location.reload();
-                    } else if (data == 'ERROR') {
-                        $('#EditErrorAlert').show(100);
-                    }
-                }, error : function(XMLHttpRequest, textStatus, errorThrown){
+  $('#EditNow').on('submit',function(event){
+    event.preventDefault();
+      var form = $(this);
+      form.parsley().validate();
+        if (form.parsley().isValid()) {
+          var x = $('#or').val();
+          var y = $('#slip').val();
+          var z = $('#ref').val();
+          var a = $('#amt').val();
+          var b = $('#id').val();
+          var nat = $('#UACS_dataed').val();
+          $.ajax({
+            url: '{{asset('employee/cashier/actions')}}',
+            method: 'POST',
+            data : {_token:$('#token').val(),or:x,slip:y,ref:z,amt:a,id:b,action:"edit",nat:nat},
+            success: function(data){
+                if (data == "SUCCESS") {
+                    alert('Successfully Edited Payment');
+                    location.reload();
+                } else if (data == 'ERROR') {
                     $('#EditErrorAlert').show(100);
                 }
-             });
-           }
-      });
-    $("select[name=mPay]").change(function(event) {
-      if($(this).val() == 'MOP-001'){
-        $('.forCheckandforMO').attr('hidden',true);
-        $("input[name=number]").removeAttr('required');
-      } else {
-        $('.forCheckandforMO').removeAttr('hidden')
-        $("input[name=number]").attr('required',true);
-      }
-      if($(this).val() == 'MOP-009'){
-        $('.forCheck').removeAttr('hidden')
-        $("input[name=attFile]","input[name=drawee]","input[name=number]").attr('required',true);
-      } else {
-        $('.forCheck').attr('hidden',true)
-        $("input[name=attFile]","input[name=drawee]","input[name=number]").removeAttr('required');
-      }
-       if($(this).val() == 'MOP-010' || $(this).val() == 'MOP-011'){
-        $('.forMO').removeAttr('hidden')
-        $("input[name=number]").attr('required',true);
-      } else {
-        $('.forMO').attr('hidden',true)
-        $("input[name=number]").removeAttr('required');
-      }
-    });
-    
+            }, error : function(XMLHttpRequest, textStatus, errorThrown){
+                $('#EditErrorAlert').show(100);
+            }
+          });
+        }
+  });
+  $("select[name=mPay]").change(function(event) {
+    if($(this).val() == 'MOP-001'){
+      $('.forCheckandforMO').attr('hidden',true);
+      $("input[name=number]").removeAttr('required');
+    } else {
+      $('.forCheckandforMO').removeAttr('hidden')
+      $("input[name=number]").attr('required',true);
+    }
+    if($(this).val() == 'MOP-009'){
+      $('.forCheck').removeAttr('hidden')
+      $("input[name=attFile]","input[name=drawee]","input[name=number]").attr('required',true);
+    } else {
+      $('.forCheck').attr('hidden',true)
+      $("input[name=attFile]","input[name=drawee]","input[name=number]").removeAttr('required');
+    }
+      if($(this).val() == 'MOP-010' || $(this).val() == 'MOP-011'){
+      $('.forMO').removeAttr('hidden')
+      $("input[name=number]").attr('required',true);
+    } else {
+      $('.forMO').attr('hidden',true)
+      $("input[name=number]").removeAttr('required');
+    }
+  });
 
-    // function showDelete(id){
-    //   var r = confirm("Are you sure you want to void this payment?");
-    //   if (r == true) {
-    //      $.ajax({
-    //         url: '{{asset('employee/cashier/actions')}}',
-    //         method: 'POST',
-    //         data: {_token: $("#token").val(), 'id': id, 'action':'delete'},
-    //         success: function(data){
-    //           if(data == 'SUCCESS'){
-    //             alert('Voided Successfully');
-    //             window.location.href = '{{asset('employee/dashboard/processflow/actions')}}/{{$appform_id}}/{{!empty($aptid) ? $aptid : ""}}'
-    //           }
-    //         }
-    //      });
-    //   } else {
-    //       txt = "You pressed Cancel!";
-    //   }
-    // }
+  // function showDelete(id){
+  //   var r = confirm("Are you sure you want to void this payment?");
+  //   if (r == true) {
+  //      $.ajax({
+  //         url: '{{asset('employee/cashier/actions')}}',
+  //         method: 'POST',
+  //         data: {_token: $("#token").val(), 'id': id, 'action':'delete'},
+  //         success: function(data){
+  //           if(data == 'SUCCESS'){
+  //             alert('Voided Successfully');
+  //             window.location.href = '{{asset('employee/dashboard/processflow/actions')}}/{{$appform_id}}/{{!empty($aptid) ? $aptid : ""}}'
+  //           }
+  //         }
+  //      });
+  //   } else {
+  //       txt = "You pressed Cancel!";
+  //   }
+  // }
 </script>
 @endsection

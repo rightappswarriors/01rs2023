@@ -19,7 +19,7 @@
 			height: 100%;
 			top: 0px;
 			left: 0px;
-			background-image: url("{{asset('ra-idlis/public/img/watermark/watermark.hfsrb.2023.png')}}");
+			background-image: url("{{asset('ra-idlis/public/img/watermark/doh.watermark.horizontal.noborder.png')}}");
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -37,8 +37,8 @@
 			 font-size: 21px;}
 		.pos { font-family: "Arial Unicode MS", "Lucida Sans Unicode", "DejaVu Sans", "Quivira", "Symbola", "Code2000", ;
 			 font-size: 20px;}
-		.contl {font-family: Century Gothic; font-size: 18px}
-		.contr {font-family: Century Gothic; font-size: 20px}
+		.contl { font-family: Century Gothic; font-size: 18px; }
+		.contr { font-family: Century Gothic; font-size: 20px; }
 	</style>
 	<div class="container mt-5">
 		<div class="card">
@@ -57,7 +57,7 @@
 				</div>
 			</div>
 			<div class="card-body " style="width: 100%;">
-			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': ''}}">
+			<div class="{{$retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': 'watermarked'}}">
 				<br>
 				<span class="  heading"><center><strong>LICENSE TO OPERATE</strong></center></span><br>
 				<!-- <span class="card-title text-center" style="font-family: ArialUnicodeMs;font-size: 42pt"><center><strong>LICENSE TO OPERATE</strong></center></span><br> -->

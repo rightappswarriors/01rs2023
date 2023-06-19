@@ -5225,7 +5225,7 @@ public static function checkConmem($appid)
 					$anotherData->LIMIT($limit);
 				}				
 				
-				$data = $anotherData->distinct()->get();
+				$data = $anotherData->get();
 
 				return array('data'=>$data, 'rowcount'=>$rowcount);
 			} 
@@ -5776,13 +5776,6 @@ public static function checkConmem($appid)
 											'isReadyForInspec' => 1
 											// 'FDAStatMach' => 'For Evaluation'
 										);
-					    
-
-						
-					
-
-
-
 					}
 					// Revised Documentary Evaluation
 					else if ($request->selected == 2)  
@@ -6519,6 +6512,7 @@ public static function checkConmem($appid)
 				return 'ERROR';
 			}
 		}
+		//
 		public static function saveAssignedMembersInTeam(Request $request)
 		{
 			try 

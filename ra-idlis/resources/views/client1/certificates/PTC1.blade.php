@@ -78,7 +78,7 @@ function xucwords($string)
 			height: 100%;
 			top: 0px;
 			left: 0px;
-			background-image: url("{{asset('ra-idlis/public/img/watermark/watermark.hfsrb.2023.png')}}");
+			background-image: url("{{asset('ra-idlis/public/img/watermark/doh.watermark.horizontal.noborder.png')}}");
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -112,9 +112,9 @@ function xucwords($string)
 					$employee_login = session()->get('employee_login');
 
 					if($employee_login) {
-						$class = $retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': '';
+						$class = $retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': 'watermarked';
 					} else {
-						$class = "";
+						$class = "watermarked";
 					}
 
 				@endphp

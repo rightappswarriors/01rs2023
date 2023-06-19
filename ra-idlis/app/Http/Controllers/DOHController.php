@@ -1306,7 +1306,7 @@ namespace App\Http\Controllers;
 			{
 				try 
 				{
-					$returnToUser = DB::table('fda_pharmacycharges')->where('chargeID', $request->id)->update(['price' => $request->ename]);
+					$returnToUser = DB::table('fda_pharmacycharges')->where('chargeID', $request->id)->update(['price' => $request->ename, 'price_renew' => $request->ename_renew]);
 					return ($returnToUser >=1 ? 'DONE' : 'ERROR');
 				} 
 				catch (Exception $e) 
@@ -4281,7 +4281,7 @@ namespace App\Http\Controllers;
 				);		
 		}
 
-		//This is the function of the content for evaluate applicant, either to go to Technical Evaluation or Documentary Evaluation.
+		//This is the function of the content for evaluate applicant, either to go to Technical Evaluation or Documentary Evaluation. 
 		public function EvaluateOneProcessFlow(Request $request, $appid, $office = 'hfsrb')
 		{
 			$isdocumentary="true";
@@ -5770,10 +5770,19 @@ namespace App\Http\Controllers;
 									}
 	
 								} else if($request->action == 'FP'){
+									$isAcceptedFP = $request->fpselect;
 									$cur = AjaxController::getCurrentUserAllData();
 									$ret = DB::table('appform')->where('appid',$appid)->update(['isAcceptedFP' => $request->fpselect, 'FPacceptedDate' => $cur['date'], 'FPacceptedTime' => $cur['time'], 'FPacceptedBy' => $cur['cur_user'], 'fpcomment' => $request->fpremark, 'status' => 'FPE']);
 									$selected = AjaxController::getUidFrom($appid);
-									AjaxController::notifyClient($appid,$selected,53);
+									
+									if($isAcceptedFP == "1")
+									{
+										AjaxController::notifyClient($appid,$selected,53);
+									}
+									else
+									{
+										AjaxController::notifyClient($appid,$selected,77);
+									}
 								}
 	
 								return ($ret ? 'done' : 'error');
@@ -13164,9 +13173,20 @@ namespace App\Http\Controllers;
 			}
 		}
 
-		public function savePayment(Request $request)
+		public function is_exists_OR($ORRef)
 		{
-			// /dd($request->all());
+			$isExists = false;
+			$chgfil = DB::table('chgfil')->WHERE('ORRef',$ORRef)->first();
+
+			if(isset($chgfil))
+			{
+				$isExists = true;
+			}
+			return $isExists;
+		}
+
+		public function savePayment(Request $request)
+		{	// /dd($request->all());
 			if(session()->has('employee_login')){
 				if(DB::table('chgfil')->where('appform_id',$request->appform_idSubmit)->whereNotNull('recievedBy')->doesntExist()){
 					$user = AjaxController::getCurrentUserAllData();
@@ -13185,25 +13205,25 @@ namespace App\Http\Controllers;
 					]);
 					$id = DB::getPdo()->lastInsertId();
 					if($id){
-						if(DB::table('chgfil')->where('uid',$request->appform_idSubmit)->insert(['amount' => $request->aPaid, 'otherRef'=>$request->otherRef, /*'depositNum'=>$request->slipNum,*/ 'ORRef'=>$request->orRef, 'paymentMode'=> $request->mPay, 'attachedFile'=>$filename, 'recievedBy'=>$user['cur_user'], 'paymentDate'=>date("Y-m-d",strtotime('now')), 'appform_id'=>$request->appform_idSubmit,'reference'=>'Payment','chgapp_id'=>$id, 'm04ID_FK' =>$request->uacs, 'draweeBank' => $request->drawee, 'number' => $request->number])){
-
-							$clienthfser_id = DB::table('appform')->where('appid',$request->appform_idSubmit)->select('hfser_id')->first()->hfser_id;
-							$stat = null;
-							switch ($clienthfser_id) {
-								case 'PTC':
-									$stat = 'FPPE';
-									break;
-								
-								default:
-									$stat = 'FI';
-									break;
+						if(SELF::is_exists_OR($request->orRef) == false)
+						{
+							if(DB::table('chgfil')->where('uid',$request->appform_idSubmit)->insert(['amount' => $request->aPaid, 'otherRef'=>$request->otherRef, /*'depositNum'=>$request->slipNum,*/ 'ORRef'=>$request->orRef, 'paymentMode'=> $request->mPay, 'attachedFile'=>$filename, 'recievedBy'=>$user['cur_user'], 'paymentDate'=>date("Y-m-d",strtotime('now')), 'appform_id'=>$request->appform_idSubmit,'reference'=>'Payment','chgapp_id'=>$id, 'm04ID_FK' =>$request->uacs, 'draweeBank' => $request->drawee, 'number' => $request->number])){
+	
+								$clienthfser_id = DB::table('appform')->where('appid',$request->appform_idSubmit)->select('hfser_id')->first()->hfser_id;
+								$stat = null;
+								switch ($clienthfser_id) {
+									case 'PTC':  $stat = 'FPPE'; break;
+									default:     $stat = 'FI';   break;
+								}
+								DB::table('appform')->where('appid',$request->appform_idSubmit)->update(['status' => $stat]);
+								return redirect('employee/dashboard/processflow/actions/'.$request->appform_idSubmit.'/'.$request->aptid);
 							}
-							DB::table('appform')->where('appid',$request->appform_idSubmit)->update(['status' => $stat]);
-							return redirect('employee/dashboard/processflow/actions/'.$request->appform_idSubmit.'/'.$request->aptid);
-
+						}
+						else
+						{
+							return redirect('employee/dashboard/processflow/actions/'.$request->appform_idSubmit.'/'.$request->aptid.'?existsor='.$request->orRef);
 						}
 					}
-
 				} else {
 					session()->flash('system_error','ERROR');
 					return redirect('employee/dashboard/processflow/actions/'.$request->appform_idSubmit.'/'.$request->aptid);

@@ -152,9 +152,9 @@ $loc =
 						($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' ).ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '.ucwords(strtolower($retTable[0]->provname)).' '.strtoupper($retTable[0]->rgn_desc));
 
 $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', 
-function($matches) {
-    return strtoupper($matches[0]);
-}, $loc);	
+				function($matches) {
+					return strtoupper($matches[0]);
+				}, $loc);	
 
 @endphp
 

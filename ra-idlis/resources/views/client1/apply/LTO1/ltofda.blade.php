@@ -99,6 +99,7 @@
                 </div>
 
 				<center  style="padding-top: 40px; font-size: 30px;"><p>Pharmacy</p></center>
+				
 				<div class="row marginbottom-md">
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
@@ -121,6 +122,7 @@
 						<div class="col-12 mb-3">
 							 @if(!empty($data[2][2][0]))
 					
+							 @php var_dump($data); @endphp
                                 @if($data[2][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
                                     <button class="btn" onclick="addT('{{$data[2][1]}}','{{$data[2][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
@@ -146,11 +148,8 @@
                             @endif
 						</div>
 						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRR/attachments/'.$appid)}}'"><i class="fa fa-paperclip"></i> Other Attachments</button>
-					</div>
-
-			
+					</div>			
 				</div>
-
 	
 				@else
 				<br><br>

@@ -587,22 +587,43 @@ class FunctionsClientController extends Controller {
 		}
 	}
 
+	public static function get_aptid_by_appid($appid = "")
+	{
+		return DB::table('appform')->select('aptid',)->WHERE('appid',$appid)->first();
+	}
 
 	public static function getDetailsFDACDRR($appid = ""){
 		try {
 			$total = 0;
 			$retArr = $prices = [];
+			$aptid = "";
+
 			if(! empty($appid)) {
+
+				$aptid=SELF::get_aptid_by_appid($appid);
+
 				$datasOfMachine = self::getUserDetailsByAppform($appid)[0];
-				if(!empty($datasOfMachine->noofmain) || !empty($datasOfMachine->noofsatellite)){
-					$prices = DB::table('fda_pharmacycharges')->get();
+
+				if(!empty($datasOfMachine->noofmain) || !empty($datasOfMachine->noofsatellite)){					
+					
+					if($aptid->aptid == 'R')
+					{
+						$prices = DB::table('fda_pharmacycharges')->selectraw('price_renew AS price')->get();
+					}
+					else
+					{
+						$prices = DB::table('fda_pharmacycharges')->get();						
+					}
+
 					if(!empty($datasOfMachine->noofmain)){
 						$total += $prices[0]->price * $datasOfMachine->noofmain;
 					}
 					if(!empty($datasOfMachine->noofsatellite)){
 						$total += ($prices[1]->price * $datasOfMachine->noofsatellite);
 					}
+
 					$lrf = (DB::table('fda_chgfil')->where([['appid',$appid],['uid', 'SYSTEM'],['amount','>', 0],['lrfFor','cdrr']])->whereNull('MAvalue')->sum('amount') ?? 0);
+					
 					return [$datasOfMachine,$datasOfMachine->noofmain + $datasOfMachine->noofsatellite,$total,[$datasOfMachine->noofmain,$datasOfMachine->noofsatellite],$lrf];
 				} else {
 					return 'You Don\'t have any pharmacies Registered!';
@@ -831,7 +852,6 @@ class FunctionsClientController extends Controller {
 		$retArr = []; $hgpidIn = "";
 		if(!empty($hgpid) || !empty($aptid)) {
 			foreach($hgpid AS $hgpidEach) { $hgpidIn .= ((! empty($hgpidIn)) ? ", '$hgpidEach'" : "'$hgpidEach'"); }
-			//dd("SELECT chg_app.chgapp_id, charges.chg_desc, chg_app.amt FROM chg_app INNER JOIN charges ON chg_app.chg_code = charges.chg_code WHERE chg_app.chg_code IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND chg_app.aptid = '$aptid' AND chg_app.hfser_id = '$hfser_id'"); exit;
 			
 			//$retArr = DB::select(DB::raw("SELECT chg_app.chgapp_id, charges.chg_desc, chg_app.amt FROM chg_app INNER JOIN charges ON chg_app.chg_code = charges.chg_code WHERE chg_app.chg_code IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND chg_app.aptid = '$aptid' AND chg_app.hfser_id = '$hfser_id'"));
 

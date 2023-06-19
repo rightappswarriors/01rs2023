@@ -57,11 +57,11 @@
                               <td class="text-center">{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}</td>
                               <td class=""><strong>{{$data->facilityname}}</strong></td>
                               <td class="">{{($data->hgpdesc ?? 'NOT FOUND')}}</td>
-                              <td>{{$data->formattedUpdatedDate}}</td>
+                              <td>@if(isset($data->formattedUpdatedDate)) <span style="color: black;font-weight:normal; font-size: small;">{{ $data->formattedUpdatedDate }}  @if(isset($data->formattedUpatedTime)) <br/>{{ $data->formattedUpatedTime }}  @endif</span> @endif</td>
                               <td style="text-align:left">@if(isset($data->CashierApproveformattedDate)){{$data->CashierApproveformattedDate}} @else <span style="color:red;">{{ 'Not Officially Applied Yet' }}</span> @endif </td>
                               <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
                               <td style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
-                              <td class="text-center" style="font-weight:bold; border-left: darkgray;border-left-width: thin;border-left-style: solid;">{{$data->trns_desc}}</td>
+                              <td class="" style="font-weight:bold; border-left: darkgray;border-left-width: thin;border-left-style: solid;">{{$data->trns_desc}}</td>
                               <td>
                                 <center>
                                   @if(!isset($data->documentSent))
