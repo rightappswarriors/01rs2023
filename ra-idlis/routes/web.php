@@ -17,10 +17,6 @@ Proper Routing
 
 // New
 
-
-
-
-
 Route::prefix('client')->group(__DIR__ . '/clients/dashboard.php');
 // OLD CLIENT-SIDE
 Route::match(['get', 'post'], '/qrcode/{appid}', 'NewClientController@generateForCertificate');
@@ -245,7 +241,6 @@ Route::prefix('client1')->group(function() {
 		Route::match(['get', 'post'], '{appid}', 'NewClientController@__novm')->name('client1.novm');
 	});
 });
-// MHEL BAMBOK
 ///////////////////// EMPLOYEE
 /////// DOH CONTROLLER
 ///// GENERAL -------------------

@@ -87,6 +87,7 @@
           let data = JSON.parse(a);
           $('#AlertBoxes').empty();
           $("#NumOfUnreadMsgs").html(data['unread']);
+          
           if (data['totalNotif'] <= 0) { // if Notification is Empty
              $('#NumOfUnreadMsgs').text('');
              $('#AlertBoxes').append(

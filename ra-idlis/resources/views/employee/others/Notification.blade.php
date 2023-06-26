@@ -30,7 +30,7 @@
 	        	    @endforeach
 	        	@endisset --}}
 	        </div>
-	        <div class="modal fade" id="AddGodModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	        {{-- <div class="modal fade" id="AddGodModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		        <div class="modal-dialog" role="document">
 		          <div class="modal-content" style="border-radius: 0px;border: none;">
 		            <div class="modal-body" style=" background-color: #272b30;color: white;">
@@ -58,7 +58,7 @@
 		                    <div class="row">
 		                      	<div class="col-sm-6">
 		                      		&nbsp;
-			                      {{-- <button type="button" class="btn btn-outline-success form-control" style="border-radius:0;"><span class="fa fa-sign-up"></span>Add</button> --}}
+			                     <button type="button" class="btn btn-outline-success form-control" style="border-radius:0;"><span class="fa fa-sign-up"></span>Add</button> 
 			                    </div> 
 			                    <div class="col-sm-6">
 			                      <button type="button" data-dismiss="modal" class="btn btn-outline-danger form-control" style="border-radius:0;"><span class="fa fa-sign-up"></span>Close</button>
@@ -68,7 +68,7 @@
 		            </div>
 		          </div>
 		        </div>
-	      </div>
+	      </div> --}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			laDisplay();
@@ -98,6 +98,7 @@
 			                       '<h5 class="mb-1">&nbsp;</h5>' + // Title
 			                       '<small>'+allData[i].adjustedmonth+'</small>' + // Difference
 			                     '</div>' + 
+								 '<p class="mb-1">Application ID: <strong>'+allData[i].appid+'</strong></p>' + 
 			                     '<p class="mb-1">'+allData[i].msg_desc+'</p>' + // Message // .substr(0, 20)
 			                     '<small>'+allData[i].notifdatetime+'</small>' + // Time Date
 			                   '</a>'

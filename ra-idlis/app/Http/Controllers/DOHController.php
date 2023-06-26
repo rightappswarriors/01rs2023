@@ -599,7 +599,7 @@ namespace App\Http\Controllers;
 				try 
 				{
 					$data = AjaxController::getAllNotifications();
-					// return dd($data);
+					 dd($data);
 					return view('employee.others.Notification', ['AllData'=> $data]);
 				} 
 				catch (Exception $e) 
@@ -4419,6 +4419,7 @@ namespace App\Http\Controllers;
 									'status' => 'FI'
 								);
 								DB::table('appform')->where('appid', '=', $appid)->update($updateData);
+								AjaxController::setAppForm_UpdatedDate($appid);
 						}
 						
 						return view('employee.processflow.pfevaluateoneLTO', ['type'=> 'docu','AppData'=> $data, 'requirements' => $req, 'appID' => $appid, 'documentDate' => $documentDate, 'linkToEdit' => $linkToEdit, 'ActualString' => $data8->toDateString(), 'DateString' => $data8->toFormattedDateString(),'appID' => $appid, 'DateNow' => $data9->toDateString(), 'AfterDay'=> $data10->toDateString(), 'tables' => json_encode($tables), 'forhfsrb' => $forhfsrb, 'office' => $office, 'coaFlag' => $coaFlag, 'redirect' => $boolRedirect]);
@@ -4434,6 +4435,7 @@ namespace App\Http\Controllers;
 							$uid = AjaxController::getUidFrom($data->appid);
 							$idForNotify = AjaxController::getNotificationIDfromCases($data->hfser_id,'additionalRequirments',1);
 							AjaxController::notifyClient($data->appid,$uid,$idForNotify);
+							AjaxController::setAppForm_UpdatedDate($appid);
 
 							return redirect('employee/dashboard/processflow/evaluate/'.$appid);
 						}
@@ -4456,6 +4458,8 @@ namespace App\Http\Controllers;
 									$test = DB::table('app_upload')->where('apup_id', '=', $request->ids[$i])->update($updateData);
 								}
 							}
+
+							AjaxController::setAppForm_UpdatedDate($appid);
 							
 							return ($test ? 'DONE' : 'ERROR');
 						} else {
@@ -4464,6 +4468,8 @@ namespace App\Http\Controllers;
 								$uid = AjaxController::getUidFrom($appid);
 								AjaxController::notifyClient($appid,$uid,23);
 							}
+							
+							AjaxController::setAppForm_UpdatedDate($appid);
 							return $test;
 						}
 					} 
@@ -5622,6 +5628,7 @@ namespace App\Http\Controllers;
 					}
 
 					if(isset($revision)){
+
 						if ($request->isMethod('get')) 
 						{
 							$membersDoneEv = array();
@@ -5631,13 +5638,15 @@ namespace App\Http\Controllers;
 								$checkapp = DB::table('appform')->where([['appid', $appid]])->first();
 	
 								if(!is_null($checkapp->requestReeval) && $checkapp->isApprove == 0 ){
+
 									$checkteam = DB::table('hferc_team')->where([['appid', $appid], ['revision', $revision]])->first();
-	
+									//dd($checkteam);
 									if(is_null($checkteam)){
+
 										$getTeam = DB::table('hferc_team')->where([['appid', $appid], ['revision', $revision - 1]])->get();
+
 										foreach($getTeam as $gt){
 											DB::table('hferc_team')->insert(['appid' => $appid, 'uid' => $gt->uid, 'pos' => $gt->pos, 'revision' => $revision, 'permittedtoInspect' => 1]);
-											// DB::table('hferc_team')->insert(['appid' => $appid, 'uid' => $gt['uid'], 'pos' => $gt['pos'], 'revision' => $revision, 'permittedtoInspect' => 1]);
 											AjaxController::notifyClient($appid,$gt->uid,41);
 										}
 									}
@@ -5647,9 +5656,8 @@ namespace App\Http\Controllers;
 								$data = AjaxController::getAllDataEvaluateOne($appid);
 								// $evaluationResult = [];
 								$evaluationResult = AjaxController::maxRevisionFor($appid, (isset($revision) ? ['revision',$revision] : []), 1);
-								// $evaluationResult = AjaxController::maxRevisionFor($appid, (isset($revision) ? ['revision',$revision] : []), 1);
 						
-								$members = AjaxController::getMembersInHFERC($data->appid,$data->rgnid,2,(isset($evaluationResult->revision) ? $evaluationResult->revision : AjaxController::maxRevisionFor($appid)+1));
+								$members = AjaxController::getMembersInHFERC($data->appid,$data->rgnid,2,$revision);
 								$notin = AjaxController::getMembersInHFERC($data->appid,$data->rgnid,1,(isset($evaluationResult->revision) ? $evaluationResult->revision : AjaxController::maxRevisionFor($appid)+1));
 								
 								if(count($members) > 0){
@@ -5676,7 +5684,8 @@ namespace App\Http\Controllers;
 								$dataTeam->where('team.rgnid', $data->assignedRgn);
 								$dataTeam =	$dataTeam->get();	
 
-								if(isset($evaluationResult->HFERC_eval)){
+								if(isset($evaluationResult->HFERC_eval))
+								{
 									if($evaluationResult->HFERC_eval == 2) {
 										$max = AjaxController::maxRevisionFor($appid) + 1;
 									} else {
@@ -5733,16 +5742,20 @@ namespace App\Http\Controllers;
 										$ret = DB::table('hferc_team')->insert(['appid' => $appid, 'uid' => $request->uid, 'pos' => $request->pos, 'revision' => (isset($evaluationResult->revision) ? $evaluationResult->revision : AjaxController::maxRevisionFor($appid) + 1), 'permittedtoInspect' => 1]);
 										AjaxController::notifyClient($appid,$request->uid,41);
 									}
+									AjaxController::setAppForm_UpdatedDate($appid);
 								
 								} else if($request->action == 'edit'){
 									$ret = DB::table('hferc_team')->where('hfercid',$request->id)->update(['pos' => $request->pos]);
+									AjaxController::setAppForm_UpdatedDate($appid);
 								} else if($request->action == 'delete'){
 									$selected = DB::table('hferc_team')->select('uid')->where('hfercid',$request->id)->first()->uid;
 									AjaxController::notifyClient($appid,$selected,40);
 									$ret = DB::table('hferc_team')->where('hfercid',$request->id)->delete();
+									AjaxController::setAppForm_UpdatedDate($appid);
 								} else if($request->action == 'permit'){
 									$ret = DB::table('hferc_team')->where('hfercid',$request->id)->update(['permittedtoInspect' => $request->permit]);
 									$selected = DB::table('hferc_team')->select('uid')->where('hfercid',$request->id)->first()->uid;
+									AjaxController::setAppForm_UpdatedDate($appid);
 									AjaxController::notifyClient($appid,$selected,41);
 								} else if($request->action == 'evaluate'){
 									$cur = AjaxController::getCurrentUserAllData();
@@ -5758,15 +5771,18 @@ namespace App\Http\Controllers;
 									// $ret = DB::table('hferc_evaluation')->insert(['HFERC_eval' => $request->evaluation, 'HFERC_comments' => $request->comments, 'HFERC_evalBy' => $cur['cur_user'], 'revision' => $maxID + 1, 'appid' => $appid]);
 	
 									$notifyAllHere = DB::table('hferc_team')->where('appid',$appid)->get();
+									
 									foreach ($notifyAllHere as $value) {
 										AjaxController::notifyClient($appid,$value->uid,($request->evaluation == 1 ? 42 : 43));
 									}
 	
 									if($request->evaluation == 1){
 										DB::table('appform')->where('appid',$appid)->update(['status' => 'FR']);
+										AjaxController::setAppForm_UpdatedDate($appid);
 									}else if($request->evaluation == 2){
 										DB::table('appform')->where('appid',$appid)->update(['status' => 'RDA']);
 										// DB::table('appform')->where('appid',$appid)->update(['status' => 'REVF']);
+										AjaxController::setAppForm_UpdatedDate($appid);
 									}
 	
 								} else if($request->action == 'FP'){
@@ -5774,6 +5790,7 @@ namespace App\Http\Controllers;
 									$cur = AjaxController::getCurrentUserAllData();
 									$ret = DB::table('appform')->where('appid',$appid)->update(['isAcceptedFP' => $request->fpselect, 'FPacceptedDate' => $cur['date'], 'FPacceptedTime' => $cur['time'], 'FPacceptedBy' => $cur['cur_user'], 'fpcomment' => $request->fpremark, 'status' => 'FPE']);
 									$selected = AjaxController::getUidFrom($appid);
+									AjaxController::setAppForm_UpdatedDate($appid);
 									
 									if($isAcceptedFP == "1")
 									{
@@ -5827,7 +5844,8 @@ namespace App\Http\Controllers;
 				// dd($dataOfEntry['reco']->details);
 				$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['choice','comment'],['revision',$revision]])->first();
 
-				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee.processflow.hferceval',['appdata'=>$data,'reco' => $dataOfEntry['reco'], 'members'=>$members, 'evaluation' => $evaluation, 'data' => $dataOfEntry]);
+				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee.processflow.hferceval',['appdata'=>$data,'reco' => $dataOfEntry['reco'], 'members'=>$members, 'evaluation' => $evaluation, 'data' => $dataOfEntry, 
+				'hferc_evaluator' => DB::table('hferc_team')->where([['pos','C'], ['appid',$appid]])->first()]);
 			} catch (Exception $e) {
 				AjaxController::SystemLogs($e);
 				session()->flash('system_error','ERROR');
@@ -12888,6 +12906,9 @@ namespace App\Http\Controllers;
 				  					]);
 				  		$upd = array('chg_num'=>(intval($getData->chg_num) + 1));
 				  		$test2 = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->update($upd);
+
+						$uid = AjaxController::getUidFrom($request->appid);
+						AjaxController::notifyClient($request->appid,$uid,79);
 			  		} elseif($request->action == 'evalute') {
 						$status = 'FDE';
 
