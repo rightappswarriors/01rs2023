@@ -435,7 +435,7 @@ class EvaluationController extends Controller
 				$arrToSend[$db->partID][$db->asmtH3ID_FK][$db->asmtH2ID_FK][$db->asmtH1ID_FK][] = $db;
 			}
 
-			if(DB::table('hferc_team')->where([['uid',$uid],['hasInspected',0]])->exists()){
+			if(DB::table('hferc_team')->where([['uid',$uid],['appid',$appid],['hasInspected',0]])->exists()){
 				DB::table('hferc_team')->where('uid',$uid)->where('appid',$appid)->update(['hasInspected' => 1, 'inspectDate' => Date('Y-m-d H:i:s')]);
 			}
 			$onWhereClause = ([$uid]);
@@ -443,13 +443,14 @@ class EvaluationController extends Controller
 			$data = [
 				'reports' => $arrToSend,
 				'assessor' => DB::table('x08')->whereIn('uid',$onWhereClause)->first(),
+				'hferc_evaluator' => DB::table('hferc_team')->where([['uid',$uid], ['appid',$appid]])->first(),
 				'uInf' => $uInf,
 				'isPtc' => true,
 				'reco' => $reco,
 				'revision' => $revision,
 				'datafromdb' => $dataFromDB
 			];
-			// dd($data);
+			//dd($data);
 			return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee/processflow/pfassessmentgeneratedreportPTC',$data);
 
 		} else {

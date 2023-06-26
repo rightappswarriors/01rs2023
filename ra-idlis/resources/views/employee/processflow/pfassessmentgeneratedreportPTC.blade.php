@@ -53,7 +53,7 @@
 						<div class="col-md-6">
 							<div class="row">
 								<div class="col-md-3">Date:</div>
-								<div class="col-md-9 text-center font-weight-bold"><u>{{Date('Y-m-d',strtotime('now'))}}</u></div>
+								<div class="col-md-9 text-center font-weight-bold"><u>@if(isset($hferc_evaluator)) {{date_format(date_create($hferc_evaluator->inspectDate), "F j, Y h:i A")}} @endif</u></div>
 							</div>
 						</div>
 						<div class="col-md-6">

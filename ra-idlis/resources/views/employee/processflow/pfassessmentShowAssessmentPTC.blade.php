@@ -276,9 +276,12 @@
 											<div class="container">
 											{{-- <div class="col-md" style="padding-left: 3rem!important;">{{$newTry->h4HeadBack}}</div> --}}
 											@php
+											//dd($head);
 											foreach($head as $fourthHeader){
-											if($fourthHeader->h4HeadID == $newTry->h4HeadID){
-												if(!isset($fourthHeader->subFor)){
+											if($fourthHeader->h4HeadID == $newTry->h4HeadID)
+											{
+												if(!isset($fourthHeader->subFor))
+												{
 												@endphp
 												<div class="col-md-8">
 												<!-- <script>
@@ -337,7 +340,7 @@
 												</div>
 
 												@php
-											} else if(isset($fourthHeader->subFor)){
+												} else if(isset($fourthHeader->subFor)){
 												@endphp
 												<div class="col-md-8">
 												<div class="pt-4" style="padding-left: 11.2rem!important;">
@@ -388,7 +391,7 @@
 												</div>
 												</div>
 												@php
-											}
+												}
 											}
 
 											}

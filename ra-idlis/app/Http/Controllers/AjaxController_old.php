@@ -576,6 +576,7 @@
 			{
 				$SelectedUser = AjaxController::getCurrentUserAllData();
 				$data = DB::table('notificiationlog')->where('uid', '=', $SelectedUser['cur_user'])->orderBy('notfdate', 'desc')->orderBy('notftime', 'desc')->get();
+				
 				if (count($data) > 0) 
 				{
 					for ($i=0; $i < count($data); $i++) 

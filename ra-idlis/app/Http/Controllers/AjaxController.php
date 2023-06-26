@@ -64,7 +64,34 @@
 				return 'ERROR';
 			}
 		}
+		//set created date of appform upon first insert
+		public static function setAppForm_CreatedDate(String $appid)
+		{
+			try
+			{
+				$dateup = new DateTime("now", new DateTimeZone('Asia/Manila'));
+				$created_at = $dateup->format('Y-m-d H:i:s');
 
+				DB::table('appform')->where([['appid',  $appid]])->insert(['created_at' => $updated_at]);
+
+				return true;
+			}
+			catch (Exception $ex) { return false; }
+		}
+		//set updated date of appform 
+		public static function setAppForm_UpdatedDate(String $appid)
+		{
+			try
+			{
+				$dateup = new DateTime("now", new DateTimeZone('Asia/Manila'));
+				$updated_at = $dateup->format('Y-m-d H:i:s');
+
+				DB::table('appform')->where([['appid',  $appid]])->update(['updated_at' => $updated_at]);
+
+				return true;
+			}
+			catch (Exception $ex) { return false; }
+		}
 
 		public static function SystemLogs($message) // Writes Error Messages to Notepad {location : ra-idlis/storage/app/system/logs}
 		{
@@ -459,18 +486,25 @@
 			try 
 			{
 				$qwe = [];
-				$alteredLink = null;
+				$alteredLink = null; $msg_desc = null;
 				$SelectedUser = AjaxController::getCurrentUserAllData();
 				$totalNotif = $unread = 0;
 				$notif = DB::table('notificiationlog')->leftJoin('notification_msg','notification_msg.msg_code','notificiationlog.msg_code')->where('uid',$request->uid)->orderBy('notifdatetime','DESC');
 				$notif = (isset($request->notIncluded) ? $notif->whereNotIn('notfid',$request->notIncluded) : $notif->get());
-
+				
 				if(count($notif) > 0){
 					$totalNotif = count($notif);
 					foreach ($notif as $key => $value) {
+
 						$notif[$key]->adjustedmonth = Carbon::parse($value->notifdatetime)->diffForHumans();
+						$msg_desc = str_replace('{appid}', $value->appid, $value->msg_desc);
+						
+						$notif[$key]->msg_desc = $msg_desc;
+
 						if($value->needappid > 0){
+
 							$alteredLink = str_replace('{appid}', $value->appid, $value->msg_loc);
+
 							if(strpos($alteredLink, '{token}') !== false){
 								$alteredLink = str_replace('{token}', FunctionsClientController::getToken(), $alteredLink);
 							}
@@ -481,12 +515,14 @@
 						} else {
 							$notif[$key]->adjustedlink = asset($value->msg_loc);
 						}
+						
 
 						if($value->status == 0){
 							$unread +=1;
 						}
 					}
 				}
+
 				return json_encode(array('unread' => $unread,'data' =>$notif, 'totalNotif' => count($notif)));
 				
 			} 
@@ -9912,6 +9948,7 @@ public static function forDoneHeadersNew($appid,$monid,$selfAssess,$isPtc = fals
 			array_push($whereClause, $otherCondition);
 		}
 		// return 1;
+	
 		return ($getAll ? DB::table('hferc_evaluation')->where($whereClause)->first() : (DB::table('hferc_evaluation')->where($whereClause)->max('revision') ?? 0));
 		// return ($getAll ? DB::table('hferc_evaluation')->where($whereClause)->orderBy('revision','DESC')->first() : (DB::table('hferc_evaluation')->where($whereClause)->max('revision') ?? 0));
 	}

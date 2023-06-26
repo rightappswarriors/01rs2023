@@ -544,7 +544,9 @@ class NewClientController extends Controller {
 						return 'DONE';
 					}
 				} else {
+
 				$curRecord = []; $msgRet = []; $isApproved = [1, null]; $isAllUpload = [];
+
 				foreach(FunctionsClientController::getReqUploads($hfser, $appid, $office) AS $each) {
 
 					if(! isset($each->filepath)) {
@@ -566,37 +568,67 @@ class NewClientController extends Controller {
 				
 				//dd($curForm); //hfser_id
 				if($request->has('upload')){
-
+					
 					if($curForm[0]->isReadyForInspec == 0){
 						if($curForm[0]->hfser_id == 'PTC'){
 							DB::table('appform')->where('appid',$appid)->update(['isReadyForInspec' => 0, 'status'=>'FDE', 'submittedReq'=>1]);
+							AjaxController::setAppForm_UpdatedDate($appid);
 						}
 						else if($curForm[0]->hfser_id == 'LTO' || $curForm[0]->hfser_id == 'COA' || $curForm[0]->hfser_id == 'COR' || $curForm[0]->hfser_id == 'ATO'){
 							DB::table('appform')->where('appid',$appid)->update(['isReadyForInspec' => 0, 'status'=>'FSR', 'submittedReq'=>1]);
+							AjaxController::setAppForm_UpdatedDate($appid);
 						}
 						else {
 							DB::table('appform')->where('appid',$appid)->update(['isReadyForInspec' => 0, 'status'=>'FDE', 'submittedReq'=>1]);
+							AjaxController::setAppForm_UpdatedDate($appid);
 						}
 					}
-
+					//var_dump($curRecord);
 					foreach($request->upload AS $uKey => $uValue) {
+						//echo"<br/><br/> ukey<br/>";
+						//var_dump($uKey);
 						if(in_array($uKey, $curRecord)) {
 							$arrFind = DB::table('app_upload')->where([['app_id', $appid], ['upid', $uKey]])->get(); $_file = $request->upload[$uKey];
 							// dd($arrFind);
+							//echo"<br/><br/> arrFind<br/>";
+							//var_dump($arrFind);
+							//echo"<br/><br/> _file<br/>";
+							//var_dump($_file);
 							if(isset($_file) || ! empty($_file)) {
+
 				                $reData = FunctionsClientController::uploadFile($_file);
 								$arrData = ['app_id', 'upid', 'filepath', 'fileExten', 'fileSize', 't_date', 't_time', 'ipaddress'];
 								$sRequest = ['app_id'=>$appid, 'upid'=>$uKey, 'filepath'=>$reData['fileNameToStore'], 'fileExten'=>$reData['fileExtension'], 'fileSize'=>$reData['fileSize'], 't_date'=>Carbon::now()->toDateString(), 't_time'=>Carbon::now()->toTimeString(), 'ipaddress'=>request()->ip()];
 								$arrCheck = []; $makeHash = []; $haveAdd = ['evaluation'=>NULL]; $fMail = [];
 								$validate = [['app_id', 'upid', 'filepath'], ['app_id'=>'No application selected.', 'upid'=>'No upload.', 'filepath'=>'No path selected.']];
+
 								$stat = ((count($arrFind) > 0) ? FunctionsClientController::fUpdData($sRequest, $arrData, $arrCheck, $makeHash, $haveAdd, $fMail, $validate, 'app_upload', [['app_id', $appid], ['upid', $uKey]]) : FunctionsClientController::fInsData($sRequest, $arrData, $arrCheck, $makeHash, $haveAdd, $fMail, $validate, 'app_upload'));
 								
+								//echo"<br/><br/> -----------------------<br/>";
+								//var_dump($stat);
+
+								if(count($arrFind) > 0)
+								{
+									if($stat == true)
+									{
+										DB::table('notificiationlog')->insert([
+											'notifdatetime'=>Carbon::now()->toDateString() .' '. Carbon::now()->toTimeString(),
+											'appid'=>$appid,
+											'uid'=>$arrFind[0]->evaluatedby,
+											'msg_code'=>'78', 
+											'status'=>0
+										]);
+									}
+								}
 								if(! in_array($stat, $msgRet)) {
 									array_push($msgRet, $stat);
 								}
 							}
 						}
 					}
+					
+					//echo"<br/><br/> -----------------------<br/>";
+					//dd($request->upload);
 				} else {
 					return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'No file selected']);
 				}

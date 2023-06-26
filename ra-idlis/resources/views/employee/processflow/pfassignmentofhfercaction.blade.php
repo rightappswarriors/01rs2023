@@ -164,40 +164,35 @@
               <tbody>
              
               @foreach($hferc as $members)
+              @php 
+                  $has_evaluation = EvaluationController::checkuidRev($appid,$revisionCountCurent,$members->uid );
+              @endphp
                 <tr>
                   <td style="font-size: 20px;">
                     ({{ucfirst($members->uid)}}) {{ucfirst($members->fname.' '.$members->lname)}}
                   </td>
                   <td>
                     @switch($members->pos)
-                      @case('C')
-                        Chairperson
-                        @break
-                      @case('VC')
-                        Vice Chairperson
-                        @break
-                      @case('E')
-                        Member
-                      @break
-                      {{--  @case('S')
-                          Secretariat
-                        @break --}}
+                      @case('C')     Chairperson  @break
+                      @case('VC')  Vice Chairperson  @break
+                      @case('E')  Member  @break
+                      {{--  @case('S')  Secretariat  @break --}}
                     @endswitch
                   </td>
                   {{-- <td>
                     {{($members->permittedtoInspect <= 0 ? "Not Permitted" : "Permitted")}}
                   </td> --}}
-                   <td>
-                    {{($members->permittedtoInspect > 0 ? ($members->hasInspected <= 0 ? 'Not yet completed' : 'Evaluation Completed') : 'Not Available')}}
+                  <td>
+                    {{($members->permittedtoInspect > 0 && $has_evaluation == true ? ($members->hasInspected > 0 ? 'Evaluation Completed' :  'Not yet completed') : 'Not Available')}}
                   </td>
                   <td>
-                    {{isset($members->inspectDate) ? Date('F j, Y g:s A',strtotime($members->inspectDate)) : 'Not yet Evaluated'}}
+                    {{ ($members->permittedtoInspect > 0 && $has_evaluation == true ? ($members->hasInspected > 0 ? isset($members->inspectDate) ? Date('F j, Y h:i A',strtotime($members->inspectDate)) : 'Not yet Evaluated' :  'Not yet completed') : 'Not Available') }}
                   </td>
                   {{-- <td>
                     {!!($members->hasInspected > 0 ? '<a href="'.asset('employee/dashboard/processflow/evaluation/compiled/'.$members->uid.'/'.$appid.'/'.$apptype).'" class="text-info"> <i class="fa fa-eye"> View Result</i></a>' : 'Not Available')!!}
                   </td> --}}
                   <td>
-                    @if($members->permittedtoInspect <= 0 && $customRights)
+                    @if($members->hasInspected <= 0 && $customRights)
                       <button type="button" title="Permit to Inspect" class="btn btn-primary" onclick="promptPermit('{{$members->hfercid}}',1)">
                         <i class="fa fa-fw fa-check"></i>
                       </button>
@@ -210,7 +205,7 @@
                     @else
                     
                    
-                      {!!($members->permittedtoInspect > 0 && $members->hasInspected > 0 && EvaluationController::checkuidRev($appid,$revisionCountCurent,$members->uid  ) ? '<a href="'.asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessments/'.$appid.'/'.$revisionCountCurent.'/'.$members->uid.'/').'" class="text-info"> <i class="fa fa-eye"> View Result</i></a>' : '<button type="button" title="Remove Permit to Inspect" class="btn btn-danger" onclick="promptPermit('.$members->hfercid.',2)">
+                      {!!($members->permittedtoInspect > 0 && $members->hasInspected > 0 && EvaluationController::checkuidRev($appid,$revisionCountCurent,$members->uid ) ? '<a href="'.asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessments/'.$appid.'/'.$revisionCountCurent.'/'.$members->uid.'/').'" class="text-info"> <i class="fa fa-eye"> View Result</i></a>' : '<button type="button" title="Remove Permit to Inspect" class="btn btn-danger" onclick="promptPermit('.$members->hfercid.',2)">
                         <i class=" fa fa-window-close"></i>
                       </button>')!!}
                     @endif
@@ -702,9 +697,6 @@ console.log(data)
     }
    return alladdmem
 }
-
-
-
       function onClickToIFrame(){
         $('iframe').contents().find('button,#menu,nav,#return-to-top,#wrapper').remove();
       }
