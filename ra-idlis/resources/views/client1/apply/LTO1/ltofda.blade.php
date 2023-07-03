@@ -105,13 +105,32 @@
 						<div class="col-12 mb-3">
 						<div class="col-12 mb-3">
 							 @if(!empty($data[0][2][0]))
+
+							<div class="modal fade" id="modal_or_pharma" tabindex="-1" role="dialog" aria-labelledby="header_or_pharma" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_or_pharma">{{$data[0][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_or_pharma">
+										@php echo nl2br($data[0][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
 						
                                 @if($data[0][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[0][1]}}','{{$data[0][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
                                 @elseif($data[0][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[0][1]}}','{{$data[0][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
                                 @endif
                             @endif
 						</div>
@@ -121,13 +140,32 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
 							 @if(!empty($data[2][2][0]))
+
+							 <div class="modal fade" id="modal_personnel" tabindex="-1" role="dialog" aria-labelledby="header_personnel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_personnel">{{$data[2][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_personnel">
+										@php echo nl2br($data[2][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
 					
                                 @if($data[2][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[2][1]}}','{{$data[2][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_personnel">Show Remarks</button>
                                 @elseif($data[2][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[2][1]}}','{{$data[2][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_personnel">Show Remarks</button>
                                 @endif
                             @endif
 						</div>
@@ -137,12 +175,32 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
 							 @if(!empty($data[6][2][0]))
+
+							 <div class="modal fade" id="modal_other_pharma" tabindex="-1" role="dialog" aria-labelledby="header_other_pharma" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_other_pharma">{{$data[6][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_other_pharma">
+										@php echo nl2br($data[6][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
+
                                 @if($data[6][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[6][1]}}','{{$data[6][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_other_pharma">Show Remarks</button>
                                 @elseif($data[6][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[6][1]}}','{{$data[6][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_other_pharma">Show Remarks</button>
                                 @endif
                             @endif
 						</div>
@@ -161,13 +219,33 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
 						@if(!empty($data[1][2][0]))
+
+						<div class="modal fade" id="modal_or_rad" tabindex="-1" role="dialog" aria-labelledby="header_or_rad" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="header_or_rad">{{$data[1][1]}}</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body" id="body_or_rad">
+									@php echo nl2br($data[1][2][0]->remarks); @endphp
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+								</div>
+							</div>
+						</div>
+
                                 @if($data[1][2][0]->evaluation === 1)
 
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[1][1]}}','{{$data[1][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
                                 @elseif($data[1][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[1][1]}}','{{$data[1][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
                                 @endif
                             @endif
 						</div>
@@ -176,13 +254,33 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
                             @if(!empty($data[3][2][0]))
+
+							<div class="modal fade" id="modal_personnel_rad" tabindex="-1" role="dialog" aria-labelledby="header_personnel_rad" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_personnel_rad">{{$data[3][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_personnel_rad">
+										@php echo nl2br($data[3][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
+
                                 @if($data[3][2][0]->evaluation === 1)
 
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[3][1]}}','{{$data[3][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_personnel_rad">Show Remarks</button>
                                 @elseif($data[3][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[3][1]}}','{{$data[3][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_personnel_rad">Show Remarks</button>
                                 @endif
                             @endif
                         </div>
@@ -191,12 +289,32 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
                             @if(!empty($data[4][2][0]))
+
+							<div class="modal fade" id="modal_xray_rad" tabindex="-1" role="dialog" aria-labelledby="header_xray_rad" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_xray_rad">{{$data[4][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_xray_rad">
+										@php echo nl2br($data[4][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
+
                                 @if($data[4][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[4][1]}}','{{$data[5][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_xray_rad">Show Remarks</button>
                                 @elseif($data[4][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[4][1]}}','{{$data[5][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_xray_rad">Show Remarks</button>
                                 @endif
                             @endif
                         </div>
@@ -210,12 +328,32 @@
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 pb-3">
                             @if(!empty($data[5][2][0]))
+
+							<div class="modal fade" id="modal_facility_rad" tabindex="-1" role="dialog" aria-labelledby="header_facility_rad" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_facility_rad">{{$data[5][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_facility_rad">
+										@php echo nl2br($data[5][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
+								</div>
+							</div>
+
                                 @if($data[5][2][0]->evaluation === 1)
                                     <i class="fa fa-check text-success"></i>
-                                    <button class="btn" onclick="addT('{{$data[5][1]}}','{{$data[5][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_facility_rad">Show Remarks</button>
                                 @elseif($data[5][2][0]->evaluation === 0)
                                     <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" onclick="addT('{{$data[5][1]}}','{{$data[5][2][0]->remarks}}')" data-toggle="modal" data-target="#modal">Show Remarks</button>
+                                    <button class="btn" data-toggle="modal" data-target="#modal_facility_rad">Show Remarks</button>
                                 @endif
                             @endif
                         </div>

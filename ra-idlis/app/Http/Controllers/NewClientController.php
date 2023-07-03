@@ -2350,7 +2350,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				if(!is_null($checkRadio)){
 					$hasRadio = true;
 				}
-
+				$data = AjaxController::getRequirementsFDA($appid);
+								
 				$arrRet = [
 					'userInf'=>FunctionsClientController::getUserDetails(),
 					'addresses'=>$hfLocs,
@@ -2358,7 +2359,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'fAddress'=>$appDet,
 					'hideExtensions'=>$hideExtensions,
 					'appid' => $appid,
-					'data' =>AjaxController::getRequirementsFDA($appid)
+					'data' => $data //AjaxController::getRequirementsFDA($appid)
 				];
 				
 				// if($appDet[0]->aptid == 'R'){
@@ -5671,7 +5672,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							$evalC = new EvaluationController();
 
 							$evaluationData = $dohC->viewhfercresult($request,$appid,(AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1),true);
-							if($evaluationData){
+							
+							if(is_array($evaluationData)){
 								$dataOfEntry = $evalC->FPGenerateReportAssessment($request, $appid, $evaluationData['evaluation']->revision, $evaluationData['evaluation']->HFERC_evalBy, true);
 								if($dataOfEntry){
 									$evaluationData['dataOfEvaluation'] = true;
