@@ -281,15 +281,19 @@
 									@case('LTO')										
 								
 									@if(isset($each[0]->FDAStatMach))
+										@if($each[0]->FDAStatMach == "For Payment")
 										<div style="margin-left: 10px;margin-right: 10px;">
 									    <a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDA')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA X-Ray)</a>
-									    </div>		
+									    </div>										
+										@endif	
 									@endif
 									@if(isset($each[0]->FDAStatPhar))
+										@if($each[0]->FDAStatPhar == "For Payment")
 									    <div class="dropdown-divider"></div>
 									    <div style="margin-left: 10px;margin-right: 10px;">
 									    <a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDACDRR')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA Pharmacy)</a>
-									    </div>		
+									    </div>										
+										@endif		
 									@endif								    
 									    <div class="dropdown-divider"></div>
 									    <div style="margin-left: 10px;margin-right: 10px;">

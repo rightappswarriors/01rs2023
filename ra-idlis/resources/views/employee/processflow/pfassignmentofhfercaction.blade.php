@@ -110,11 +110,15 @@
             @endif
           @endforeach
 
-     {{--   @if($isHead)--}}
-         {{--   @if($canEval && count($membDone) != 0) --}}
-            @if($canEval && count($membDone) != 0 && EvaluationController::checkRev($appid,$revisionCountCurent) && $done == 0)
+          {{--   @if($canEval && count($membDone) != 0)  --}}
+         {{--  @if($canEval && count($membDone) != 0 && $done == 0)   && EvaluationController::checkRev($appid,$revisionCountCurent)--}}
+         
+
+         @if($isHead)
+            @if($canEval && EvaluationController::checkRev($appid,$revisionCountCurent))
             <button class="btn btn-success p-2" data-backdrop="static" data-toggle="modal" data-target="#compareModal" onclick="onClickToIFrame()"><i class="fa fa-files-o" aria-hidden="true"></i> Compare Results </button>
        
+            @endif
             @endif
          {{-- @endif --}}
          <!-- endif -->
@@ -192,7 +196,7 @@
                     {!!($members->hasInspected > 0 ? '<a href="'.asset('employee/dashboard/processflow/evaluation/compiled/'.$members->uid.'/'.$appid.'/'.$apptype).'" class="text-info"> <i class="fa fa-eye"> View Result</i></a>' : 'Not Available')!!}
                   </td> --}}
                   <td>
-                    @if($members->hasInspected <= 0 && $customRights)
+                    @if($members->permittedtoInspect == 0 )
                       <button type="button" title="Permit to Inspect" class="btn btn-primary" onclick="promptPermit('{{$members->hfercid}}',1)">
                         <i class="fa fa-fw fa-check"></i>
                       </button>
@@ -203,8 +207,6 @@
                         <i class="fa fa-ban" aria-hidden="true"></i>
                       </button>
                     @else
-                    
-                   
                       {!!($members->permittedtoInspect > 0 && $members->hasInspected > 0 && EvaluationController::checkuidRev($appid,$revisionCountCurent,$members->uid ) ? '<a href="'.asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessments/'.$appid.'/'.$revisionCountCurent.'/'.$members->uid.'/').'" class="text-info"> <i class="fa fa-eye"> View Result</i></a>' : '<button type="button" title="Remove Permit to Inspect" class="btn btn-danger" onclick="promptPermit('.$members->hfercid.',2)">
                         <i class=" fa fa-window-close"></i>
                       </button>')!!}
@@ -765,6 +767,9 @@ console.log(data)
                   alert('Successfully executed given action');
                   location.reload();
                 }
+                else {
+                  alert("Cannot update. Something unexpected happened.");
+                }
               }
             })
           }
@@ -778,6 +783,9 @@ console.log(data)
                 if(a == 'done'){
                   alert('Successfully executed given action');
                   location.reload();
+                }
+                else {
+                  alert(a);
                 }
               }
             })

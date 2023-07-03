@@ -4368,7 +4368,7 @@ namespace App\Http\Controllers;
 							return view('employee.processflow.pfevaluteone');
 						}
 					} else {
-					
+					//if FDA Office belong
 						$tables = array();
 						$arrTemp = [];
 						$req = AjaxController::getAllRequirementsLTO($appid);
@@ -5728,7 +5728,7 @@ namespace App\Http\Controllers;
 								return view('employee.processflow.pfassignmentofhfercaction');
 							}
 						} else {
-							if($request->isMethod('post')){
+							if($request->isMethod('post')){ 
 	
 								if($request->action == 'add'){
 	
@@ -5753,10 +5753,13 @@ namespace App\Http\Controllers;
 									$ret = DB::table('hferc_team')->where('hfercid',$request->id)->delete();
 									AjaxController::setAppForm_UpdatedDate($appid);
 								} else if($request->action == 'permit'){
+																	
 									$ret = DB::table('hferc_team')->where('hfercid',$request->id)->update(['permittedtoInspect' => $request->permit]);
 									$selected = DB::table('hferc_team')->select('uid')->where('hfercid',$request->id)->first()->uid;
-									AjaxController::setAppForm_UpdatedDate($appid);
+									
+									$success = AjaxController::setAppForm_UpdatedDate($appid);
 									AjaxController::notifyClient($appid,$selected,41);
+
 								} else if($request->action == 'evaluate'){
 									$cur = AjaxController::getCurrentUserAllData();
 									$maxID = AjaxController::maxRevisionFor($appid);
@@ -5764,7 +5767,6 @@ namespace App\Http\Controllers;
 									// $rev = $maxID;
 
 									$rev =	$maxID + 1;
-
 	
 									$ret = DB::table('hferc_evaluation')->insert(['HFERC_eval' => $request->evaluation, 'HFERC_comments' => $request->comments, 'HFERC_evalBy' => $cur['cur_user'], 'revision' => $rev, 'appid' => $appid]);
 									
@@ -5816,12 +5818,10 @@ namespace App\Http\Controllers;
 		}
 
 		public function viewhfercresult(Request $request, $appid, $revision, $isSelfAssess = false){
-			try {
+			//try {
 				// $revision =  0;
-
 				// $revision = $revision == 1 ? 1 : 0;
-
-
+				$reco = null;
 				$data = AjaxController::getAllDataEvaluateOne($appid);
 				$evaluation = AjaxController::maxRevisionFor($appid, ['revision',$revision], 1);
 
@@ -5833,24 +5833,33 @@ namespace App\Http\Controllers;
 				if(!$isSelfAssess){
 					$evalC = new EvaluationController();
 					$dataOfEntry = $evalC->FPGenerateReportAssessment($request, $appid, $evaluation->revision, $evaluation->HFERC_evalBy, true);
+					
+
 					if(empty($dataOfEntry)){
 						return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Application record Doesnt\' exist.']);
 					}
-
+					else{
+						$reco = $dataOfEntry['reco'];
+					}
 				}
-
 				$members = AjaxController::getMembersInHFERC($data->appid,$data->rgnid,2,$revision);
 
 				// dd($dataOfEntry['reco']->details);
 				$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['choice','comment'],['revision',$revision]])->first();
 
-				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee.processflow.hferceval',['appdata'=>$data,'reco' => $dataOfEntry['reco'], 'members'=>$members, 'evaluation' => $evaluation, 'data' => $dataOfEntry, 
-				'hferc_evaluator' => DB::table('hferc_team')->where([['pos','C'], ['appid',$appid]])->first()]);
-			} catch (Exception $e) {
+				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee.processflow.hferceval',
+					['appdata'=>$data,
+					'reco' => $reco, 
+					'members'=>$members, 
+					'evaluation' => $evaluation, 
+					'data' => $dataOfEntry, 
+					'hferc_evaluator' => DB::table('hferc_team')->where([['pos','C'], ['appid',$appid]])->first()]);
+
+			/*} catch (Exception $e) {
 				AjaxController::SystemLogs($e);
 				session()->flash('system_error','ERROR');
 				return ($this->agent ? response()->json(array('error' => $e)) :view('employee.processflow.hferceval'));
-			}
+			}*/
 		}
 
 		public function committeTeam(Request $request)
@@ -6208,7 +6217,7 @@ namespace App\Http\Controllers;
 			{	
 				if(in_array(true, AjaxController::isSessionExist(['employee_login']))){
 					$data = SELF::application_filter($request, 'app_evaluation_tool');
-
+					
 					$arrRet = [
 						'BigData' =>$data['data'], 
 						'arr_fo'=>$data['arr_fo'],
@@ -12351,7 +12360,7 @@ namespace App\Http\Controllers;
 				$chk = DB::table('x08')->where([['uid', $request->uid]])->first();
 
 				if($request->banned == 1){
-					DB::table('x08')->where([['uid', $request->uid]])->update(['isTempBanned' => null,'tries' => 0,'isBanned' => 0,'lastTry' => null,'token' => null ]);
+					DB::table('x08')->where([['uid', $request->uid]])->update(['isTempBanned' => null, 'tries' => 0, 'isBanned' => 0,'lastTry' => null,'token' => null ]);
 				}else{
 					DB::table('x08')->where([['uid', $request->uid]])->update(['isTempBanned' => 1 ]);
 				}
@@ -12359,20 +12368,15 @@ namespace App\Http\Controllers;
 				$chknew = DB::table('x08')->where([['uid', $request->uid]])->first();
 
 				return response()->json(
-					[
-						'banned' => $chknew->isTempBanned,
-					],
+					['banned' => $chknew->isTempBanned],
 					200
 				);
-
-
 			}
 			catch (Exception $e) 
 			{
 				AjaxController::SystemLogs($e);
 				return $e;
 			}
-
 		}
 
 

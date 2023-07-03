@@ -23,7 +23,7 @@
         }
         .control {
           display: block;
-          position: relative;
+          position: relative; 
           padding-left: 30px;
           margin-bottom: 15px;
           cursor: pointer;
@@ -619,7 +619,6 @@
                 }
 
                 
-
                 ifCheck.forEach(function(index, el) {
                     // setTimeout(function () {
                       $.ajax({
@@ -630,7 +629,6 @@
                     // }, 1000);
                   count++;
                 });
-
 
                 window[classTOCall]();
              }
