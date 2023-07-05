@@ -1648,7 +1648,7 @@ class NewClientController extends Controller {
 			$x08_ft = 0;
 			$arrayFaci = $arrayserv = array();
 			$retTable = FunctionsClientController::getUserDetailsByAppform($appid);
-
+			
 			if(!empty($retTable))
 			{
 				switch ($retTable[0]->hfser_id) {
@@ -1728,12 +1728,12 @@ class NewClientController extends Controller {
 			$hfser .= '1';
 
 			$check =  DB::table('x08_ft')
-			->join('facilitytyp','x08_ft.facid','facilitytyp.facid')
-			->join('hfaci_grp','facilitytyp.hgpid','hfaci_grp.hgpid')
-			->where([['x08_ft.appid',$appid] ])
-			->whereNull('facilitytyp.specified')
-			->orderBy('x08_ft.id', 'ASC')
-			->first();
+							->join('facilitytyp','x08_ft.facid','facilitytyp.facid')
+							->join('hfaci_grp','facilitytyp.hgpid','hfaci_grp.hgpid')
+							->where([['x08_ft.appid',$appid] ])
+							->whereNull('facilitytyp.specified')
+							->orderBy('x08_ft.id', 'ASC')
+							->first();
 
 			$servname = '';
 			$servname_new ='';

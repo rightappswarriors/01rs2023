@@ -108,64 +108,67 @@
 						:</div>
 					<div class="col-md-5 contr" style="float:left;display: inline;">
 						{{((isset($facname)) ? strtoupper($facname)  : "No Health Service")}}
-						<!-- {{((isset($facilityTypeId)) ? $facilityTypeId : "No Health Service")}} -->
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
 				</div>
+				
+				@php
+					$str = $newservices;
+					$pattern = '/hospital/i';
+					$sc = preg_replace($pattern, ' ', $str);
+					$str_new = $servname;			
+				
+				@endphp
+
+				@if(isset($retTable[0]->hgpid))		
+					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "28" )	
+						
 				<div class="row">
 						<div class="col-md-1"  >&nbsp;</div>
 					<div class="col-md-4 contl">
 						Service Capability
 					</div>
-					<div class="col-md-1" style="display: inline">
-						:</div>
+					<div class="col-md-1" style="display: inline">:</div>
 					<div class="col-md-5 contr" style="float:left;display: inline;">
-					<script>
+						<script>
 						
 						</script>
 						{{--((isset($services->facname)) ? $services->facname : "No Health Service")--}}
 
-						@php
-						$str = $newservices;
-						$pattern = '/hospital/i';
-
-
-						$sc = preg_replace($pattern, ' ', $str);
-
-
-						$str_new = $servname;
-			
-						
-						@endphp
 						{{ $str_new  }}
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
 				</div>
-				<div class="row">
-						<div class="col-md-1"  >&nbsp;</div>
-					<div class="col-md-4 contl" >
-						Classification
-					</div>
-					<div class="col-md-1" style="display: inline">
-						:</div>
-					<div class="col-md-5 contr" style="float:left;display: inline;">
+					
+				@endif
+			@endif
+				@if(isset($retTable[0]->hgpid))		
+					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "4" || $retTable[0]->hgpid == "12" || $retTable[0]->hgpid == "9")	
 						@if(isset($retTable[0]->funcid))
-							{{$retTable[0]->funcid == 1 ? 'General': ''}}
-							{{$retTable[0]->funcid == 2 ? 'Special': ''}}
-							{{$retTable[0]->funcid == 3 ? 'Not Applicable': ''}}
-						@else
-						"NOT DEFINED"
+						
+							<div class="row">
+									<div class="col-md-1"  >&nbsp;</div>
+								<div class="col-md-4 contl" >
+									Classification
+								</div>
+								<div class="col-md-1" style="display: inline">
+									:</div>
+								<div class="col-md-5 contr" style="float:left;display: inline;">
+									@if(isset($retTable[0]->funcid))
+										{{$retTable[0]->funcid == 1 ? 'General': ''}}
+										{{$retTable[0]->funcid == 2 ? 'Special': ''}}
+										{{$retTable[0]->funcid == 3 ? 'Not Applicable': ''}}
+									@endif
+								</div>
+								<div class="col-md-1" style="display: inline">
+									&nbsp;</div>
+							</div>
+					
 						@endif
-
-
-						<!-- {{((isset($retTable[0]->funcid)) ? $retTable[0]->funcid : "NOT DEFINED")}} -->
-						<!-- {{((isset($retTable[0]->classname)) ? $retTable[0]->classname : "NOT DEFINED")}} -->
-					</div>
-					<div class="col-md-1" style="display: inline">
-						&nbsp;</div>
-				</div>
+					@endif
+				@endif
 				<div class="row">
 						<div class="col-md-1"  >&nbsp;</div>
 					<div class="col-md-4 contl" >
@@ -175,92 +178,52 @@
 						:</div>
 					<div class="col-md-5 contr" style="float:left;display: inline;">
 
-				{{--	{{((isset($retTable[0])) ?
-						 (
-							 ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ')
-						 
-						 .
-						($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' ).ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '.ucwords(strtolower($retTable[0]->provname)).' '.$retTable[0]->rgn_desc) : 'No Location.')}}
-					
-						--}}
-
 						@php
-$loc =
-(
-							 ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ')
-						 
-						 .
-						($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' ).ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '.ucwords(strtolower($retTable[0]->provname)));
+							$loc = ( ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ')  .   ($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' ).ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '.ucwords(strtolower($retTable[0]->provname)));
 
-$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', 
-function($matches) {
-    return strtoupper($matches[0]);
-}, $loc);	
+							$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', 
+							function($matches) {
+								return strtoupper($matches[0]);
+							}, $loc);	
 
-@endphp
-
-
-
+						@endphp
 
 					{{((isset($retTable[0])) ?
-						$stringloc
-						
-						: 'No Location.')}}
-					<!-- {{((isset($retTable[0])) ? (ucfirst(strtolower($retTable[0]->street_name)).', '.ucfirst(strtolower($retTable[0]->street_number)).', '.ucfirst(strtolower($retTable[0]->brgyname)).', '.ucfirst(strtolower($retTable[0]->cmname)).', '.ucfirst(strtolower($retTable[0]->provname)).' '.ucfirst(strtolower($retTable[0]->rgn_desc))) : 'No Location.')}} -->
-						<!-- {{ucwords(((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '. $retTable[0]->street_number. $retTable[0]->street_name.' '.$retTable[0]->street_number) : "CURRENT_LOCATION"))}} -->
+						$stringloc	: 'No Location.')}}
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
 				</div>
 				@php
-						$pad_length = 4;
-						$pad_char = 0;
-						$str_type = 'd';
+					$pad_length = 4;
+					$pad_char = 0;
+					$str_type = 'd';
 
-						$format = "%{$pad_char}{$pad_length}{$str_type}";
-						$formatted_str = sprintf($format, $retTable[0]->appid);
+					$format = "%{$pad_char}{$pad_length}{$str_type}";
+					$formatted_str = sprintf($format, $retTable[0]->appid);
 
+					$sercap = preg_replace('/\s*/', '', $sc);
+					$sercap = strtolower($sercap);
+					$disercap = $sercap == 'level1' ? 'H1' :  ($sercap == 'level2' ? 'H2' :  ($sercap == 'level3' ? 'H3' : $sercap));
 
-						$sercap = preg_replace('/\s*/', '', $sc);
-         			    $sercap = strtolower($sercap);
-
-						 $disercap = $sercap == 'level1' ? 'H1' :  ($sercap == 'level2' ? 'H2' :  ($sercap == 'level3' ? 'H3' : $sercap));
-
-						@endphp
-						
-				@isset($retTable[0]->facmdesc)
-				{{-- <div class="row">
-						<div class="col-md-1"  >&nbsp;</div>
-					<div class="col-md-4 contl" >
-						Institutional Character
-					</div>
-					<div class="col-md-1" style="display: inline;float: left">
-						:</div>
-					<div class="col-md-5 contr" style="float:left;display: inline;">
-						<strong>{{((isset($retTable[0]->facmdesc)) ? $retTable[0]->facmdesc : "CURRENT_FACILITY")}}</strong>
-					</div>
-					<div class="col-md-1" style="display: inline">
-						&nbsp;</div>
-				</div>	 --}}
-				{{-- last update: 11/20/2019 by atty. Flores --}}
-				@endisset
+				@endphp
 				
 				@if(isset($otherDetails[1]) && $otherDetails[1])
-				<div class="row">
-						<div class="col-md-1"  >&nbsp;</div>
-					<div class="col-md-4 contl" >
-						Authorized Bed Capacity
-					</div>
-					<div class="col-md-1" style="display: inline;float: left">
-						:</div>
-					<div class="col-md-5 contr" style="float:left;display: inline;">
-			
-						<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong>
-						<!-- <strong>{{((isset($otherDetails[0]->noofbed)) ? $otherDetails[0]->noofbed : "NA")}}</strong> -->
-					</div>
-					<div class="col-md-1" style="display: inline">
-						&nbsp;</div>
-				</div>
+
+					@if(isset($retTable[0]->noofbed))
+						<div class="row">
+								<div class="col-md-1"  >&nbsp;</div>
+							<div class="col-md-4 contl" >
+								Authorized Bed Capacity
+							</div>
+							<div class="col-md-1" style="display: inline;float: left">:</div>
+							<div class="col-md-5 contr" style="float:left;display: inline;">			
+								<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong>
+							</div>
+							<div class="col-md-1" style="display: inline">&nbsp;</div>
+						</div>
+					@endif
+
 					@if($disercap == 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
 						<div class="row">
 								<div class="col-md-1"  >&nbsp;</div>
@@ -272,79 +235,58 @@ function($matches) {
 							<div class="col-md-5 contr" style="float:left;display: inline;">
 							
 								<strong>{{((isset($retTable[0]->noofdialysis)) ? $retTable[0]->noofdialysis : "NA")}}</strong>
-								<!-- <strong>{{((isset($retTable[0]->noofstation)) ? $retTable[0]->noofstation : "NA")}}</strong> -->
 							</div>
 							<div class="col-md-1" style="display: inline">
 								&nbsp;</div>
 						</div>
 					@endif
 				@endif
-
-				 <div class="row">
-						<div class="col-md-1"  >&nbsp;</div>
-					<div class="col-md-4 contl" >
-						Authorized Ambulance Unit
-					</div>
-					<div class="col-md-1" style="display: inline;float: left">
-						:</div>
-					<div class="col-md-5 contr" style="float:left;display: inline;">
-					{{--foreach($amb as $ambServ => $val){
-									if($ambServ == 1){
-										echo '1, '.$val . ' ' . $ambServ;
-									}
-								}--}}
-								
-						@php
-							//	if($ambType1[$i] == '2'){
-								//	echo ((int)$i + 1).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-							//		echo ((int)$i + 1).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-							//		echo "<br>";
+				
+				@if(isset($retTable[0]->plate_number) && isset($retTable[0]->ambtyp))
+				
+					@php 
+						$type = json_decode($retTable[0]->typeamb);
+						$ambType = json_decode($retTable[0]->ambtyp);
+						$ambType1 = json_decode($retTable[0]->ambtyp);
+						$plateNum = json_decode($retTable[0]->plate_number);
+						$owner = json_decode($retTable[0]->ambOwner);					
+						$i=0;
+						$amb_disp_temp = ""; $ambulance_display = "";							
 									
-							//	}
-							@endphp
+						foreach($ambType1 as $atval){
+							if($i != 0){
+								if($ambType1[$i] == '2'){
+								//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
+								$amb_disp_temp =  ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i] ."<br/>";
+									
+								}else{
+								//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
+								$amb_disp_temp =	((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i] ."<br/>";
+								}
 
-					@if(isset($retTable[0]->plate_number) && isset($retTable[0]->ambtyp))
-						@php
-							$type = json_decode($retTable[0]->typeamb);
-							$ambType = json_decode($retTable[0]->ambtyp);
-							$ambType1 = json_decode($retTable[0]->ambtyp);
-							$plateNum = json_decode($retTable[0]->plate_number);
-							$owner = json_decode($retTable[0]->ambOwner);
-
-						
-							
-							
-
-							$i=0;
-							foreach($ambType1 as $atval){
-								
-						
-								if($i != 0){
-									if($ambType1[$i] == '2'){
-									//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-										echo ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-										
-									}else{
-									//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
-										echo ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
-									}
-									echo "<br>";
+								$ambulance_display = $ambulance_display ."".$amb_disp_temp;
 							}
 
-								$i++;
-							}
+							$i++;
+						}
+					@endphp						
+					@if(!empty($ambulance_display))
+						<div class="row">
+								<div class="col-md-1"  >&nbsp;</div>
+							<div class="col-md-4 contl" >
+								Authorized Ambulance Unit
+							</div>
+							<div class="col-md-1" style="display: inline;float: left">
+								:</div>
+							<div class="col-md-5 contr" style="float:left;display: inline;">
+								@php echo $ambulance_display; @endphp
+							</div>
+							<div class="col-md-1" style="display: inline">&nbsp;</div>
+						</div>
+					@endif
+				@endif	
 
-							
-						@endphp
 
-					
-						@endif
-
-						
-					</div>
-					<div class="col-md-1" style="display: inline">
-						&nbsp;</div>
-				</div>	
 				<div class="row">
 						<div class="col-md-1"  >&nbsp;</div>
 					<div class="col-md-4 contl" >
@@ -353,7 +295,6 @@ function($matches) {
 					<div class="col-md-1" style="display: inline;float: left">
 						:</div>
 					<div class="col-md-5 contr" style="float:left;display: inline;">
-						<!-- {{$retTable[0]->licenseNo}} -->
 						
 						{{$retTable[0]->rgnid.'-'.$formatted_str.'-'.date('y', strtotime(str_replace('-','/', $retTable[0]->t_date))).'-'. strtoupper($disercap).'-'.($retTable[0]->ocid == 'G'? '1':'2') }}
 					</div>
@@ -368,12 +309,8 @@ function($matches) {
 					<div class="col-md-1" style="display: inline;float: left">
 						:</div>
 					<div class="col-md-5 contr" style="float:left;display: inline;">
-						<!-- @if(isset($otherDetails[0]) && isset($otherDetails[0]->valto))
-						{{Date('F j, Y',strtotime($otherDetails[0]->valfrom))}} - {{Date('F j, Y',strtotime($otherDetails[0]->valto))}}
-						@endif -->	
 						@if($retTable[0]->aptid != 'R' )
 						{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
-						<!-- {{Date('F j, Y',strtotime($retTable[0]->approvedDate))}} - {{date('F j, Y', strtotime("Last day of December", strtotime($retTable[0]->approvedDate)))}} -->
 						@else
 						{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
 						@endif
@@ -382,36 +319,6 @@ function($matches) {
 						&nbsp;</div>
 				</div>
 
-				{{-- @if($retTable[0]->noofsatellite > 0)
-					<div class="row">
-							<div class="col-md-1"  >&nbsp;</div>
-						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-							FDA Status
-						</div>
-						<div class="col-md-1" style="display: inline;float: left">
-							:</div>
-						<div class="col-md-5" style="float:left;display: inline;font-family: Century Gothic; font-size: 13">
-							{{($retTable[0]->FDAstatus == null ? 'Not Yet Evaluated' :($retTable[0]->FDAstatus == 'A') ? 'FDA Certified' : 'FDA Certification Rejected')}}
-						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;</div>
-					</div>
-					@if($retTable[0]->FDAstatus == 'A' && isset($retTable[0]->fdacoc))
-					<div class="row">
-							<div class="col-md-1"  >&nbsp;</div>
-						<div class="col-md-3" >
-							COC Number
-						</div>
-						<div class="col-md-1" style="display: inline;float: left">
-							:</div>
-						<div class="col-md-5" style="float:left;display: inline;">
-							{{$retTable[0]->fdacoc}}
-						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;</div>
-					</div>
-					@endif
-				@endif --}}
 					@if((count($addons) > 0)  || ($disercap != 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0) )
 					<div class="row mt-3">
 							<div class="col-md-1"  >&nbsp;</div>
@@ -425,10 +332,10 @@ function($matches) {
 								console.log('{{$retTable[0]->addonDesc}}')
 							</script>
 						<div class="col-md-5 pl-5 mt-3 contr" >
+
 						@if($disercap != 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
 										{{((isset($retTable[0]->noofdialysis)) ? "Dialysis Clinic (".$retTable[0]->noofdialysis."), " : "")}} 	
 							@endif
-						<!-- <div class="col-md-3 pl-5 mt-3 contr" > -->
 							@foreach($addons as $add)
 								@php
 								$ons = json_decode($retTable[0]->addonDesc);
@@ -445,57 +352,48 @@ function($matches) {
 										{{$add}} (Owner: {{$aowner}})
 										@else
 										{{$add}}
-										@endif
-										
-									
+										@endif									
 							@endforeach
+
 						</div>
 					</div>
 					@endif
 
 
 				<div class="row">
-					<div class="col-md-5">
-						<p class="text-muted text-small" style="float: left; margin-top: 80px;">
+					<div class="col-md-3" style="vertical-align: bottom;">
+						<p class="text-muted text-small" style="float: center; margin-top: 80px;">
 							{{-- <iframe src="{{asset('ra-idlis/resources/views/client1/qrcode/index.php')}}?data={{asset('client1/certificates/view/external/')}}/{{$retTable[0]->appid}}" style="border: none !important; height: 150px; width: 150px;"></iframe> --}}
 							<iframe src="{!!url('qrcode/'.$retTable[0]->appid )!!}" style="border: none !important; height: 230px; width: 260px;"></iframe>
 						</p>
 					</div>
-					<div class="col-md-7">
-						<br><br><br>
-						<div class="row">
-							<div class="col-md-12 auth" >
-								<strong>By Authority of the Secretary of Health:</strong>
-							</div>
-						</div><br><br>
-						<div class="row">
-							<div class="col-md-12 director" >
-								<strong ><center>{{ucwords($retTable[0]->signatoryname)}}</center></strong>
-							</div>
+
+					<div class="col-md-9" style="padding-top:120px;">
+						
+						<div class="col-md-12 auth" style="text-align: center; font-weight: bold;" >
+							By Authority of the Secretary of Health:
 						</div>
-						<div class="row">
-							<div class="col-md-12 pos">
-								<center><b style="white-space: pre-line">{{$retTable[0]->signatorypos}}</b></center>
-							</div>
+						
+						<div class="col-md-12 director" style="text-align: center; font-weight: bold; margin-top:80px;">
+							{{ucwords($retTable[0]->signatoryname)}}
 						</div>
-						<br><br><br>
+						
+						<div class="col-md-12 pos" style="text-align: center; font-weight: bold;">
+							<b style="white-space: pre-line">{{$retTable[0]->signatorypos}}</b>
+						</div>
+
 					</div>
 				</div>
-				<!-- <h5 class="text-uppercase text-center text-muted">By Authority of the Secretary of Health:</h5>
-				<br><br><br>
-				<h6 class="text-uppercase text-center"><strong>{{--((isset($sec_name)) ? $sec_name->sec_name : 'DIRECTOR')--}}</strong></h6>
-				<p class="text-small text-center text-muted">Director IV</p> -->
 
 			</div>
 			</div>
 			<div class="card-footer">
 			
-			<center>
-			<b><hr/></b>
-				<br/>
-			<i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">This license is renewable annually and subject to suspension or revocation if the hospital is found violating RA 4226 and related
-issuances.</b></i></center>
-<br/><br/>
+				<center>
+					<b><hr/></b>
+					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">This license is renewable annually and subject to suspension or revocation if the hospital is found violating RA 4226 and related issuances.</b></i>
+				</center><br/><br/>
+
 				<p class="text-muted text-small" style="float: right; padding: 0; margin: 0;">© All Rights Reserved {{date('Y')}}</p>
 			</div>
 		</div><br>
