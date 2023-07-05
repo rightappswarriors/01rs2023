@@ -79,7 +79,7 @@ function xucwords($string)
 			top: 0px;
 			left: 0px;
 			background-image: url("{{asset('ra-idlis/public/img/watermark/doh.watermark.horizontal.noborder.png')}}");
-			background-position: center;
+  			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
 			z-index: 0;
@@ -106,21 +106,8 @@ function xucwords($string)
 				</div>
 			</div>
 			<div class="card-body">
-
-				@php 
-
-					$employee_login = session()->get('employee_login');
-
-					if($employee_login) {
-						$class = $retTable[0]->assignedRgn == 'hfsrb'? 'watermarked': 'watermarked';
-					} else {
-						$class = "watermarked";
-					}
-
-				@endphp
-
 			
-				<div class="{{$class}}" style="font-family: Cambria, Georgia, serif;">
+				<div class="watermarked" style="font-family: Cambria, Georgia, serif;">
 				
 					<h1 class="text-center" >PERMIT TO CONSTRUCT</h1>
 
@@ -171,7 +158,7 @@ function xucwords($string)
 							<!-- <p class="rightHeader"><strong>{{((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : 'No Location.')}}</strong></p> -->
 						</div>
 					</div>
-					<div class="row" style="margin-top:10px;">
+					<div class="row">
 						<div class="col-md-3">
 							<span style="float: left;" class="leftHeader text-justify">Scope of Work </span><span style="float: right">:</span>
 						</div>
@@ -219,7 +206,7 @@ function xucwords($string)
 					</div>
 					<br><br>
 					<div class="row">
-						<div class="col-md-4" style="vertical-align: bottom;">
+						<div class="col-md-3" style="vertical-align: bottom;">
 												
 							<small class="text-small" style="padding-left:12px">PTC No. {{$retTable[0]->licenseNo}}</small><br>
 							<small class="text-small" style="padding-left:12px">Date Issued: {{((isset($retTable[0]->approvedDate)) ? date("F j, Y", strtotime($retTable[0]->approvedDate)) : 'No date.')}}</small>
@@ -230,7 +217,7 @@ function xucwords($string)
 							</p>
 						
 						</div>
-						<div class="col-md-8" style="padding-top:120px;">
+						<div class="col-md-9" style="padding-top:120px;">
 							<h3 class="text-uppercase text-center" style="font-size: 30px;"><strong>{{$retTable[0]->signatoryname}}</strong></h3>
 							<h4 class="text-small text-center text-muted" style="white-space: pre-line; margin-top:10px;">{{$retTable[0]->signatorypos}}</h4>
 						</div>					

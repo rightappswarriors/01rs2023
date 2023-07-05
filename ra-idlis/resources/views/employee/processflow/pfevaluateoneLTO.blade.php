@@ -406,7 +406,7 @@
             
             <div class="col-sm-12 d-flex justify-content-center">
 
-@if($office == 'pharma' || $office == 'xray')
+          @if($office == 'pharma' || $office == 'xray')
               @if(!empty($documentDate))
                 @isset($AppData)
                   @if ($triggerThis)
@@ -416,24 +416,18 @@
                  
                          
                  <button type="button" id="approveButton" class="btn btn-success" onclick="Recommended4Inspection('ApproveApplication');">Approve</button>
-                  <!-- 7-1-2021 <button type="button" id="approveButton" class="btn btn-success" onclick="Recommended4Inspection('ApproveApplication');">Approve</button> -->
-                  <!-- <button type="button" id="approveButton" class="btn btn-success" onclick="Recommended4Inspection('ApproveApplication');">Approve</button> -->
-                  @endif
+                @endif
                   &nbsp;
-                  &nbsp;
-                  <!-- <button type="button" id="rejectButton" class="btn btn-danger" onclick="Recommended4Inspection('RejectApplication');">Disapprove</button> -->
-             
+                  &nbsp;             
                   <button type="button" id="reviseButton" class="btn btn-warning" onclick="Recommended4Inspection('ReviseApplication')">Need for Revision</button>
-                 <!-- 7-1-2021 <button type="button" id="reviseButton" class="btn btn-warning" onclick="Recommended4Inspection('ReviseApplication')">Need for Revision</button> -->
-                 <!-- 6-26-2021 <button type="button" id="reviseButton" class="btn btn-warning" onclick="Recommended4Inspection('ReviseApplication')">Need for Revision</button> -->
                   @endif
                 @endisset
               @else
-             <button class="btn btn-block p-4 btn-primary" onclick="acceptDocu()">Accept Documents</button>
+                <button class="btn btn-block p-4 btn-primary" onclick="acceptDocu()">Accept Documents</button>
               @endif
               </div>
 
-@endif
+          @endif
               &nbsp;
 
           <div class="modal fade" id="ShowDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

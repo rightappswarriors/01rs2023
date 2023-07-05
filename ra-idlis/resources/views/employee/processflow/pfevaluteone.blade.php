@@ -255,7 +255,7 @@
                 <tr>
                   
                 </tr>
-          <form id="EvalForm" data-parsley-validate>
+              <form id="EvalForm" data-parsley-validate>
                 <input type="text" name="TotalNumber" value="@isset($UploadData){{count($UploadData)}}@endisset" hidden>
                 @if (isset($UploadData))
                   @foreach ($UploadData as $UpData)
