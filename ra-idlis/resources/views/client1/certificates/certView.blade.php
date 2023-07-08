@@ -95,35 +95,58 @@
 					</div>	
 				</div>
 @endif
-@if(strtolower($retTable[0]->hfser_id) != 'con' && strtolower($retTable[0]->hfser_id) != 'ptc')
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						Service Capability
+			@if(strtolower($retTable[0]->hfser_id) != 'con' && strtolower($retTable[0]->hfser_id) != 'ptc')
+
+
+				@if(isset($retTable[0]->hgpid))		
+					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "28")	
+						
+					<div class="row">
+						<div class="col-md-2" style="">&nbsp;</div>
+						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+								Service Capability
+						</div>
+						<div class="col-md-1 hide-div">
+							<center>:</center>
+						</div>
+						<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+							{{((isset($servCap)) ? implode(', ',$servCap)  : "NOT DEFINED")}}
+						</div>	
 					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{((isset($servCap)) ? implode(', ',$servCap)  : "NOT DEFINED")}}
-					</div>	
-				</div>
-@endif
-				@isset($retTable[0]->funcdesc)
-				@if(strtolower($retTable[0]->hfser_id) != 'ptc')
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						Classification
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{$retTable[0]->funcdesc}}
-					</div>	
-				</div>
+					
+					@endif
 				@endif
+			@endif
+				@isset($retTable[0]->hgpid)
+					@if(strtolower($retTable[0]->hfser_id) != 'ptc')
+						@php
+							$str = $newservices;
+							$pattern = '/hospital/i';
+							$sc = preg_replace($pattern, ' ', $str);
+							$str_new = $servname;			
+						
+						@endphp
+					
+						@if(isset($retTable[0]->hgpid))		
+							@if($retTable[0]->hgpid == "12" || $retTable[0]->hgpid == "6" ||  $retTable[0]->hgpid == "9"  || $retTable[0]->hgpid == "4")	
+								
+							<div class="row">	
+								<div class="col-md-2" style="">&nbsp;</div>
+								<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+									Classification
+								</div>
+								<div class="col-md-1 hide-div">
+									<center>:</center>
+								</div>
+								<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+									{{ $str_new  }}
+								</div>	
+							</div>
+							
+							@endif
+						@endif
+
+					@endif
 				@endisset
 
 
@@ -136,16 +159,8 @@
 						<center>:</center>
 					</div>
 					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-				{{--	{{((isset($retTable[0])) ?
-						 (
-							 ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ')
-						 
-						 .
-						($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' ).ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '.ucwords(strtolower($retTable[0]->provname)).' '.$retTable[0]->rgn_desc ) : 'No Location.')}}
-					--}}
 					@php
-$loc =
-(
+$loc =(
 							 ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ')
 						 
 						 .
@@ -159,31 +174,27 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 @endphp
 
 
-
-
 					{{((isset($retTable[0])) ?
 						$stringloc
 						
 						: 'No Location.')}}
-					<!-- {{((isset($retTable[0]->cmname)) ? (ucwords($retTable[0]->street_number . ' ' . $retTable[0]->street_name . ' ' . $retTable[0]->cmname . ' ' . $retTable[0]->provname)) : "NOT DEFINED")}} -->
 					</div>	
 				</div>
-				@if(strtolower($retTable[0]->hfser_id) != 'con' && strtolower($retTable[0]->hfser_id) != 'ptc')
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-					Authorized Bed Capacity
-						<!-- Number of Beds -->
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						<!--{{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($otherDetails->noofbed) ? $otherDetails->noofbed : ''))}} -->	
-						<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong>
-						<!-- {{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($retTable[0]->noofbed) ? $retTable[0]->noofbed : ''))}} -->
-					</div>	
-				</div>
+				@if(isset($retTable[0]->noofbed))
+					@if($retTable[0]->noofbed > 0)
+						<div class="row">	
+							<div class="col-md-2" style="">&nbsp;</div>
+							<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+							Authorized Bed Capacity
+							</div>
+							<div class="col-md-1 hide-div">
+								<center>:</center>
+							</div>
+							<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+								<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong>
+							</div>	
+						</div>
+					@endif
 				@endif
 				@if(strtolower($retTable[0]->hfser_id) != 'con' && strtolower($retTable[0]->hfser_id) != 'ptc')
 				@if(isset($otherDetails->noofdialysis))
@@ -191,21 +202,17 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 					<div class="col-md-2" style="">&nbsp;</div>
 					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
 					Authorized Dialysis Station
-						<!-- Number of Dialysis Station -->
 					</div>
 					<div class="col-md-1 hide-div">
 						<center>:</center>
 					</div>
 					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
 					{{((isset($otherDetails->noofdialysis)) ? $otherDetails->noofdialysis : "NA")}}
-						<!-- {{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($retTable[0]->noofbed) ? $retTable[0]->noofbed : ''))}} -->
 					</div>	
 				</div>
 				@endif
 				@endif
 				@if(strtolower($retTable[0]->hfser_id) == 'lto')
-			{{--	@if(strtolower($retTable[0]->hfser_id) == 'ptc' || strtolower($retTable[0]->hfser_id) == 'lto') --}}
-				<!-- noof bed and dialysis here -->
 				<div class="row">	
 					<div class="col-md-2" style="">&nbsp;</div>
 					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
@@ -238,87 +245,53 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 
 						@endphp
 						{{$retTable[0]->rgnid.'-'.$formatted_str.'-'.date('y', strtotime(str_replace('-','/', $retTable[0]->t_date))).'-'. $disercap.'-'.($retTable[0]->ocid == 'G'? '1':'2') }}
-						<!-- {{((isset($otherDetails->ubn)) ? $otherDetails->ubn : (isset($retTable[0]->noofbed) ? $retTable[0]->noofbed : ''))}} -->
 					</div>	
 				</div>
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-					Authorized Ambulance Unit
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+
 					@if(isset($retTable[0]->plate_number) && isset($retTable[0]->ambtyp))
-						@php
+						@php 
 							$type = json_decode($retTable[0]->typeamb);
 							$ambType = json_decode($retTable[0]->ambtyp);
 							$ambType1 = json_decode($retTable[0]->ambtyp);
 							$plateNum = json_decode($retTable[0]->plate_number);
-							$owner = json_decode($retTable[0]->ambOwner);
-							
-							
-							
-
+							$owner = json_decode($retTable[0]->ambOwner);					
 							$i=0;
+							$amb_disp_temp = ""; $ambulance_display = "";							
+										
 							foreach($ambType1 as $atval){
-								
-								//if($ambType1[$i] == '2'){
-								//	echo ((int)$i ).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-								//	echo "<br>";
-									
-								//}
-
 								if($i != 0){
 									if($ambType1[$i] == '2'){
-										echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
-									//	echo ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
+									//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i];
+									$amb_disp_temp =  ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i] ."<br/>";
 										
 									}else{
-										echo 'Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
-									//	echo ((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
+									//	echo ' Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i];
+									$amb_disp_temp =	((int)$i).', Type '. $type[$i].' ,Plate No. ' .  $plateNum[$i].' ,Owner: '.$owner[$i] ."<br/>";
 									}
-									echo "<br>";
-							}
+
+									$ambulance_display = $ambulance_display ."".$amb_disp_temp;
+								}
 
 								$i++;
 							}
-
-							
-						@endphp
-
-					
+						@endphp		
+						@if(!empty($ambulance_display))
+							<div class="row">	
+								<div class="col-md-2" style="">&nbsp;</div>
+								<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
+								Authorized Ambulance Unit
+								</div>
+								<div class="col-md-1 hide-div">
+									<center>:</center>
+								</div>
+								<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+									@php echo $ambulance_display; @endphp
+								</div>	
+							</div>
 						@endif
-					</div>	
-				</div>
-				@endif
-				<!-- <div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						Service Capability
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{((isset($servCap)) ? implode(', ',$servCap)  : "NOT DEFINED")}}
-					</div>	
-				</div> -->
-				
-				@if(strtolower($retTable[0]->hfser_id) == 'lto' && isset($retTable[0]->facmdesc))
-				<!-- <div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						Institutional Character
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{((isset($retTable[0]->facmdesc)) ? $retTable[0]->facmdesc : "NOT DEFINED")}}
-					</div>	
-				</div> -->
+					
+					@endif
+
 				@endif
 
 				@if(strtolower($retTable[0]->hfser_id) == 'ptc')
@@ -333,29 +306,11 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
 					
 						{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}
-					<!-- {{((isset($ptcdet)) ? $ptcdet->construction_description : "NOT DEFINED")}} -->
-					{{--	{{((isset($retTable[0]->HFERC_swork)) ? $retTable[0]->HFERC_swork : "NOT DEFINED")}} --}}
 					</div>	
 				</div>
 				@endif
 
-				
-
-				<!-- @isset($retTable[0]->funcdesc)
-				<div class="row">	
-					<div class="col-md-2" style="">&nbsp;</div>
-					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
-						Classification
-					</div>
-					<div class="col-md-1 hide-div">
-						<center>:</center>
-					</div>
-					<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{$retTable[0]->funcdesc}}
-					</div>	
-				</div>
-				@endisset -->
-				@if(strtolower($retTable[0]->hfser_id) == 'lto')
+				@if(strtolower($retTable[0]->hfser_id) == 'lto' || strtolower($retTable[0]->hfser_id) == 'coa' || strtolower($retTable[0]->hfser_id) == 'ato')
 					<div class="row">	
 						<div class="col-md-2" style="">&nbsp;</div>
 						<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
@@ -365,8 +320,16 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 							<center>:</center>
 						</div>
 						<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						{{Date('F j, Y',strtotime($retTable[0]->validDateFrom))}} - {{date('F j, Y', strtotime("Last day of December", strtotime($retTable[0]->validDate)))}}
-						
+						@if(strtolower($retTable[0]->hfser_id) == 'lto')
+							@if($retTable[0]->aptid != 'R' )
+							{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
+							@else
+							{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
+							@endif
+						@elseif(strtolower($retTable[0]->hfser_id) == 'coa')
+							{{date('F j, Y', strtotime($retTable[0]->approvedDate))}} – {{'December 31, '. date('Y', strtotime('+1 years' ,  strtotime($retTable[0]->approvedDate)))}}
+						@endif
+
 						<!-- {{((isset($otherDetails->valto)) ? $otherDetails->valto : "NOT DEFINED")}} -->
 						</div>	
 					</div>
@@ -453,8 +416,8 @@ $stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i',
 							<center>:</center>
 						</div>
 						<div class="col-md-6 font-weight-bold" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
+							
 						{{((isset($retTable[0]->t_date)) ? date("F j, Y", strtotime($retTable[0]->t_date)) : 'DATE_ISSUED')}} to {{((isset($retTable[0]->t_date)) ? date("F j, Y", ((strtotime($retTable[0]->t_date)-(86400*2))+15552000)) : 'DATE_ISSUED')}}
-						
 						<!--- {{((isset($retTable[0]->t_date)) ? date("F j, Y", strtotime($retTable[0]->t_date)) : 'DATE_ISSUED')}} to {{((isset($retTable[0]->t_date)) ? date("F j, Y", ((strtotime($retTable[0]->t_date)-(86400*2))+15552000)) : 'DATE_ISSUED')}} --->
 						</div>	
 					</div>

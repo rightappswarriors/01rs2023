@@ -122,30 +122,29 @@
 				@endphp
 
 				@if(isset($retTable[0]->hgpid))		
-					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "28" )	
+					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "28" || $retTable[0]->hgpid == "4"  )	
 						
-				<div class="row">
-						<div class="col-md-1"  >&nbsp;</div>
-					<div class="col-md-4 contl">
-						Service Capability
+					<div class="row">
+							<div class="col-md-1"  >&nbsp;</div>
+						<div class="col-md-4 contl">
+							@if($retTable[0]->hgpid == "4")
+								Classification
+							@else
+								Service Capability
+							@endif
+						</div>
+						<div class="col-md-1" style="display: inline">:</div>
+						<div class="col-md-5 contr" style="float:left;display: inline;">
+							{{ $str_new  }}
+						</div>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;</div>
 					</div>
-					<div class="col-md-1" style="display: inline">:</div>
-					<div class="col-md-5 contr" style="float:left;display: inline;">
-						<script>
-						
-						</script>
-						{{--((isset($services->facname)) ? $services->facname : "No Health Service")--}}
-
-						{{ $str_new  }}
-					</div>
-					<div class="col-md-1" style="display: inline">
-						&nbsp;</div>
-				</div>
 					
+					@endif
 				@endif
-			@endif
 				@if(isset($retTable[0]->hgpid))		
-					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "4" || $retTable[0]->hgpid == "12" || $retTable[0]->hgpid == "9")	
+					@if($retTable[0]->hgpid == "6" || $retTable[0]->hgpid == "12" || $retTable[0]->hgpid == "9")	
 						@if(isset($retTable[0]->funcid))
 						
 							<div class="row">
@@ -207,10 +206,10 @@
 					$disercap = $sercap == 'level1' ? 'H1' :  ($sercap == 'level2' ? 'H2' :  ($sercap == 'level3' ? 'H3' : $sercap));
 
 				@endphp
-				
-				@if(isset($otherDetails[1]) && $otherDetails[1])
 
-					@if(isset($retTable[0]->noofbed))
+				
+				@if(isset($retTable[0]->noofbed))
+					@if($retTable[0]->noofbed > 0)
 						<div class="row">
 								<div class="col-md-1"  >&nbsp;</div>
 							<div class="col-md-4 contl" >
@@ -223,8 +222,13 @@
 							<div class="col-md-1" style="display: inline">&nbsp;</div>
 						</div>
 					@endif
+				@endif
 
-					@if($disercap == 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
+				{{-- @if(isset($otherDetails[1]) && $otherDetails[1])
+					@if($disercap == 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)  --}}
+				
+				@if(isset($retTable[0]->noofdialysis))
+					@if($retTable[0]->noofdialysis > 0)
 						<div class="row">
 								<div class="col-md-1"  >&nbsp;</div>
 							<div class="col-md-4 contl" >
@@ -320,8 +324,8 @@
 				</div>
 
 					@if((count($addons) > 0)  || ($disercap != 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0) )
-					<div class="row mt-3">
-							<div class="col-md-1"  >&nbsp;</div>
+					<div class="row">
+						<div class="col-md-1"  >&nbsp;</div>
 						<div class="col-md-4 contl" >
 							Other Services Offered
 						</div>
@@ -362,7 +366,7 @@
 
 				<div class="row">
 					<div class="col-md-3" style="vertical-align: bottom;">
-						<p class="text-muted text-small" style="float: center; margin-top: 80px;">
+						<p class="text-muted text-small" style="text-align: center; margin-top: 80px;">
 							{{-- <iframe src="{{asset('ra-idlis/resources/views/client1/qrcode/index.php')}}?data={{asset('client1/certificates/view/external/')}}/{{$retTable[0]->appid}}" style="border: none !important; height: 150px; width: 150px;"></iframe> --}}
 							<iframe src="{!!url('qrcode/'.$retTable[0]->appid )!!}" style="border: none !important; height: 230px; width: 260px;"></iframe>
 						</p>
@@ -387,12 +391,16 @@
 
 			</div>
 			</div>
-			<div class="card-footer">
-			
-				<center>
-					<b><hr/></b>
-					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">This license is renewable annually and subject to suspension or revocation if the hospital is found violating RA 4226 and related issuances.</b></i>
-				</center><br/><br/>
+			<div class="card-footer text-center">				
+				<b><hr/></b>
+				@if(isset($director->ftr_msg_lto))
+					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">{{$director->ftr_msg_lto}}</b></i>
+					<br/><br/>
+				@endif
+				@if(isset($ftr_msg_facility))
+					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">{{$ftr_msg_facility}}</b></i>
+					<br/><br/>
+				@endif
 
 				<p class="text-muted text-small" style="float: right; padding: 0; margin: 0;">© All Rights Reserved {{date('Y')}}</p>
 			</div>

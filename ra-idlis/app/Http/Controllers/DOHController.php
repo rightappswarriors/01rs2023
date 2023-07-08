@@ -4185,7 +4185,7 @@ namespace App\Http\Controllers;
 			try 
 			{
 				$clientChoice = AjaxController::isRequestForFDA($clientChoice);
-
+				
 				if($clientChoice == 'machines')
 				{
 					$data = SELF::application_filter($request, 'view_fda_evaluate');

@@ -154,8 +154,6 @@ function xucwords($string)
 
 									{{((isset($retTable[0])) ?	$stringloc	: 'No Location.')}}
 							</span>
-							<!-- <p class="rightHeader"><strong>{{((isset($retTable[0])) ? ($retTable[0]->street_name.', '.$retTable[0]->street_number.', '.$retTable[0]->brgyname.', '.$retTable[0]->cmname.', '.$retTable[0]->provname.' '.$retTable[0]->rgn_desc) : 'No Location.')}}</strong></p> -->
-							<!-- <p class="rightHeader"><strong>{{((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : 'No Location.')}}</strong></p> -->
 						</div>
 					</div>
 					<div class="row">
@@ -211,7 +209,7 @@ function xucwords($string)
 							<small class="text-small" style="padding-left:12px">PTC No. {{$retTable[0]->licenseNo}}</small><br>
 							<small class="text-small" style="padding-left:12px">Date Issued: {{((isset($retTable[0]->approvedDate)) ? date("F j, Y", strtotime($retTable[0]->approvedDate)) : 'No date.')}}</small>
 							
-							<p class="text-muted text-small" style="float: left; padding: 0; margin: 0;">
+							<p class="text-muted text-small" style="text-align: left; padding: 0; margin: 0;">
 								{{-- <iframe  src="{{asset('ra-idlis/resources/views/client1/qrcode/index.php')}}?data={{asset('client1/certificates/view/external/')}}/{{$retTable[0]->appid}}" style="border: none !important; height: 150px; width: 150px;"></iframe> --}}
 								<iframe src="{!!url('qrcode/'.$retTable[0]->appid )!!}" style="border: none !important; height: 230px; width: 260px;"></iframe>
 							</p>
