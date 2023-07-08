@@ -73,50 +73,37 @@
 
                 @if($AppData->ispayProofFilenPhar == 1 )
                  
-                 <a target="_blank" href="{{ route('OpenFile', $AppData->payProofFilenPhar) }}" >
-                 <button style="float: right;" type="button" class="btn btn-primary p-2 m-1">
-                 </i> View Proof of Payment
-                 </button>
-                 </a>
-                 <!-- <button class="btn btn-success p-2 m-1" data-toggle="modal" data-target="#evaluatePayment"> <i class="fa fa-check" aria-hidden="true"></i> Confirm Payment </button> -->
-                 <!-- <button class="btn btn-success p-2 m-1" data-toggle="modal" data-target="#evaluatePayment"> <i class="fa fa-check" aria-hidden="true"></i> Confirm Payment</button> -->
-            
-                 @else
-                 <button style="float: right;" onclick="alert('Please wait for the proof of payment.')" type="button" class="btn btn-warning p-2 m-1">
-                 </i> No proof of payment attached yet
-                 </button>
-                 @endif
-
-
-
-              @endif
-              @if($AppData->isCashierApprovePharma == 1)
-              <a target="_blank" href="{{ route('OpenFile', $AppData->payProofFilenPhar) }}" >
+                  <a target="_blank" href="{{ route('OpenFile', $AppData->payProofFilenPhar) }}" >
                   <button style="float: right;" type="button" class="btn btn-primary p-2 m-1">
                   </i> View Proof of Payment
                   </button>
                   </a>
+                 @else
+                  <button style="float: right;" onclick="alert('Please wait for the proof of payment.')" type="button" class="btn btn-warning p-2 m-1">
+                  </i> No proof of payment attached yet
+                  </button>
+                 @endif
 
-
-              {{-- <button type="button" onclick="window.location.href='{{asset('employee/dashboard/processflow/FDA/printor/').'/'.$appid}}'" class="btn btn-primary p-2 m-1">
-                <i class="fa fa-print" aria-hidden="true"></i> Print Official Receipt
-              </button> --}}
+              @elseif($AppData->isCashierApprovePharma == 1)
+                <a target="_blank" href="{{ route('OpenFile', $AppData->payProofFilenPhar) }}" >
+                  <button style="float: right;" type="button" class="btn btn-secondary p-2 m-1">
+                  </i> View Proof of Payment
+                  </button>
+                </a>
+                {{-- <button type="button" onclick="window.location.href='{{asset('employee/dashboard/processflow/FDA/printor/').'/'.$appid}}'" class="btn btn-primary p-2 m-1">
+                  <i class="fa fa-print" aria-hidden="true"></i> Print Official Receipt
+                </button> --}}
               @endif
+
               @if($Sum <= 0 && empty($AppData->isCashierApprovePharma))
               <!-- <button class="btn btn-success p-2 m-1" data-toggle="modal" data-target="#evaluatePayment"> <i class="fa fa-check" aria-hidden="true"></i> Confirm Payment</button> -->
               @endif
-              <div class="col d-flex justify-content-end">
-              <button type="button" class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#showOP">
-                <i class="fa fa-eye" aria-hidden="true"></i> View Order of Payment  
-              </button>
+              <div class="col justify-content-end">
+                <button type="button" class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#showOP">
+                  <i class="fa fa-eye" aria-hidden="true"></i> View Order of Payment  
+                </button>
               </div>
               
-
-
-
-
-
-
             </div>
             @if($Remarks)
             <div class="row mt-1">

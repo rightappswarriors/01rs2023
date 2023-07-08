@@ -120,25 +120,68 @@
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
 				</div>	
+				@php
+					$str = $newservices;
+					$pattern = '/hospital/i';
+					$sc = preg_replace($pattern, ' ', $str);
+					$str_new = $servname;			
+				
+				@endphp
+
+				@if(isset($retTable[0]->hgpid))		
+					@if($retTable[0]->hgpid == "12" || $retTable[0]->hgpid == "9"  )	
+						
+					<div class="row">
+						<div class="col-md-2" style="">&nbsp;</div>
+						<div class="col-md-3" style="font-family: Arial; font-size: 12pt">
+							Classification
+						</div>
+						<div class="col-md-5" style="float:left;display: inline;font-family: Arial; font-size: 13pt">
+							:&nbsp;&nbsp;&nbsp;
+							{{ $str_new  }}
+						</div>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;</div>
+					</div>
+					
+					@endif
+				@endif
+
 				<br><br><br>
-				<div class="row">
-					<div class="col-md-6"></div>
-					<div class="col-md-6">
-						<p class="text-uppercase " style="font-family: Cambria;font-size: 12pt;"><strong>By Authority of the Secretary of Health:</strong></p>
-						<br><br><br><br>
-						 <p class="text-uppercase"  style="font-family: Cambria;font-size: 16pt;"><strong>{{ucwords($retTable[0]->signatoryname)}}</strong></p>
-						<p class="text-small" style="font-family: Cambria;font-size: 14pt;">
-							<strong style="margin-left: 7em; white-space: pre-line">{{$retTable[0]->signatorypos}}</strong></p>
+
+				<div class="row" style="margin-top:100px; ">
+					<div class="col-md-6"  style="vertical-align: bottom;">
+						<p class="text-muted text-small" style="text-align: center; padding: 0; margin: 0;">
+							{{-- <iframe src="{{asset('ra-idlis/resources/views/client1/qrcode/index.php')}}?data={{asset('client1/certificates/view/external/')}}/{{$retTable[0]->appid}}" style="border: none !important; height: 150px; width: 150px;"></iframe> --}}
+							<iframe src="{!!url('qrcode/'.$retTable[0]->appid )!!}" style="border: none !important; height: 230px; width: 260px;"></iframe>
+						</p>					
+					</div>
+					<div class="col-md-6" >
+						
+						<div class="col-md-12 auth text-uppercase" style="font-family: Cambria;font-size: 12pt; font-weight:bold; text-align: center; ">By Authority of the Secretary of Health:</div>
+						
+						 <div class="col-md-12 director text-uppercase"  style="font-family: Cambria;font-size: 16pt; font-weight:bold; text-align: center;  margin-top:80px;">{{ucwords($retTable[0]->signatoryname)}}</div>
+						
+						 <div class="col-md-12 pos text-small" style="font-family: Cambria;font-size: 14pt; text-align: center; font-weight: bold;">
+							{{$retTable[0]->signatorypos}}</div>
 					</div>
 				</div>
 				<br><br><br><br><br><br><br><br>
 			</div>
 			</div>
-			<div class="card-footer">
-				<p class="text-muted text-small" style="float: left; padding: 0; margin: 0;">
-					{{-- <iframe src="{{asset('ra-idlis/resources/views/client1/qrcode/index.php')}}?data={{asset('client1/certificates/view/external/')}}/{{$retTable[0]->appid}}" style="border: none !important; height: 150px; width: 150px;"></iframe> --}}
-					<iframe src="{!!url('qrcode/'.$retTable[0]->appid )!!}" style="border: none !important; height: 230px; width: 260px;"></iframe>
-				</p>
+			<div class="card-footer text-center">
+
+				<b><hr/></b>
+				@if(isset($director->ftr_msg_coa))
+					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">{{$director->ftr_msg_coa}}</b></i>
+					<br/><br/>
+				@endif
+				
+				@if(isset($ftr_msg_facility))
+					<br/><i><b style="font-family: Cambria, Georgia, serif; font-size: 18px">{{$ftr_msg_facility}}</b></i>
+					<br/><br/>
+				@endif
+
 				<p class="text-muted text-small" style="float: right; padding: 0; margin: 0;">© All Rights Reserved {{date('Y')}}</p>
 			</div>
 		</div><br>

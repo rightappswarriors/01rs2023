@@ -1640,6 +1640,9 @@ class NewClientController extends Controller {
 
 	public function __byHfser(Request $request, $hfser, $appid, $viewFor = 'client') 
 	{
+		$ftr_msg_facility = "";
+		$hgpid = "";
+
 		try {
 			if(DB::table('appform')->where([['appform.appid',$appid],['appform.isApprove',1]])->doesntExist()){
 				return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Application Does not Exist']);
@@ -1651,16 +1654,35 @@ class NewClientController extends Controller {
 			
 			if(!empty($retTable))
 			{
+				if(isset($retTable[0]->hgpid))
+					$hgpid = $retTable[0]->hgpid; 
+					
 				switch ($retTable[0]->hfser_id) {
 					case 'PTC':
 						$otherDetails = DB::table('hferc_evaluation')->join('hferc_team', 'hferc_evaluation.HFERC_evalBy', '=', 'hferc_team.uid')
 						->where([['hferc_evaluation.appid',$appid],['hferc_evaluation.HFERC_eval',1],['hferc_team.pos','C']])
 						->first();
 						// $otherDetails = DB::table('hferc_evaluation')->where([['appid',$appid],['HFERC_eval',1]])->first();
+						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_ptc')->where('hgpid',$hgpid)->first())->ftr_msg_ptc;
 						break;
 
 					case 'LTO':
 						$otherDetails = [DB::table('assessmentrecommendation')->where('appid',$appid)->first(), DB::table('x08_ft')->where('appid',$appid)->whereIn('facid',['H','H2','H3'])->exists()];
+
+						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_lto')->where('hgpid',$hgpid)->first())->ftr_msg_lto;
+
+						break;
+					case 'COA':
+						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_coa')->where('hgpid',$hgpid)->first())->ftr_msg_coa;
+
+						break;
+
+					case 'ATO':
+						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_ato')->where('hgpid',$hgpid)->first())->ftr_msg_ato;
+						break;
+
+					case 'COR':
+						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_cor')->where('hgpid',$hgpid)->first())->ftr_msg_cor;
 						break;
 
 					case 'CON':
@@ -1671,7 +1693,7 @@ class NewClientController extends Controller {
 						$otherDetails = null;
 						break;
 				}
-			
+				
 				$facilityTypeId = "No Facility Type"; 
 				$serviceId = "No Service";
 
@@ -1815,6 +1837,7 @@ class NewClientController extends Controller {
 				'services' => AjaxController::getHighestApplicationFromX08FT($appid),
 				'newservices' => $servname,
 				'otherDetails' => $otherDetails,
+				'ftr_msg_facility'=> $ftr_msg_facility,
 				'viewFor' => (session()->has('employee_login') && $viewFor == 'employee' ? 'employee' : 'client')
 			];
 			// dd($arrData);
@@ -1844,7 +1867,83 @@ class NewClientController extends Controller {
 			}
 			$ptcdet=[];
 			$serviceId = null;
+
+			$check =  DB::table('x08_ft')
+							->join('facilitytyp','x08_ft.facid','facilitytyp.facid')
+							->join('hfaci_grp','facilitytyp.hgpid','hfaci_grp.hgpid')
+							->where([['x08_ft.appid',$appid] ])
+							->whereNull('facilitytyp.specified')
+							->orderBy('x08_ft.id', 'ASC')
+							->first();
+
 			$servname = '';
+			$servname_new ='';
+			
+			//to be corrected. need to placed on db
+			if(!is_null($check)){
+				$servname = $check->facname;
+				$servname_new = $check->facname;
+
+				$data = array(
+				'Level 1 Hospital' => 'H1',
+				'Level 2 Hospital' => 'H2',
+				'Level 3 Hospital' => 'H3',
+				'Level 1' => 'H1',
+				'Level 2' => 'H2',
+				'Level 3' => 'H3',
+
+				'Kidney Transplant Facility' => 'KTF',
+				'Newborn Screening Center' => 'NSC',
+				'Human Stem Cell and Cell-Based or Cellular Therapy' => 'HSC',
+
+				'Colorectal Surgery' => 'ASC',
+				'General Surgery' => 'ASC',
+				'Oral and Maxillo-Facial Surgery' => 'ASC',
+				'Orthopedic Surgery' => 'ASC',
+				'Ophthalmologic Surgery' => 'ASC',
+				'Otolryngologic Surgery' => 'ASC',
+				'Plastic/Reconstructive Surgery' => 'ASC',
+				'Pediatric Surgery' => 'ASC',
+				'Reproductive Health Surgery' => 'ASC',
+				'Thoracic Surgery' => 'ASC',
+				'Urologic Surgery' => 'ASC',
+
+				'Hemodialysis' => 'DC',
+				'Dental Laboratory' => 'DL',
+
+				'Primary Clinical Laboratory' => 'CL',
+				'Secondary Clinical Laboratory' => 'CL',
+				'Tertiary Clinical Laboratory' => 'CL',
+
+				'Primary Care Facility - Birthing Home' => 'BH',
+				'Primary Care Facility - Infirmary' => 'I',
+				'Primary Care Facility -  Infirmary' => 'I',
+
+				'Acute Chronic' => 'AC',
+				'Custodial' => 'CP',
+				'Birthing Home' => 'BH',
+				'Blood Center' => 'BC',
+				'Ambulance Service Provider' => 'ASP',
+				'Laboratory for Drinking Water Analysis*' => 'LW',
+				'Regular Medical Facility' => 'MF',
+				'Special Land-based Medical Facility' => 'MF',
+				'Special Seafarer\'s Medical Facility' => 'MF',
+				'Non-residential' => 'DR',
+				'Residential' => 'DR',
+				'Residential DATRC with OutPatient Facility' => 'DR',
+				'Blood Station' => 'BS',
+				'Blood Collection Unit' => 'BCU',
+				'Special Clinical Authority' => 'SCL',
+				
+				'Drug Testing Laboratory-Confirmatory'=>'DTL',
+				'Drug Testing Laboratory - Screening'=>'DTL'
+
+				);
+
+				$servname = $data[$check->facname];
+			}
+
+
 			$facname = "No Health Facility";
 			//approvedDate  for date issued
 			$issued_date = ((isset($retTable[0]->approvedDate)) ? date_format(date_create($retTable[0]->approvedDate),"F d, Y ")  : 'Not Specified');
@@ -1916,6 +2015,7 @@ class NewClientController extends Controller {
 				'ptcdet' => $ptcdet,
 				'otherDetails' => $otherDetails,
 				'serviceId'=>$serviceId,
+				'servname'=>$servname_new,
 				'newservices' => $servname,
 				'facname' => $facname,
 				'issued_date' => $issued_date
