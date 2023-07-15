@@ -23,6 +23,11 @@
                   <tr>
                     <th style="width: auto">ID</th>
                     <th style="width: auto">Name</th>
+                    <th style="width: auto">PTC Certificate Footer</th>
+                    <th style="width: auto">LTO Certificate Footer</th>
+                    <th style="width: auto">COA Certificate Footer</th>
+                    <th style="width: auto">ATO Certificate Footer</th>
+                    <th style="width: auto">COR Certificate Footer</th>
                     <th style="width: auto"><center>Options</center></th>
                   </tr>
                 </thead>
@@ -32,9 +37,19 @@
                     <tr>
                             <td>{{$fatype->hgpid}}</td>
                             <td>{{$fatype->hgpdesc}}</td>
+                            <td>@isset($fatype->ftr_msg_ptc) {{$fatype->ftr_msg_ptc}} @endisset</td>
+                            <td>@isset($fatype->ftr_msg_lto) {{$fatype->ftr_msg_lto}} @endisset</td>
+                            <td>@isset($fatype->ftr_msg_coa) {{$fatype->ftr_msg_coa}} @endisset</td>
+                            <td>@isset($fatype->ftr_msg_ato) {{$fatype->ftr_msg_ato}} @endisset</td>
+                            <td>@isset($fatype->ftr_msg_cor) {{$fatype->ftr_msg_cor}} @endisset</td>
                             <td><center>
                             <span class="AP008_update">
-                            <button type="button" class="btn btn-outline-warning" onclick="showData('{{$fatype->hgpid}}','{{$fatype->hgpdesc}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-edit"></i></button>&nbsp;
+                            <button type="button" class="btn btn-outline-warning" onclick="showData('{{$fatype->hgpid}}','{{$fatype->hgpdesc}}',
+                            '@isset($fatype->ftr_msg_ptc) {{$fatype->ftr_msg_ptc}} @endisset',
+                            '@isset($fatype->ftr_msg_lto) {{$fatype->ftr_msg_lto}} @endisset',
+                            '@isset($fatype->ftr_msg_coa) {{$fatype->ftr_msg_coa}} @endisset',
+                            '@isset($fatype->ftr_msg_ato) {{$fatype->ftr_msg_ato}} @endisset',
+                            '@isset($fatype->ftr_msg_cor) {{$fatype->ftr_msg_cor}} @endisset');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-edit"></i></button>&nbsp;
                             </span>
                             <span class="AP008_cancel">
                             <button type="button" class="btn btn-outline-danger" onclick="showDelete('{{$fatype->hgpid}}', '{{$fatype->hgpdesc}}');" data-toggle="modal" data-target="#DelGodModal"><i class="fa fa-fw fa-trash"></i></button>
@@ -147,7 +162,7 @@
             // buttons: ['csvHtml5', 'excelHtml5', 'pdfHtml5', 'print'],
         });
       });
-      function showData(id,desc){
+      function showData(id,desc, ptc, lto, coa, ato, cor){
         $('#EditBody').empty();
         $('#EditBody').append(
             '<div class="col-sm-4">ID:</div>' +
@@ -157,6 +172,26 @@
             '<div class="col-sm-4">Description:</div>' +
             '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
               '<input type="text" id="edit_desc" value="'+desc+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+desc+'" class="form-control" required>' +
+            '</div>' +
+            '<div class="col-sm-4">PTC Certificate Footer:</div>' +
+            '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
+              '<input type="text" id="edit_ptc" value="'+ptc+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+ptc+'" class="form-control" >' +
+            '</div>' +
+            '<div class="col-sm-4">LTO Certificate Footer:</div>' +
+            '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
+              '<input type="text" id="edit_lto" value="'+lto+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+lto+'" class="form-control" >' +
+            '</div>' +
+            '<div class="col-sm-4">COA Certificate Footer:</div>' +
+            '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
+              '<input type="text" id="edit_coa" value="'+coa+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+coa+'" class="form-control" >' +
+            '</div>' +
+            '<div class="col-sm-4">ATO Certificate Footer:</div>' +
+            '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
+              '<input type="text" id="edit_ato" value="'+ato+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+ato+'" class="form-control" >' +
+            '</div>' +
+            '<div class="col-sm-4">COR Certificate Footer:</div>' +
+            '<div class="col-sm-12" style="margin:0 0 .8em 0;">' +
+              '<input type="text" id="edit_cor" value="'+cor+'" data-parsley-required-message="<strong>*</strong>Description Code <strong>Required</strong>" placeholder="'+cor+'" class="form-control" >' +
             '</div>' 
           );
       }
@@ -233,10 +268,17 @@
           if (form.parsley().isValid()) {
              var x = $('#edit_name').val();
              var y = $('#edit_desc').val();
+             
+             var edit_ptc = $('#edit_ptc').val();
+             var edit_lto = $('#edit_lto').val();
+             var edit_coa = $('#edit_coa').val();
+             var edit_ato = $('#edit_ato').val();
+             var edit_cor = $('#edit_cor').val();
+
              $.ajax({
                 url: "{{ asset('employee/mf/save_facility') }}",
                 method: 'POST',
-                data : {_token:$('#token').val(),id:x,name:y,mod_id : $('#CurrentPage').val()},
+                data : {_token:$('#token').val(),id:x,name:y,mod_id : $('#CurrentPage').val(), edit_ptc:edit_ptc, edit_lto:edit_lto, edit_coa:edit_coa, edit_ato:edit_ato, edit_cor:edit_cor},
                 success: function(data){
                     if (data == "DONE") {
                         logActions('Edited Facility with ID: '+ $('#edit_name').val());
