@@ -73,10 +73,6 @@
     background-color: #f4f4f4;
 }
 
-.d-flex {
-    overflow: scroll;
-}
-
 @media (min-width: 576px){
     .modal-dialog {
         max-width: 800px;

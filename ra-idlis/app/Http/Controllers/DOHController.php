@@ -5604,7 +5604,8 @@ namespace App\Http\Controllers;
 			{
 				try 
 				{
-					$data = SELF::application_filter($request, 'app_assignmentofhferc');
+					$data = SELF::application_filter($request, 'app_assignmentofhferc_max_rev');
+
 					return view('employee.processflow.pfassignmentofhferc', ['BigData' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
 				} 
 				catch (Exception $e) 
@@ -9991,7 +9992,7 @@ namespace App\Http\Controllers;
 				return view('employee.processflow.pfrecommendation');
 			}
 		}
-		////// RECOMMENDATION 
+
 		////// RECOMMENDATION ONE
 		public function RecommendationOneProcessFlow(Request $request, $appid)
 		{
@@ -10044,11 +10045,6 @@ namespace App\Http\Controllers;
 							$otherDetails = [];
 							break;
 					}
-					// dd($data);
-					// if($data->hfser_id == 'LTO'){
-					// 	$canView = AjaxController::canViewFDAOOP($appid);
-					// }
-					//dd($data);
 					
 					return view('employee.processflow.pfrecommendationone', ['AppData'=>$data,'apdat'=>$apdata,/*'PreAss'=>$data1,*/ 'APPID' => $appid, 'Teams4theApplication' => $data2, 'canView' => $canView, 'otherDetails' => $otherDetails, 'complianceDetails' => $complianceDetails]);
 				} 
@@ -13624,7 +13620,6 @@ namespace App\Http\Controllers;
 					'fo_rowscnt' => '0'
 				);						
 			}				
-			
 			$data = AjaxController::getAllApplicantionWithFilter($table, $arr_fo, $fo_rows, $fo_pgno-1); 
 
 			$arr_fo['fo_rowscnt']=$data['rowcount'];

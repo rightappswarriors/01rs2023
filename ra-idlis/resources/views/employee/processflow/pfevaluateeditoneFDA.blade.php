@@ -201,7 +201,6 @@
                         <button type="button" class="btn-primarys">
                           <i class="fa fa-download" aria-hidden="true"></i>
                         </button>
-                        </a>
                         @else
                         <button type="button" class="btn-primarys" style="background-color: red">
                           <i class="fa fa-times" aria-hidden="true"></i>

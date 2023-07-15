@@ -663,7 +663,7 @@
                           </tr>
                           <tr>
                             <th scope="row">Remark:</th>
-                            <td>@isset($AppData->RecoRemark) <span style="color:green;font-weight: bolder">{{$AppData->RecoRemark}}</span> @else <span style="color:red;font-weight: bolder">Not Available</span> @endisset</td>
+                            <td>@isset($AppData->RecoRemark) <span style="color:green;font-weight: bolder">{{$AppData->RecoRemark}}</span> @else <span style="color:red;font-weight: bolder">None</span> @endisset</td>
                           </tr>
                         </tbody>
                       </table>  

@@ -175,6 +175,7 @@
 			{
 				// $test = Storage::get('public/uploaded/'.$id);
 				$exists = Storage::exists('public/uploaded/'.$id);
+				
 				if ($exists) {
 					// return Storage::get('public/uploaded/'.$id);
 					$pathToFile = storage_path('app' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploaded' . DIRECTORY_SEPARATOR . $id );
@@ -2113,8 +2114,16 @@ public static function checkConmem($appid)
 		{
 			try 
 			{
-				$updateData = array('hgpdesc' => $request->name);
+				$updateData = array('hgpdesc' => $request->name, 
+									'ftr_msg_ptc' => $request->edit_ptc,
+									'ftr_msg_lto' => $request->edit_lto,
+									'ftr_msg_coa' => $request->edit_coa,
+									'ftr_msg_ato' => $request->edit_ato,
+									'ftr_msg_cor' => $request->edit_cor
+							);
+
 				$test = DB::table('hfaci_grp')->where('hgpid',$request->id)->update($updateData);
+
 				if ($test) {return 'DONE';} 
 				else 
 				{
@@ -5164,6 +5173,7 @@ public static function checkConmem($appid)
 			$rowcount = 0;
 			$Cur_useData = AjaxController::getCurrentUserAllData();
 			$uid = $Cur_useData['cur_user'];
+			
 			try 
 			{
 				switch ($viewtype) 
@@ -5178,8 +5188,7 @@ public static function checkConmem($appid)
 
 						break;
 
-					case 'app_evaluation_tool':		
-
+					case 'app_evaluation_tool':
 						if($Cur_useData['grpid'] == "NA") {	$anotherData = DB::table('app_evaluation_tool_admin'); 	}
 						else 
 						{ 	
@@ -5207,11 +5216,11 @@ public static function checkConmem($appid)
 						$anotherData = DB::table('applist');	
 						break;
 
-					default:								
+					default:							
 						$anotherData = DB::table($viewtype);
 						break;
 				}
-
+				
 				//conditions area
 				if($Cur_useData['is_fda'] == 1){
 					if($Cur_useData['rgnid'] && $Cur_useData['rgnid'] != 'FDA'){
@@ -5225,7 +5234,7 @@ public static function checkConmem($appid)
 				}
 				$t_date_1 = NULL;
 				$t_date_2 = NULL;
-
+				
 				//Filter Area
 				foreach($filter  as $fo => $foval)
 				{
