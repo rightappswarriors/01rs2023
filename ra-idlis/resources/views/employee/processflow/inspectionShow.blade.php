@@ -2,7 +2,7 @@
   @extends('mainEmployee')
   @section('title', 'Inspection Schedule')
   <style>
-    .weekend, .drp-calendar thead tr:nth-child(2) th:nth-child(1),  th:nth-child(7){
+    .weekend, .drp-calendar thead tr:nth-child(2) th:nth-child(1), th:nth-child(6),  th:nth-child(7){
       display:none
     }
   </style>
@@ -143,20 +143,26 @@
 
     <script>
       var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      var excludedDay = [6,0];
+      var excludedDay = [0, 6];
       $("#datepicker").daterangepicker({
         "showDropdowns": true,
-        dateLimit: { days: 5 },
-		firstDay: 1,
-        locale: {
-            format: 'MM/DD/YYYY '
-        },
+        beforeShowDay: $.datepicker.noWeekends,
+        dateLimit: { days: 6 },
+        format:'YYYY-MM-DD',
+        locale:  moment.locale('en', {
+            week: { dow: 1 }
+        }),
       });
       $("#datepicker").change(function(event) {
         var allowed = Array();
         for (var day = $("#datepicker").data('daterangepicker').startDate._d; day <= $("#datepicker").data('daterangepicker').endDate._d; day.setDate(day.getDate() + 1)) {
+          console.log(day.getDay());
           if($.inArray(day.getDay(), excludedDay) < 0){
+            console.log(day.getDay(),'included');
+
             allowed.push(months[new Date(day).getMonth()] +' '+ (new Date(day).getDate()) + ', '+new Date(day).getFullYear() + '<br>');
+          } else {
+            console.log(day.getDay(),'excluded');
           }
 
         }

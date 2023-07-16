@@ -529,15 +529,15 @@
         });
 
 
-        if(checkForNo.length > 0){
-          $('#approveButton').hide();
-          $('#rejectButton').show();
-          $('#reviseButton').show();
-        } else if(checkForYes.length == choices.length) {
-          $('#approveButton').show();
-          $('#rejectButton').hide();
-          $('#reviseButton').hide();
-        }
+        // if(checkForNo.length > 0){
+        //   $('#approveButton').hide();
+        //   $('#rejectButton').show();
+        //   $('#reviseButton').show();
+        // } else if(checkForYes.length == choices.length) {
+        //   $('#approveButton').show();
+        //   $('#rejectButton').hide();
+        //   $('#reviseButton').hide();
+        // }
 
 
      }
