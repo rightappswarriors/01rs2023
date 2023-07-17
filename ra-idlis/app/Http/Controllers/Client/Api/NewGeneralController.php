@@ -174,6 +174,7 @@ class NewGeneralController extends Controller
         }
 
         $chkGet = DB::table('appform_orderofpayment')->where([['appid', $appid]])->first();
+
         if(isset($chkGet)) {
             DB::table('appform_orderofpayment')->where([['appop_id', $chkGet->appop_id]])->update(['oop_total' => ($chkGet->oop_total + $tPayment)]);
         } else {
@@ -181,10 +182,9 @@ class NewGeneralController extends Controller
         }
     }
 
-    public function uploadProofofPay(Request $request) {
-
+    public function uploadProofofPay(Request $request) 
+    {
         $msg = 0;
-
         $app =  DB::table('appform')->where('appid',$request->appid)->first();
 
         if($request->upproof){
@@ -192,153 +192,118 @@ class NewGeneralController extends Controller
             $fname = $request->file('upproof')->getClientOriginalName();
             $fileExtension = $request->file('upproof')->getClientOriginalExtension();
             $fileNameToStore = (session()->has('employee_login') ? FunctionsClientController::getSessionParamObj("employee_login", "uid") : FunctionsClientController::getSessionParamObj("uData", "uid")).'_'.Str::random(10).'_'.date('Y_m_d_i_s').'.'.$fileExtension;
+            
             $request->file('upproof')->storeAs('public/uploaded', $fileNameToStore);
 
-
-          
             $val =  DB::table('appform')->where('appid',$request->appid)->update(['payProofFilen' => $fileNameToStore,'isPayProofFilen' => 1 ]);
         
-            if($val){
-                $msg += 1;
-            }
+            if($val){  $msg += 1; }
         }
-
         if($request->upmach){
             $data = $request->input('upmach');
             $fname = $request->file('upmach')->getClientOriginalName();
             $fileExtension = $request->file('upmach')->getClientOriginalExtension();
             $fileNameToStore = (session()->has('employee_login') ? FunctionsClientController::getSessionParamObj("employee_login", "uid") : FunctionsClientController::getSessionParamObj("uData", "uid")).'_'.Str::random(10).'_'.date('Y_m_d_i_s').'.'.$fileExtension;
             $request->file('upmach')->storeAs('public/uploaded', $fileNameToStore);
-
-
             
             $valmch =  DB::table('appform')->where('appid',$request->appid)->update(['payProofFilenMach' => $fileNameToStore,'ispayProofFilenMach' => 1 ]);
         
-            if($valmch){
-                $msg += 1;
-            }
-           
-            // 7-2-2020
+            if($valmch){  $msg += 1;  }
             if(is_null($app->proofpaystatMach)){
                 DB::table('appform')->where('appid',$request->appid)->update(['proofpaystatMach' => 'posting']);
             }
         }
-
         if($request->upphar){
             $data = $request->input('upphar');
             $fname = $request->file('upphar')->getClientOriginalName();
             $fileExtension = $request->file('upphar')->getClientOriginalExtension();
             $fileNameToStore = (session()->has('employee_login') ? FunctionsClientController::getSessionParamObj("employee_login", "uid") : FunctionsClientController::getSessionParamObj("uData", "uid")).'_'.Str::random(10).'_'.date('Y_m_d_i_s').'.'.$fileExtension;
             $request->file('upphar')->storeAs('public/uploaded', $fileNameToStore);
-
-
             
             $valmch =  DB::table('appform')->where('appid',$request->appid)->update(['payProofFilenPhar' => $fileNameToStore,'ispayProofFilenPhar' => 1 ]);
         
-            if($valmch){
-                $msg += 1;
-            }
-
+            if($valmch){  $msg += 1;  }
             if(is_null($app->proofpaystatPhar)){
                 DB::table('appform')->where('appid',$request->appid)->update(['proofpaystatPhar' => 'posting']);
             }
         }
-
         if(is_null($app->proofpaystat)){
             DB::table('appform')->where('appid',$request->appid)->update(['proofpaystat' => 'posting']);
-        }
-       
+        }       
 
         return  response()->json([
             'msg' => 'success' ,
-            'id' => $request->appid
-          
+            'id' => $request->appid          
         ]);
     }
 
+    // public function FPSaveAssessments (Request $request, $revision, $otherUID = null){
+    public function FPSaveAssessments (Request $request){        
+        // $datass = json_decode($request->data);
+        // $filteredAssessment = $datass;
+        // // $mydata = unserialize($request);
+        // $count = 0;
+        // $getOnDBID = $sample = array();
 
-
-// public function FPSaveAssessments (Request $request, $revision, $otherUID = null){
-public function FPSaveAssessments (Request $request){
-    
-    // $datass = json_decode($request->data);
-
-    // $filteredAssessment = $datass;
-
-    // // $mydata = unserialize($request);
-    // $count = 0;
-    // $getOnDBID = $sample = array();
-
-
-    // foreach ($filteredAssessment as $key => $value) {
-    //     if($key != '_token' || $key != 'appid' || $key != 'part' ||$key != 'comment' ){
-    //         if( !in_array($key, $getOnDBID)){
-    //             $count += 1;
-    //             array_push($getOnDBID, $key);
-    //         }
-    //     }
-    // }
-  
-    
-    $hi = $request->appid;
-    return  response()->json([
+        // foreach ($filteredAssessment as $key => $value) {
+        //     if($key != '_token' || $key != 'appid' || $key != 'part' ||$key != 'comment' ){
+        //         if( !in_array($key, $getOnDBID)){
+        //             $count += 1;
+        //             array_push($getOnDBID, $key);
+        //         }
+        //     }
+        // }            
+        $hi = $request->appid;
+        return  response()->json([            
+            'request' => $hi,
+            // 'request' =>  "heehe"
         
-        'request' => $hi,
-        // 'request' =>  "heehe"
-      
-    ]);
-
-
-// 		AjaxController::createMobileSessionIfMobile($request);
-// 		// dd($request->all());
-// 		$arrOfUnneeded = array('_token','appid','part');
-// 		$arrForCheck = $request->except($arrOfUnneeded);
-// 		$isMon = $isSelfAssess = false;
-// 		if(!isset($request->appid) || count($arrForCheck) <= 0 ){
-// 			return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'No items to pass.']);
-// 		}
-		
-// 		$getOnDBID = $sample = array();
-// 		$res = null;
-// 		if(isset($request->appid) && isset($revision) && FunctionsClientController::isExistOnAppform($request->appid) && FunctionsClientController::existOnDB('asmt_h3',[['asmtH3ID',$request->part]]) && in_array(true, AjaxController::isSessionExist(['employee_login']))){
-// 			try {
-// 				if(DB::table('assessmentcombinedduplicateptc')->where([['asmtH3ID_FK',$request->part],['appid',$request->appid],['evaluatedBy',session()->get('employee_login')->uid],['revision',$revision]])->count() <= 0){
-
-// 					$data = AjaxController::getAllDataEvaluateOne($request->appid);
-// 					$filteredAssessment = $request->except($arrOfUnneeded);
-// 					$uData = AjaxController::getCurrentUserAllData();
-// // suggest to place if count $filteredAssessment
-// 					foreach ($filteredAssessment as $key => $value) {
-						
-// 						if(is_numeric($key) && !in_array($key, $getOnDBID)){
-// 							$res = DB::table('assessmentcombined')->whereIn('asmtComb',[$key])->select('asmtComb','assessmentName','assessmentSeq','headingText','subFor','isAlign')->first();
-// 							$dataFromDB = AjaxController::forAssessmentHeaders(array(['asmt_title.title_code',$value['part']],['asmt_h1.asmtH1ID',$value['lvl1']],['asmt_h2.asmtH2ID',$value['lvl2']],['asmt_h3.asmtH3ID',$value['lvl3']]),array('asmt_h1.*','asmt_h2.*','asmt_h3.*','asmt_title.title_code','asmt_title.title_name', 'asmt_h2.isdisplay'))[0];
-// 		//6-4-2021 original_state					// $dataFromDB = AjaxController::forAssessmentHeaders(array(['asmt_title.title_code',$value['part']],['asmt_h1.asmtH1ID',$value['lvl1']],['asmt_h2.asmtH2ID',$value['lvl2']],['asmt_h3.asmtH3ID',$value['lvl3']]),array('asmt_h1.*','asmt_h2.*','asmt_h3.*','asmt_title.title_code','asmt_title.title_name', 'asmt_h2.isdisplay'))[0];
-// 							$forInsertArray = array('asmtComb_FK' => $res->asmtComb, 'assessmentName' => $res->assessmentName, 'asmtH3ID_FK' => $request->part, 'h3name' => $dataFromDB->h3name, 'asmtH2ID_FK' => $dataFromDB->asmtH2ID, 'isdisplay' => $dataFromDB->isdisplay, 'h2name' => $dataFromDB->h2name, 'asmtH1ID_FK' => $dataFromDB->asmtH1ID, 'h1name' => $dataFromDB->h1name, 'sub' => $res->subFor, 'isAlign' => $res->isAlign, 'revision' => $revision, 'partID' => $dataFromDB->title_code, 'parttitle' => $dataFromDB->title_name, 'evaluation' => ($value['comp'] == 'false' ? 0 : ($value['comp'] == 'NA' ? 'NA' : 1)), 'remarks' => ($value['remarks'] ?? null), 'assessmentSeq' => $res->assessmentSeq, 'evaluatedBy'=> ($uData['cur_user'] != 'ERROR' ? $uData['cur_user'] : (session()->has('uData') ? session()->get('uData')->uid :'UNKOWN, '.$request->ip())), 'assessmentHead' => $res->headingText, 'appid' => $request->appid);
-// 							// (isset($request->monid) && $request->monid > 0 ? $forInsertArray['monid'] = $request->monid : '');
-// 							DB::table('assessmentcombinedduplicateptc')->insert($forInsertArray);
-// 							array_push($getOnDBID, $key);
-// 						}
-// 					}
-
-// 					if(DB::table('assessmentrecommendation')->where([['choice' , 'comment'], ['evaluatedby', session()->get('employee_login')->uid], ['appid' , $request->appid], ['revision',$revision]])->exists()){
-// 						DB::table('assessmentrecommendation')->where([['choice' , 'comment'], ['evaluatedby', session()->get('employee_login')->uid], ['appid' , $request->appid], ['revision',$revision]])->delete();
-// 					}
-// 					DB::table('assessmentrecommendation')->insert(['choice' => 'comment', 'details' => ($request->comment ?? ' '), 'evaluatedby' => session()->get('employee_login')->uid, 'appid' => $request->appid, 'revision' => $revision]);
-
-// 					$urlToRedirect = url('employee/dashboard/processflow/floorPlan/parts/'.$request->appid.'/'.$revision. '/'.($otherUID ?? ''));
-// 					$toViewArr = [
-// 						'redirectTo' => $urlToRedirect
-// 					];
-// 					return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee/assessment/operationSuccess',$toViewArr);
-
-// 				}
-// 			} catch (Exception $e) {
-// 				return $e;
-// 			}
-// 		}
-// 		return ($isSelfAssess ? false : back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Item not found on DB.']));
-		
+        ]);
+        //	AjaxController::createMobileSessionIfMobile($request);
+        //  dd($request->all());
+        // 	$arrOfUnneeded = array('_token','appid','part');
+        // 	$arrForCheck = $request->except($arrOfUnneeded);
+        // 	$isMon = $isSelfAssess = false;
+        // 	if(!isset($request->appid) || count($arrForCheck) <= 0 ){
+        // 		return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'No items to pass.']);
+        // 	}
+                
+        // 	$getOnDBID = $sample = array();
+        // 	$res = null;
+        // 	if(isset($request->appid) && isset($revision) && FunctionsClientController::isExistOnAppform($request->appid) && FunctionsClientController::existOnDB('asmt_h3',[['asmtH3ID',$request->part]]) && in_array(true, AjaxController::isSessionExist(['employee_login']))){
+        // 		try {
+        // 			if(DB::table('assessmentcombinedduplicateptc')->where([['asmtH3ID_FK',$request->part],['appid',$request->appid],['evaluatedBy',session()->get('employee_login')->uid],['revision',$revision]])->count() <= 0){
+        // 				$data = AjaxController::getAllDataEvaluateOne($request->appid);
+        // 				$filteredAssessment = $request->except($arrOfUnneeded);
+        // 				$uData = AjaxController::getCurrentUserAllData();
+        // // suggest to place if count $filteredAssessment
+        // 			foreach ($filteredAssessment as $key => $value) {
+                               
+        // 					if(is_numeric($key) && !in_array($key, $getOnDBID)){
+        // 						$res = DB::table('assessmentcombined')->whereIn('asmtComb',[$key])->select('asmtComb','assessmentName','assessmentSeq','headingText','subFor','isAlign')->first();
+        // 						$dataFromDB = AjaxController::forAssessmentHeaders(array(['asmt_title.title_code',$value['part']],['asmt_h1.asmtH1ID',$value['lvl1']],['asmt_h2.asmtH2ID',$value['lvl2']],['asmt_h3.asmtH3ID',$value['lvl3']]),array('asmt_h1.*','asmt_h2.*','asmt_h3.*','asmt_title.title_code','asmt_title.title_name', 'asmt_h2.isdisplay'))[0];
+        // 		//6-4-2021 original_state					// $dataFromDB = AjaxController::forAssessmentHeaders(array(['asmt_title.title_code',$value['part']],['asmt_h1.asmtH1ID',$value['lvl1']],['asmt_h2.asmtH2ID',$value['lvl2']],['asmt_h3.asmtH3ID',$value['lvl3']]),array('asmt_h1.*','asmt_h2.*','asmt_h3.*','asmt_title.title_code','asmt_title.title_name', 'asmt_h2.isdisplay'))[0];
+        // 						$forInsertArray = array('asmtComb_FK' => $res->asmtComb, 'assessmentName' => $res->assessmentName, 'asmtH3ID_FK' => $request->part, 'h3name' => $dataFromDB->h3name, 'asmtH2ID_FK' => $dataFromDB->asmtH2ID, 'isdisplay' => $dataFromDB->isdisplay, 'h2name' => $dataFromDB->h2name, 'asmtH1ID_FK' => $dataFromDB->asmtH1ID, 'h1name' => $dataFromDB->h1name, 'sub' => $res->subFor, 'isAlign' => $res->isAlign, 'revision' => $revision, 'partID' => $dataFromDB->title_code, 'parttitle' => $dataFromDB->title_name, 'evaluation' => ($value['comp'] == 'false' ? 0 : ($value['comp'] == 'NA' ? 'NA' : 1)), 'remarks' => ($value['remarks'] ?? null), 'assessmentSeq' => $res->assessmentSeq, 'evaluatedBy'=> ($uData['cur_user'] != 'ERROR' ? $uData['cur_user'] : (session()->has('uData') ? session()->get('uData')->uid :'UNKOWN, '.$request->ip())), 'assessmentHead' => $res->headingText, 'appid' => $request->appid);
+        // 						// (isset($request->monid) && $request->monid > 0 ? $forInsertArray['monid'] = $request->monid : '');
+        // 						DB::table('assessmentcombinedduplicateptc')->insert($forInsertArray);
+        // 						array_push($getOnDBID, $key);
+        // 					}
+        // 				}
+        // 				if(DB::table('assessmentrecommendation')->where([['choice' , 'comment'], ['evaluatedby', session()->get('employee_login')->uid], ['appid' , $request->appid], ['revision',$revision]])->exists()){
+        // 					DB::table('assessmentrecommendation')->where([['choice' , 'comment'], ['evaluatedby', session()->get('employee_login')->uid], ['appid' , $request->appid], ['revision',$revision]])->delete();
+        // 				}
+        // 				DB::table('assessmentrecommendation')->insert(['choice' => 'comment', 'details' => ($request->comment ?? ' '), 'evaluatedby' => session()->get('employee_login')->uid, 'appid' => $request->appid, 'revision' => $revision]);
+        // 				$urlToRedirect = url('employee/dashboard/processflow/floorPlan/parts/'.$request->appid.'/'.$revision. '/'.($otherUID ?? ''));
+        // 				$toViewArr = [
+        // 					'redirectTo' => $urlToRedirect
+        // 				];
+        // 				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee/assessment/operationSuccess',$toViewArr);
+        // 			}
+        // 		} catch (Exception $e) {
+        // 			return $e;
+        // 		}
+        // 	}
+        // 	return ($isSelfAssess ? false : back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Item not found on DB.']));		
 	}
   
     //to register the new facility that is not existing on the db on registered_facility or to update the details if existing.

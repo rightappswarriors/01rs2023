@@ -112,8 +112,6 @@
 						<th style="white-space: nowrap;" class="text-center">DOH Status</th>
 						<th style="white-space: nowrap;" class="text-center">FDA Radiation</br>Facility Status</th>
 						<th style="white-space: nowrap;" class="text-center">FDA Pharmacy </br> Status</th>
-						<!-- <th style="white-space: nowrap;" class="text-center">DOH Status</th> -->
-					{{--	<th style="white-space: nowrap;" class="text-center">FDA Status</th>--}}
 						{{-- <th>Self-Assement Complied (%)</th> --}}
 						<th style="white-space: nowrap;" class="text-center">Document <br/> Received On</th>
 						<th style="white-space: nowrap;" class="text-center">DOH/FDA <br/>Requirements</th>
@@ -130,7 +128,7 @@
 								if(intval($each[2][0]) > 0) { $_percentage = "warning"; } 
 								else { $_percentage = "danger"; } 
 							} else { $_percentage = "success"; } ?> {{-- 2 --}}
-					<tr+>
+					<tr>
 						<td>@if ($each[0]->aptid == 'IN') Initial New @elseif ($each[0]->aptid == 'R') Renewal @else Initial Change @endif</td>
 						<?php $_tColor = (($each[0]->canapply == 0) ? "success" : (($each[0]->canapply == 1) ? "warning" : "primary")); ?>
 						<td>{{$each[0]->hfser_id}}R{{$each[0]->rgnid}}-{{$each[0]->appid}}</td>
@@ -215,105 +213,52 @@
 							  </button>
 							  <div class="dropdown-menu" style=" position: relative; z-index: 1000">
 							  	@switch($each[0]->hfser_id)
-									@case('PTC')
-									
-									@if($each[0]->isApprove === 0 && $each[0]->requestReeval === null)
-									
-											<div style="margin-left: 10px;margin-right: 10px;">
-											<a class="dropdown-item ddi bg-warning" style="border-radius: 3px;" onclick="requestReEval('{!! $each[0]->appid !!}')"  href="#">Request for re-evaluation</a>
-											</div>
-											<div class="dropdown-divider"></div>
-									@endif
-									
-									  	<div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Permit to Construct Details</a>
-									    @if($_percentage == "success")@endif
-									    </div>
-										@if($each[0]->savingStat == "final")
-									    <div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
-									    </div>
-										@endif
-									
-									
-										@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
-										
-											<div class="dropdown-divider"></div>
-											<div style="margin-left: 10px;margin-right: 10px;">
-											<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
-											</div>
-										@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
-											<div class="dropdown-divider"></div>
-											<div style="margin-left: 10px;margin-right: 10px;">
-											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
-											</div>
-										@else
-										@endif
 
-
-									@break
-									@case('CON')
-									
+									@case('CON')										
 										<div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Certificate of Need Details</a>
-									    </div>	
+										<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Certificate of Need Details</a>
+										</div>	
 										@if($each[0]->savingStat == "final")
-									    <div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
-									    </div>	
+										<div class="dropdown-divider"></div>
+										<div style="margin-left: 10px;margin-right: 10px;">
+										<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
+										</div>	
 										@endif
 										
 										@if($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no"  && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0)
 										<div class="dropdown-divider"></div>
 										<div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
-									    </div>
+										<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
+										</div>
 										@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
 											<div class="dropdown-divider"></div>
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 											</div>
-										@else
 										@endif								    
 									@break
-									@case('LTO')										
 								
-									@if(isset($each[0]->FDAStatMach))
-										@if($each[0]->FDAStatMach == "For Payment")
-										<div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDA')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA X-Ray)</a>
-									    </div>										
-										@endif	
-									@endif
-									@if(isset($each[0]->FDAStatPhar))
-										@if($each[0]->FDAStatPhar == "For Payment")
-									    <div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDACDRR')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA Pharmacy)</a>
-									    </div>										
-										@endif		
-									@endif								    
-									    <div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">License to Operate Details</a>
-									    </div>	
-										@if($each[0]->savingStat == "final")
-									    <div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/assessmentReady/')}}/{{$each[0]->appid}}/">Self Assessment</a>
-									    </div>	
-									    <div class="dropdown-divider"></div>										
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
-									    </div>									
-										@endif		
+									@case('PTC')
+									
+										@if($each[0]->isApprove === 0 && $each[0]->requestReeval === null)									
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a class="dropdown-item ddi bg-warning" style="border-radius: 3px;" onclick="requestReEval('{!! $each[0]->appid !!}')"  href="#">Request for re-evaluation</a>
+											</div>
 											<div class="dropdown-divider"></div>
-									    <div style="margin-left: 10px;margin-right: 10px;">
-									    <a  data-toggle="modal" data-target="#chgfilupload-{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="#">Upload FDA Proof of payment</a>
-										</div>	
-										@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
+										@endif
+									
+									  	<div style="margin-left: 10px;margin-right: 10px;">
+									    	<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Permit to Construct Details</a>
+									    </div>
+
+										@if($each[0]->savingStat == "final")
+											<div class="dropdown-divider"></div>
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
+											</div>
+										@endif									
+									
+										@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")										
 											<div class="dropdown-divider"></div>
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
@@ -323,8 +268,55 @@
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 											</div>
-										@else 
+										@endif
+									@break									
+									@case('LTO')										
+								
+										@if(isset($each[0]->FDAStatMach))
+											@if($each[0]->FDAStatMach == "For Payment")
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDA')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA X-Ray)</a>
+											</div>										
+											@endif	
+										@endif
+										@if(isset($each[0]->FDAStatPhar))
+											@if($each[0]->FDAStatPhar == "For Payment")
+											<div class="dropdown-divider"></div>
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/printPaymentFDACDRR')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}">Order of Payment (FDA Pharmacy)</a>
+											</div>										
+											@endif		
+										@endif								    
+									    <div class="dropdown-divider"></div>
+									    <div style="margin-left: 10px;margin-right: 10px;">
+									    	<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">License to Operate Details</a>
+									    </div>	
+										@if($each[0]->savingStat == "final")
+											<div class="dropdown-divider"></div>
+											<div style="margin-left: 10px;margin-right: 10px;">
+											<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/assessmentReady/')}}/{{$each[0]->appid}}/">Self Assessment</a>
+											</div>	
+											<div class="dropdown-divider"></div>										
+											<div style="margin-left: 10px;margin-right: 10px;">
+											<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a>
+											</div>									
+										@endif	
 
+										<div class="dropdown-divider"></div>
+									    <div style="margin-left: 10px;margin-right: 10px;">
+									    	<a  data-toggle="modal" data-target="#chgfilupload-{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="#">Upload FDA Proof of payment</a>
+										</div>	
+
+										@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
+											<div class="dropdown-divider"></div>
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
+											</div>
+										@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
+											<div class="dropdown-divider"></div>
+											<div style="margin-left: 10px;margin-right: 10px;">
+												<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
+											</div>
 										@endif		
 									@break
 									@case('COA')
@@ -355,7 +347,6 @@
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 											</div>
-										@else
 										@endif							
 							    	@break
 									@case('COR')
@@ -378,7 +369,6 @@
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 											</div>
-										@else
 										@endif
 
 							    	@break
@@ -402,7 +392,6 @@
 											<div style="margin-left: 10px;margin-right: 10px;">
 											<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 											</div>
-										@else
 										@endif	
 
 							    	@break
@@ -419,6 +408,12 @@
 							    	@break
 								@endswitch
 								    
+									@if($each[0]->savingStat == "final")
+										<div class="dropdown-divider"></div>
+										<div style="margin-left: 10px;margin-right: 10px;">
+											<a  data-toggle="modal" data-target="#chgfilupload-doh-{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="#">Upload DOH Proof of payment</a>
+										</div>	
+									@endif
 
 									@if($each[0]->trns_desc == "For Compliance")
 										<div class="dropdown-divider"></div>
@@ -429,17 +424,13 @@
 							</div>
 							
 							<div class="modal fade" id="chgfil-{{$each[0]->appid}}" role="dialog"  tabindex="-1">
-										<div class="modal-dialog modal-lg ">
-										
-										<!-- Modal content-->
-										<div class="modal-content">
-											<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal">&times;</button>
-											
-											</div>
-											<div class="modal-body">
-											<center>
-												<table>
+								<div class="modal-dialog modal-lg ">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>										
+										</div>
+										<div class="modal-body" style="text-align:center">
+											<table>
 												<tr id="chgfil{{$each[0]->appid}}" hidden>
 													<td colspan="11">
 													@if(count($each[1]) > 0) <?php $isDone = false; ?>
@@ -475,145 +466,166 @@
 													@else
 														<center class="text-primary">Order of Payment has not been finalized by the Process Owner. We will notify you as soon as we finish the verification. Thank you for your patience.</center>
 													@endif
-													</td> <td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td> </tr> 
-											
-												</table>
-											</center>
-											</div>
-											<div class="modal-footer">
+													</td> <td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td> 
+												</tr>										
+											</table>
+										</div>
+										<div class="modal-footer">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-											</div>
 										</div>
-										
-										</div>
-									</div>
+									</div>								
+								</div>
+							</div>
 
-									<div class="modal fade" id="chgfilupload-{{$each[0]->appid}}" role="dialog"  tabindex="-1">
-										<div class="modal-dialog modal-lg ">
-										
-										<!-- Modal content-->
+							<div class="modal fade" id="chgfilupload-{{$each[0]->appid}}" role="dialog"  tabindex="-1">
+								<div class="modal-dialog modal-lg ">
+									<form id="uppp-{{$each[0]->appid}}" method="post" enctype="multipart/form-data">
 										<div class="modal-content">
 											<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal">&times;</button>
-											
+												Upload FDA Proof of Payment <button type="button" class="close" data-dismiss="modal">&times;</button>										
 											</div>
 											<div class="modal-body">
-											@if( $each[0]->hfser_desc == "License to Operate")
-											<form id="uppp-{{$each[0]->appid}}" method="post" enctype="multipart/form-data">
-													Upload proof of payment 
-													<br/>												
+												@if( true)									
 													<label style="float: left;" for="filemach-{{$each[0]->appid}}">Machine</label>
 													<input id="filemach-{{$each[0]->appid}}" class="form-control"  type="file" name="upmach">
 													
 													<label style="float: left;" for="filemach-{{$each[0]->appid}}">Pharmacy</label>
 													<input id="filephar-{{$each[0]->appid}}" class="form-control"  type="file" name="upphar">
-													
-													
-													
 													<input id="appi-{{$each[0]->appid}}" class="form-control" type="hidden" name="appid">
-													
-													<br/>
-													<button  style="width: 30%; float: right;"	class="btn btn-info btn-block " type="submit"  >Submit</button>
-													<!-- <button type="submit" onclick="subProofPay('{{$each[0]->appid}}')"  >Submit</button> -->
-											</form>
-											@else
-												PROOF OF PAYMENT NOT APPLICABLE
-											@endif
-											<!-- endif -->
+												@else
+													PROOF OF PAYMENT NOT APPLICABLE
+												@endif
 											</div>
 											<div class="modal-footer">
-											<button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+												<button type="button"  style="width: 30%; float: right;" class="btn btn-default btn-block " data-dismiss="modal">Close</button>&nbsp;&nbsp;&nbsp;
+												<button  style="width: 30%; float: right;"	class="btn btn-info btn-block " type="submit" >Submit</button>
 											</div>
 										</div>
-										
+									</form>
+								</div>
+							</div>
+
+							<div class="modal fade" id="chgfilupload-doh-{{$each[0]->appid}}" role="dialog"  tabindex="-1">
+								<div class="modal-dialog modal-lg ">									
+									<form id="uppp-doh-{{$each[0]->appid}}" method="post" enctype="multipart/form-data">
+										<div class="modal-content">
+											<div class="modal-header">
+												Upload DOH Proof of Payment<button type="button" class="close" data-dismiss="modal">&times;</button>										
+											</div>
+											<div class="modal-body">
+												@if(true)
+													<label style="float: left;" for="filemach-{{$each[0]->appid}}">File</label>
+													<input id="file-payment-doh-{{$each[0]->appid}}" class="form-control"  type="file" name="upphar">
+													<input id="payment-doh-appi-{{$each[0]->appid}}" class="form-control" type="hidden" name="appid">
+												@else
+													PROOF OF PAYMENT NOT APPLICABLE
+												@endif
+											</div>
+											<div class="modal-footer">
+												<button type="button"  style="width: 30%; float: right;"  class="btn btn-default btn-block " data-dismiss="modal">Close</button>&nbsp;&nbsp;&nbsp;
+												<button  style="width: 30%; float: right;"	class="btn btn-info btn-block " type="submit" >Submit</button>
+											</div>
 										</div>
-									</div>
+									</form>								
+								</div>
+							</div>
 									
-<script>
-	function requestReEval(appid){
-		console.log(appid)
-		if(confirm('Are you sure you want to request for re-evaluation?')){
-			$.ajax({
-							url: '{{asset('/api/request/reeval')}}',
-							type: 'POST',
-							data:{appid: appid},
+							<script>
+								function requestReEval(appid){
+									console.log(appid)
+									if(confirm('Are you sure you want to request for re-evaluation?')){
+										$.ajax({
+											url: '{{asset('/api/request/reeval')}}',
+											type: 'POST',
+											data:{appid: appid},
 
-							success: function(a){
-								
-								if(a == 'succ'){
-									alert("Request for Re-evaluation sent")
-									location.reload();
-								}else{
-									alert("Request for Re-evaluation failed")
+											success: function(a){								
+												if(a == 'succ'){
+													alert("Request for Re-evaluation sent")
+													location.reload();
+												}else{	alert("Request for Re-evaluation failed")	}
+											}
+										})
+									}
 								}
+								$(document).on('submit','#uppp-{{$each[0]->appid}}',function(event){
+									event.preventDefault();
+									if(confirm('Are you sure you want to upload proof of payment?')){
+															
+										let data = new FormData(this);
+										// data.append('upproof', document.getElementById("file-{{$each[0]->appid}}").value);
+										data.append('appid', '{{$each[0]->appid}}');
+										console.log("data")
+										console.log(data.values())
+										console.log('{{$each[0]->appid}}')
+										$.ajax({
+											url: '{{asset('/api/upload/proofpayment')}}',
+											type: 'POST',
+											contentType: false,
+											processData: false,
+											data:data,
+											success: function(a){
+												console.log("a")
+												console.log(a.msg)
+												console.log(a.id)
 
-							}
-				})
-		}
-	}
-
-
-
-
-	$(document).on('submit','#uppp-{{$each[0]->appid}}',function(event){
-		event.preventDefault();
-		if(confirm('Are you sure you want to upload proof of payment?')){
-								
-								let data = new FormData(this);
-								// data.append('upproof', document.getElementById("file-{{$each[0]->appid}}").value);
-								data.append('appid', '{{$each[0]->appid}}');
-								console.log("data")
-								console.log(data.values())
-								console.log('{{$each[0]->appid}}')
-								$.ajax({
-									url: '{{asset('/api/upload/proofpayment')}}',
-									type: 'POST',
-									contentType: false,
-									processData: false,
-									data:data,
-
-									success: function(a){
-										console.log("a")
-										console.log(a.msg)
-										console.log(a.id)
-
-										if(a.msg == "success"){
-											alert("Payment upload successful")
-										}else{
-											alert("Payment upload failed")
-										}
-										
-										// if(a == 'DONE'){
-										// 	alert('Successfully Edited Personnel');
-										// 	location.reload();
-										// } else {
-										// 	console.log(a);
-										// }
-									},
-									fail: function(a,b,c){
-										console.log([a,b,c]);
+												if(a.msg == "success"){	alert("Payment upload successful")	}
+												else{	alert("Payment upload failed")	}					
+												// if(a == 'DONE'){ 	alert('Successfully Edited Personnel'); 	location.reload();
+												// } else { 	console.log(a); }
+											},
+											fail: function(a,b,c){
+												console.log([a,b,c]);
+											}
+										})
 									}
 								})
-		}
-							})
-	</script>				
+								$(document).on('submit','#uppp-doh-{{$each[0]->appid}}',function(event){
+									event.preventDefault();
+									if(confirm('Are you sure you want to upload proof of payment?')){
+															
+										let data = new FormData(this);
+										// data.append('upproof', document.getElementById("file-{{$each[0]->appid}}").value);
+										data.append('appid', '{{$each[0]->appid}}');
+										console.log("data")
+										console.log(data.values())
+										console.log('{{$each[0]->appid}}')
+										$.ajax({
+											url: '{{asset('/api/upload/proofpayment')}}',
+											type: 'POST',
+											contentType: false,
+											processData: false,
+											data:data,
+											success: function(a){
+												console.log("a")
+												console.log(a.msg)
+												console.log(a.id)
+
+												if(a.msg == "success"){	alert("Payment upload successful")	}
+												else{	alert("Payment upload failed")	}					
+												// if(a == 'DONE'){ 	alert('Successfully Edited Personnel'); 	location.reload();
+												// } else { 	console.log(a); }
+											},
+											fail: function(a,b,c){
+												console.log([a,b,c]);
+											}
+										})
+									}
+								})
+							</script>				
 						</td>
 					</tr>
-					
-					
-					@endif @endforeach @else
+					@endif 
+					@endforeach 
+					@else
 					<tr>
 						<td colspan="13">No application applied yet.</td>
 					</tr>
-					@endif
-					
+					@endif					
 				</tbody>
 			</table>
-			</div>
-
+		</div>
 	</div>
-
-
 	<script src="{{asset('ra-idlis/public/js/forall.js')}}"></script>
 	<script type="text/javascript">
 		"use strict";
@@ -624,14 +636,12 @@
 		}
 		(function() {
 		})();
-		$(function () {
-		  	$('[data-toggle="tooltip"]').tooltip()
-		});
+		$(function () {	$('[data-toggle="tooltip"]').tooltip()	});
 		$(document).ready( function () {
-		    $('#tApp').DataTable({
-		    	"ordering": false,
-		    	"lengthMenu": [10, 20, 50, 100]
-		    });
+			$('#tApp').DataTable({
+				"ordering": false,
+				"lengthMenu": [10, 20, 50, 100]
+			});
 		});
 		function remAppHiddenId(elId) {
 			let idom = document.getElementById(elId);
@@ -644,10 +654,10 @@
 			}
 		}
 	</script>
-
-<script type="text/javascript">
+	<script type="text/javascript">
 		"use strict";
 		var ___div = document.getElementById('__applyBread');
+
 		if(___div != null || ___div != undefined) {
 			___div.classList.remove('active');
 			___div.classList.add('text-primary');
@@ -655,13 +665,13 @@
 		(function() {
 		})();
 		$(function () {
-		  	$('[data-toggle="tooltip"]').tooltip()
+			$('[data-toggle="tooltip"]').tooltip()
 		});
 		$(document).ready( function () {
-		    $('#tAppCl').DataTable({
-		    	"ordering": false,
-		    	"lengthMenu": [10, 20, 50, 100]
-		    });
+			$('#tAppCl').DataTable({
+				"ordering": false,
+				"lengthMenu": [10, 20, 50, 100]
+			});
 		});
 		function remAppHiddenId(elId) {
 			let idom = document.getElementById(elId);
@@ -674,76 +684,48 @@
 			}
 		}
 	</script>
-	@include('client1.cmp.footer')
+@include('client1.cmp.footer')
 </body>
 @endsection
 
 <script>
+	function subProofPay(appid){
 
-		function subProofPay(appid){
-
-			
-			document.getElementById("uppp-"+appid).addEventListener("submit", function(event){
-			event.preventDefault()
-			});
-
-			
-			var form =	document.forms["uppp-"+appid].getElementsByTagName("input");
-			
-			if(form[0].value != ""){
-				if(confirm("Are you sure you want to send your proof of payment?")){
-				
-					$(document).on('submit','#uppp'+appid,function(event){
-						event.preventDefault();
-						let data = new FormData(this);
-						console.log("data")
-						console.log(data)
-						$.ajax({
-							url: '{{asset('client1/sendproofpay')}}',
-							type: 'POST',
-							contentType: false,
-							processData: false,
-							data:data,
-							success: function(a){
-								console.log("a")
-								// console.log(a)
-								// if(a == 'DONE'){
-								// 	alert('Successfully Edited Personnel');
-								// 	location.reload();
-								// } else {
-								// 	console.log(a);
-								// }
-							},
-							fail: function(a,b,c){
-								console.log([a,b,c]);
-							}
-						})
+		document.getElementById("uppp-"+appid).addEventListener("submit", function(event){	event.preventDefault()	});		
+		var form =	document.forms["uppp-"+appid].getElementsByTagName("input");
+		
+		if(form[0].value != ""){
+			if(confirm("Are you sure you want to send your proof of payment?")){			
+				$(document).on('submit','#uppp'+appid,function(event){
+					event.preventDefault();
+					let data = new FormData(this);
+					console.log("data")
+					console.log(data)
+					$.ajax({
+						url: '{{asset('client1/sendproofpay')}}',
+						type: 'POST',
+						contentType: false,
+						processData: false,
+						data:data,
+						success: function(a){
+							console.log("a")
+							// if(a == 'DONE'){ alert('Successfully Edited Personnel');	location.reload(); } else { console.log(a); }
+						},
+						fail: function(a,b,c){
+							console.log([a,b,c]);
+						}
 					})
-
-
-				// $.ajax({
-				// 		url: '{{asset('client1/sendproofpay')}}',
-				// 		// dataType: "json", 
-	    		// 		async: false,
-				// 		type: 'POST',
-				// 	data:subs,
-				// 	cache: false,
-			    //     contentType: false,
-			    //     processData: false,
-				// 		success: function(a){
-				// 			console.log(a.msg)
-                            
-				// 		}
-				// 	});
-
-
-				}
+				})
+			// $.ajax({
+			// 		url: '{{asset('client1/sendproofpay')}}',
+			// 		// dataType: "json", 
+			// 		async: false, type: 'POST', data:subs, cache: false, contentType: false, processData: false,
+			// 		success: function(a){ console.log(a.msg)} 
+			//});
 			}
-			
-		}								
-										
-
-									</script>
+		}		
+	}
+</script>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.0.3/css/dataTables.dateTime.min.css" />

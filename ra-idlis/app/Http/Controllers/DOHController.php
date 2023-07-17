@@ -4307,18 +4307,17 @@ namespace App\Http\Controllers;
 					$data10 = Carbon::parse($Cur_useData['date']);
 					$data10 = $data10->addDays(30);
 					$data8 = $data8->addDays(1);
+					// $temp = $data8->toDateString();	
 
 					do {
-						// $temp = $data8->toDateString();	
 						if ($data8->isWeekday()) { // true
 							$temp = $data8->toDateString();
 							$check = DB::table('holidays')->where('hdy_date', '=', $temp)->first();
+
 							if ($check) {
 								$data8 = $data8->addDays(1);
 								$test = false;
-							} else {
-								$test = true;
-							}
+							} else {	$test = true;	}
 						} else { // false
 							$data8 = $data8->addDays(1);
 							$test = false;
@@ -4327,22 +4326,17 @@ namespace App\Http\Controllers;
 
 					if($coaFlag && !isset($data->coaflag)){
 						$boolFlag = true;
-					} else {
-						$boolRedirect = false;
-					}
+					} else {	$boolRedirect = false;	}
 
 					if($isdocumentary == "true"){
 						$boolFlag = true;
-					} else{
-						$boolRedirect = false;
-					}
+					} else{	$boolRedirect = false;	}
 
 					if($office == 'xray' || $office == 'pharma')
 					{
 						$boolFlag = false;
 					}
-					// dd($boolFlag);
-					//dd($boolRedirect);
+					//dd($boolFlag); //dd($boolRedirect);
 					if($boolFlag){
 						try 
 						{
@@ -4353,12 +4347,15 @@ namespace App\Http\Controllers;
 							$data5 = AjaxController::getAllDataEvaluateOneUploads($appid, 4);
 							$data6 = AjaxController::getAllOrderOfPayment();
 							$test = false;
-
-							//dd($data1);
 							$isApproved = [1, null]; $isAllUpload = []; $isTrue = true;
 							$acceptedExt = array('pdf','jpg','png','jpeg','gif');
-							//dd($data);
-							return view('employee.processflow.pfevaluteone', ['AppData'=> $data, 'UploadData' => $data1, 'numOfX' => count($data2), 'numOfApp' => count($data3), 'numOfAprv'=> count($data4), 'numOfNull' => count($data5), 'OOPS'=>$data6, /*'OPPok' => $data7,*/ 'ActualString' => $data8->toDateString(), 'DateString' => $data8->toFormattedDateString(),'appID' => $appid, 'DateNow' => $data9->toDateString(), 'AfterDay'=> $data10->toDateString(), 'linkToEdit' => $linkToEdit, 'documentDate' => $documentDate/*,'allSent' => $isTrue*/, 'accepted' => $acceptedExt, 'forhfsrb' => $forhfsrb, 'office' => $office, 'coaFlag' => $coaFlag, 'redirect' => $boolRedirect]);
+							
+							return view('employee.processflow.pfevaluteone', [
+											'AppData'=> $data, 'UploadData' => $data1, 'numOfX' => count($data2), 'numOfApp' => count($data3), 'numOfAprv'=> count($data4), 
+											'numOfNull' => count($data5), 'OOPS'=>$data6, /*'OPPok' => $data7,*/ 'ActualString' => $data8->toDateString(), 
+											'DateString' => $data8->toFormattedDateString(),'appID' => $appid, 'DateNow' => $data9->toDateString(), 
+											'AfterDay'=> $data10->toDateString(), 'linkToEdit' => $linkToEdit, 'documentDate' => $documentDate/*,'allSent' => $isTrue*/, 
+											'accepted' => $acceptedExt, 'forhfsrb' => $forhfsrb, 'office' => $office, 'coaFlag' => $coaFlag, 'redirect' => $boolRedirect]);
 						} 
 						catch (Exception $e) 
 						{
@@ -4373,13 +4370,12 @@ namespace App\Http\Controllers;
 						$arrTemp = [];
 						$req = AjaxController::getAllRequirementsLTO($appid);
 						
-						if($office != 'hfsrb'){
-							
+						if($office != 'hfsrb')
+						{							
 							$adjustedName = ($office == 'pharma' ? 'CDRR' : 'CDRRHR');
 							$req = AjaxController::getRequirementsFDA($appid);
 							$count = count($req);
 							
-
 							if(isset($req)){
 								for ($i=0; $i < $count; $i++) {
 									if(isset($req[$i]) && ($req[$i][4] == $adjustedName) && $req[$i][2]->isNotEmpty()){
@@ -4397,10 +4393,7 @@ namespace App\Http\Controllers;
 									array_push($tables, trim($datas[3]));
 								}
 							}
-						} else {
-							$tables = $arrTemp;
-						}
-
+						} else {	$tables = $arrTemp;	}
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 						$checdata = DB::table('appform')->where('appid', '=', $appid)->first();
 
@@ -5594,8 +5587,7 @@ namespace App\Http\Controllers;
 			}
 			else {
 				return redirect()->route('employee');
-			}
-			
+			}			
 		}
 
 		public function hfercTeam(Request $request)
@@ -5622,8 +5614,7 @@ namespace App\Http\Controllers;
 			if(session()->has('employee_login')){
 				if(DB::table('appform')->where('appid',$appid)->exists()){
 
-					// $revision = $revision == 1 ? 0 : $revision;
-	
+					// $revision = $revision == 1 ? 0 : $revision;	
 					if( $revision > 2 && AjaxController::isRequredToPayPTC($revision) && !FunctionsClientController::existOnDB('chgfil',array(['appform_id',$appid],['uid',AjaxController::getUidFrom($appid)],['revision',$revision],['isPaid',1])) && !AjaxController::isSessionExist(['employee_login'])){
 						return redirect('employee/dashboard/processflow/assignmentofhferc/'.$appid.'/'.(AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid)-1 : 1))->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Payment is not settled.']);
 					}

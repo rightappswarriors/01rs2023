@@ -20,7 +20,7 @@
 
           <div class="design text-right">
 
-            Online Licensing Regulatory System Version 1.0.35
+            Online Licensing Regulatory System Version 1.0.36
 
           </div>
 
