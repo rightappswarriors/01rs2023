@@ -678,8 +678,8 @@ class FunctionsClientController extends Controller {
 		try {
 			$arrRet = [];
 			if(! empty($appid)) {
-				//$sql2 = "SELECT DISTINCT facid FROM `x08_ft` WHERE appid = '$appid'";
-				$sql2 = "SELECT facid FROM `x08_ft` WHERE ID IN(SELECT DISTINCT MIN(id) FROM `x08_ft` WHERE appid = '$appid')";
+				$sql2 = "SELECT DISTINCT facid FROM `x08_ft` WHERE appid = '$appid'";
+				// $sql2 = "SELECT facid FROM `x08_ft` WHERE ID IN(SELECT DISTINCT MIN(id) FROM `x08_ft` WHERE appid = '$appid')";
 				$sql1 = "SELECT DISTINCT hgpid FROM facilitytyp WHERE facid IN ($sql2) ORDER BY hgpid DESC";
 				$sql3 = "SELECT facid, facname FROM facilitytyp WHERE facid IN ($sql2)";
 				$sql4 = "SELECT hgpid, hgpdesc FROM hfaci_grp WHERE hgpid IN ($sql1)";
