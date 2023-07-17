@@ -22,8 +22,7 @@
                   <td scope="col" style="text-align: center;">Type of Facility</td>
                   <td scope="col" style="text-align: center;">Complete Address</td>
 
-                  <td scope="col" style="text-align: center;">Head of Facility</td>
-                  <td scope="col" style="text-align:center">Contact Info</td>
+                  <td scope="col" style="text-align: center;">Owner and Head of Facility <br/>and Contact Info</td>
                   <td scope="col" style="text-align:center">License Details</td>
                   <td scope="col" style="text-align: center;">Action</td>                 
                   
@@ -36,30 +35,45 @@
                     <tr>
                       <td style="text-align:left"><strong>{{$data->appid}}</strong></td>
                       <td style="text-align:left"><strong>{{$data->facilityname}}</strong></td>
-                      <td style="text-align:left">{{( $data->hgpdesc ?? 'NOT FOUND')}}<br/> {{$data->facmdesc}}<br/>{{$data->ocdesc}}<br/>{{$data->classname}} {{$data->subclassname}}</td>
-                      <td style="text-align:center">{{$data->street_number}} {{$data->street_name}} {{$data->brgyname}}, {{$data->cmname}},<br/>{{$data->provname}} {{$data->zipcode}} <br/>{{$data->rgn_desc}}</td>
+                      <td style="text-align:left"><strong>{{( $data->hgpdesc ?? 'NOT FOUND')}}</strong><br/> {{$data->facmdesc}}<br/>{{$data->ocdesc}}<br/>{{$data->classname}} {{$data->subclassname}}</td>
+                      <td style="text-align:left">
+                        {{$data->street_number}} {{$data->street_name}} {{$data->brgyname}}, {{$data->cmname}},<br/>
+                        {{$data->provname}} {{$data->zipcode}} <br/>
+                        {{$data->rgn_desc}}
+                      </td>
                       
-                      <td style="text-align:left">{{$data->approvingauthority}},<br/>{{$data->approvingauthoritypos}} <br/>Owned by:<br/>{{$data->owner}}</td>
-                      <td style="text-align:left">Tel: {{$data->landline}}<br/>Fax: {{$data->faxnumber}}<br/>Email: {{$data->email}}</td>
-
-                      <td style="text-align:left">Type: <strong>{{$data->hfser_id}}</strong><br/>License No:<br/><strong>{{$data->licenseNo}}</strong><br/>Issued On:<br/>{{$data->formattedDateApprove}}</td>  
+                      <td style="text-align:left">
+                        Owned by: <strong>{{$data->owner}}</strong><br/>
+                        {{$data->approvingauthority}}, {{$data->approvingauthoritypos}}<br/>
+                        Tel: {{$data->landline}}<br/>
+                        Fax: {{$data->faxnumber}}<br/>
+                        Email: {{$data->email}}
+                      </td>
 
                       <td style="text-align:left">
-                      <center>
-                              @php
-                              $link = '';
-                              $urlFixed = 
-                                url(
-                                  str_replace(
-                                  array("{appid}","{hfser_id}"),
-                                  array($data->appid, $data->hfser_id),
-                                  $link
-                                  )
-                                );
-                              @endphp
-                              <a class="btn btn-primary" target="_blank" href="{{ asset('client1/certificates/'.$data->hfser_id.'/'.$data->appid) }}"><i class="fa fa-fw fa-eye"></i></a>
-                            </center>
-                    
+                        Type: <strong>{{$data->hfser_id}}</strong><br/>
+                        License No: <strong>{{$data->licenseNo}}</strong><br/>
+                        Issued On: <strong>{{$data->formattedDateApprove}}</strong><br/>
+                        Certificate Signatory: {{$data->signatoryname}}<br/>
+                        Signatory Position: {{$data->signatorypos}}                    
+                      </td>  
+
+                      <td style="text-align:left">
+                        <center>
+                          @php
+                          $link = '';
+                          $urlFixed = 
+                            url(
+                              str_replace(
+                              array("{appid}","{hfser_id}"),
+                              array($data->appid, $data->hfser_id),
+                              $link
+                              )
+                            );
+                          @endphp
+                          <a class="btn btn-primary" target="_blank" href="{{ asset('client1/certificates/'.$data->hfser_id.'/'.$data->appid) }}"><i class="fa fa-fw fa-eye"></i></a>
+                        </center>
+                
                       </td>
                     </tr>
 

@@ -740,7 +740,7 @@ class ReportsController extends Controller
 					if($request->fo_submit == 'csv') 
 					{ 
 						$tbl = $data['data'];
-						$data_array[] = array("Region","Complete Address","Name of Facility","Type Of Facility","Approving Authority","Approving Authority Postion","Owner","Ownership","Class","Subclass","DOH Retained","Telephone No.","Fax No.","Email","Authorization Type","License ID","Date Issued","Remarks", "Certificate URL");
+						$data_array[] = array("Region","Complete Address","Name of Facility","Type Of Facility","Approving Authority","Approving Authority Postion","Owner","Ownership","Class","Subclass","DOH Retained","Telephone No.","Fax No.","Email","Authorization Type","License ID","Date Issued","Certificate Signatory", "Certificate Signatory Position", "Remarks", "Certificate URL");
 
 						foreach($data['data']  as $data_item)
 						{
@@ -765,11 +765,12 @@ class ReportsController extends Controller
 								'License ID' =>$data_item->licenseNo,
 								
 								'Date Issued' =>$data_item->formattedDateApprove,
+								'Certificate Signatory' => $data_item->signatoryname,
+								'Certificate Signatory Position' => $data_item->signatorypos,
 								'Remarks' =>$data_item->approvedRemark,
 								'Certificate URL' =>asset('client1/certificates/'.$data_item->hfser_id.'/'.$data_item->appid)
 							);
 						}
-
 
 						$this->ExportExcel($data_array, $title);
 						$data['data'] = array();

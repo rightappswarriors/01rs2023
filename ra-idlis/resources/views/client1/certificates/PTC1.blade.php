@@ -3,28 +3,22 @@
 @include('client1.cmp.__issuance')
 <body>
 <?php
-
-function xucwords($string)
-{
-	$words = split(" ", $string);
-	$newString = array();
-
-	foreach ($words as $word)
+	function xucwords($string)
 	{
-		if(!preg_match("/^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/", $word)) {
-			$word = ucfirst($word);
-		} else {
-			$word = strtoupper($word);
+		$words = split(" ", $string);
+		$newString = array();
+
+		foreach ($words as $word)
+		{
+			if(!preg_match("/^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/", $word)) {
+				$word = ucfirst($word);
+			} else {
+				$word = strtoupper($word);
+			}
+			array_push($newString, $word);
 		}
-
-		array_push($newString, $word);
+		return join(" ", $newString);  
 	}
-
-	return join(" ", $newString);  
-}
-
-
-
 ?>
 	<style>
 		
@@ -40,8 +34,6 @@ function xucwords($string)
 			padding-top: 20px;
     		padding-left: 15px;
 		}
-
-
 		.leftHeader{
 			font-family: Cambria, Georgia, serif;
 			font-size: 12;
@@ -50,26 +42,21 @@ function xucwords($string)
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12;
 		}
-		
-
+		.contl { float: left; font-family: Cambria, Georgia, serif; }
 		@media print {
 			.card-body .row{
 				height:26px;
 			}
-
 			.card-body {
 				line-height: 20px;
 			}
-
 			.card-header .row{
 				height:100px;
 			}
-
 			.card-body .row.location{
 				height:50px;
 			}
 		}
-
 		.watermarked {
 			position: relative;
 			content: "";
@@ -112,59 +99,72 @@ function xucwords($string)
 					<h1 class="text-center" >PERMIT TO CONSTRUCT</h1>
 
 					<div class="row">
-						<div class="col-md-3">
-							<span class="leftHeader text-justify" style="float: left; font-family: Cambria, Georgia, serif;" >Owner </span><span style="float: right">:</span>
+						<div class="col-md-3 leftHeader contl">
+							Owner
 						</div>
-						<div class="col-md-8">
-							<span  class="rightHeader text-justify" >{{((isset($retTable[0]->owner)) ? $retTable[0]->owner : 'No owner')}}</span>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;:&nbsp;
+						</div>
+						<div class="col-md-8 rightHeader text-justify">
+							{{((isset($retTable[0]->owner)) ? $retTable[0]->owner : 'No owner')}}
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-3">
-							<span class="leftHeader text-justify" style="float: left; font-family: Cambria, Georgia, serif;">Name of Health Facility </span><span style="float: right">:</span>
+						<div class="col-md-3 leftHeader contl">
+							Name of Health Facility
 						</div>
-						<div class="col-md-8">
-							<span  class="rightHeader text-justify"><strong>{{((isset($retTable[0]->facilityname)) ? strtoupper($retTable[0]->facilityname)  : 'No facility name')}}</strong></span>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;:&nbsp;
+						</div>
+						<div class="col-md-8 rightHeader text-justify">
+							<strong>{{((isset($retTable[0]->facilityname)) ? strtoupper($retTable[0]->facilityname)  : 'No facility name')}}</strong>
 						</div>
 					</div>
 					
 					<div class="row">
-						<div class="col-md-3">
-							<span class="leftHeader text-justify" style="float: left; font-family: Cambria, Georgia, serif;">Type of Health Facility </span><span style="float: right">:</span>
+						<div class="col-md-3 leftHeader contl">
+							Type of Health Facility
 						</div>
-						<div class="col-md-8">
-							<span  class="rightHeader text-justify">{{((isset($retTable[0]->hgpdesc)) ? $retTable[0]->hgpdesc : '')}}  {{((isset($retTable[0]->ocdesc)) ? ' / '.$retTable[0]->ocdesc : '')}} </span>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;:&nbsp;
+						</div>
+						<div class="col-md-8 rightHeader text-justify">
+							{{((isset($retTable[0]->hgpdesc)) ? $retTable[0]->hgpdesc : '')}}  {{((isset($retTable[0]->ocdesc)) ? ' / '.$retTable[0]->ocdesc : '')}}
 						</div>
 					</div>
 
 					<div class="row">
-						<div class="col-md-3">
-							<span class="leftHeader text-justify" style="float: left; font-family: Cambria, Georgia, serif;">Location </span><span style="float: right">:</span>
+						<div class="col-md-3 leftHeader contl">
+							Location
 						</div>
-						<div class="col-md-8">
-							<span  class="rightHeader text-justify">
-								@php
-									$loc =( ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ') 				 
-															.($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' )
-															.ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '
-															.ucwords(strtolower($retTable[0]->provname)).' '.strtoupper($retTable[0]->rgn_desc));
+						<div class="col-md-1" style="display: inline">
+							&nbsp;:&nbsp;
+						</div>
+						<div class="col-md-8 rightHeader text-justify">
+							@php
+								$loc =( ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ') 				 
+										.($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' )
+										.ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '
+										.ucwords(strtolower($retTable[0]->provname)).' '.strtoupper($retTable[0]->rgn_desc));
 
-									$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
-								@endphp
-
-									{{((isset($retTable[0])) ?	$stringloc	: 'No Location.')}}
-							</span>
+								$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
+							@endphp
+							{{((isset($retTable[0])) ?	$stringloc	: 'No Location.')}}
 						</div>
 					</div>
+
 					<div class="row">
-						<div class="col-md-3">
-							<span style="float: left;" class="leftHeader text-justify">Scope of Work </span><span style="float: right">:</span>
+						<div class="col-md-3 leftHeader contl">
+							Scope of Work
 						</div>
-						<div class="col-md-8">
-							<span  class="rightHeader text-justify"><strong>
-							{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}</strong></span>
+						<div class="col-md-1" style="display: inline">
+							&nbsp;:&nbsp;
+						</div>
+						<div class="col-md-8 rightHeader text-justify">
+							<strong>{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}</strong>
 						</div>
 					</div>
+
 					<br/><br/>
 					<div style="margin-top:20px;">
 						<div class="col-md-12" style="padding:0;">
