@@ -283,7 +283,7 @@
 												if(!isset($fourthHeader->subFor))
 												{
 												@endphp
-												<div class="col-md-8">
+												<div class="col-md-12">
 												<!-- <script>
 													var num = {
 														id: '{{$fourthHeader->id}}',
@@ -295,100 +295,94 @@
 													}
 														console.log(num)
 														</script> -->
-												<div class="pt-3" style="padding-left: {{($fourthHeader->isAlign != 1 ? '4rem!important;' : '1rem!important;')}}">
-												<div class="row operations" id="{{$fourthHeader->id}}" >
-												<div class="col-md-3">
-												<div class="form-check form-check-inline">
-												{{-- yes --}}
-												<div class="custom-control custom-radio">
-												
-												<input required type="text" name="{{$fourthHeader->id}}[lvl1]" class="custom-control-input" value="{{$fourthHeader->h1idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[lvl2]" class="custom-control-input" value="{{$fourthHeader->h2idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[lvl3]" class="custom-control-input" value="{{$fourthHeader->h3idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[part]" class="custom-control-input" value="{{$fourthHeader->partidReal}}">
-												<input required type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="true" id="customCheck1{{$fourthHeader->id}}" checked="">
-												<label class="custom-control-label text-success check" for="customCheck1{{$fourthHeader->id}}"><i class="fa fa-check" aria-hidden="true"></i></label>
-												</div> &nbsp;&nbsp;
-												{{-- end yes --}}
-												{{-- no --}}
-												<div class="custom-control custom-radio">
-												<input type="radio" name="{{$fourthHeader->id}}[comp]" onclick="showRemark(this,{{$fourthHeader->id}})" class="custom-control-input" value="false" id="customCheck2{{$fourthHeader->id}}">
-												<label class="custom-control-label text-danger times"  for="customCheck2{{$fourthHeader->id}}"><i class="fa fa-times" aria-hidden="true"></i></label>
-												</div>&nbsp;&nbsp;
-												{{-- end no --}}
-												{{-- na --}}
-												<div class="custom-control custom-radio">
-												<input type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="NA" id="customCheck3{{$fourthHeader->id}}">
-												<label class="custom-control-label text-danger na"  for="customCheck3{{$fourthHeader->id}}">N/A</label>
-												</div>
-												{{-- end na --}}
-												</div>
-												</div>
-												<div class="col-md">
-													{{-- assessment combined --}}
-												{!!$fourthHeader->description ?? ""!!}
-
-												</div>
-												<div class="col-md-3" id="el{{$fourthHeader->id}}">
-													{{-- assessment remarks --}}
-													<textarea name="{{$fourthHeader->id}}[remarks]" hidden=""></textarea>
-													<a class="text-primary" onclick="showRemark(this,{{$fourthHeader->id}})" style="cursor: pointer;">Add Remarks</a>
-													
-												</div>
-												</div>
-												</div>
+													<div class="pt-3" style="padding-left: {{($fourthHeader->isAlign != 1 ? '4rem!important;' : '1rem!important;')}}">
+														<div class="row operations" id="{{$fourthHeader->id}}" >
+															<div class="col-md-3">
+																<div class="form-check form-check-inline">
+																	{{-- yes --}}
+																	<div class="custom-control custom-radio">															
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl1]" class="custom-control-input" value="{{$fourthHeader->h1idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl2]" class="custom-control-input" value="{{$fourthHeader->h2idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl3]" class="custom-control-input" value="{{$fourthHeader->h3idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[part]" class="custom-control-input" value="{{$fourthHeader->partidReal}}">
+																		<input required type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="true" id="customCheck1{{$fourthHeader->id}}" checked="">
+																		<label class="custom-control-label text-success check" for="customCheck1{{$fourthHeader->id}}"><i class="fa fa-check" aria-hidden="true"></i></label>
+																	</div> &nbsp;&nbsp;
+																	{{-- end yes --}}
+																	{{-- no --}}
+																	<div class="custom-control custom-radio">
+																		<input type="radio" name="{{$fourthHeader->id}}[comp]" onclick="showRemark(this,{{$fourthHeader->id}})" class="custom-control-input" value="false" id="customCheck2{{$fourthHeader->id}}">
+																		<label class="custom-control-label text-danger times"  for="customCheck2{{$fourthHeader->id}}"><i class="fa fa-times" aria-hidden="true"></i></label>
+																	</div>&nbsp;&nbsp;
+																	{{-- end no --}}
+																	{{-- na --}}
+																	<div class="custom-control custom-radio">
+																		<input type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="NA" id="customCheck3{{$fourthHeader->id}}">
+																		<label class="custom-control-label text-danger na"  for="customCheck3{{$fourthHeader->id}}">N/A</label>
+																	</div>
+																	{{-- end na --}}
+																</div>
+															</div>
+															<div class="col-md">
+																{{-- assessment combined --}}
+																{!!$fourthHeader->description ?? ""!!}
+															</div>
+															<div class="col-md-2   text-right" id="el{{$fourthHeader->id}}">
+																{{-- assessment remarks --}}
+																<textarea name="{{$fourthHeader->id}}[remarks]" hidden=""></textarea>
+																<a class="text-primary " onclick="showRemark(this,{{$fourthHeader->id}})" style="cursor: pointer;">Add Remarks</a>
+																
+															</div>
+														</div>
+													</div>
 												</div>
 
 												@php
 												} else if(isset($fourthHeader->subFor)){
 												@endphp
-												<div class="col-md-8">
-												<div class="pt-4" style="padding-left: 11.2rem!important;">
-												<div class="row operations" id="{{$fourthHeader->id}}">
-												<div class="col-md-3">
-												<div class="form-check form-check-inline">
-												{{-- yes --}}
-												<div class="custom-control custom-radio">
-												
-												
-												
+												<div class="col-md-12">
+													<div class="pt-4" style="padding-left: 11.2rem!important;">
+														<div class="row operations" id="{{$fourthHeader->id}}">
+															<div class="col-md-3">
+																<div class="form-check form-check-inline">
+																	{{-- yes --}}
+																	<div class="custom-control custom-radio">		
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl1]" class="custom-control-input" value="{{$fourthHeader->h1idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl2]" class="custom-control-input" value="{{$fourthHeader->h2idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[lvl3]" class="custom-control-input" value="{{$fourthHeader->h3idReal}}">
+																		<input required type="text" name="{{$fourthHeader->id}}[part]" class="custom-control-input" value="{{$fourthHeader->partidReal}}">
+																		<input required type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="true" id="customCheck1{{$fourthHeader->id}}" checked>
+																		<label class="custom-control-label text-success check" for="customCheck1{{$fourthHeader->id}}"><i class="fa fa-check" aria-hidden="true"></i></label>
+																	</div> &nbsp;&nbsp;
+															
+																	{{-- end yes --}}
+																	{{-- no --}}
+																	<div class="custom-control custom-radio">
+																		<input type="radio" name="{{$fourthHeader->id}}[comp]" onclick="showRemark(this,{{$fourthHeader->id}})" class="custom-control-input" value="false" id="customCheck12{{$fourthHeader->id}}">
+																		<label class="custom-control-label text-danger times" for="customCheck12{{$fourthHeader->id}}"><i class="fa fa-times" aria-hidden="true"></i></label>
+																	</div>&nbsp;&nbsp;
+																	{{-- end no --}}
+																	{{-- NA --}}
+																	<div class="custom-control custom-radio">
+																		<input type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="NA" id="customCheck13{{$fourthHeader->id}}">
+																		<label class="custom-control-label text-danger na"  for="customCheck13{{$fourthHeader->id}}">N/A</label>
+																	</div>
+																	{{-- end NA --}}
+																</div>
+															</div>
+															<div class="col-md">
+																{{-- assessment combined --}}
+															{!!$fourthHeader->description ?? ""!!}
 
-												<input required type="text" name="{{$fourthHeader->id}}[lvl1]" class="custom-control-input" value="{{$fourthHeader->h1idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[lvl2]" class="custom-control-input" value="{{$fourthHeader->h2idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[lvl3]" class="custom-control-input" value="{{$fourthHeader->h3idReal}}">
-												<input required type="text" name="{{$fourthHeader->id}}[part]" class="custom-control-input" value="{{$fourthHeader->partidReal}}">
-												<input required type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="true" id="customCheck1{{$fourthHeader->id}}" checked>
-												<label class="custom-control-label text-success check" for="customCheck1{{$fourthHeader->id}}"><i class="fa fa-check" aria-hidden="true"></i></label>
-												</div> &nbsp;&nbsp;
-											
-												{{-- end yes --}}
-												{{-- no --}}
-												<div class="custom-control custom-radio">
-												<input type="radio" name="{{$fourthHeader->id}}[comp]" onclick="showRemark(this,{{$fourthHeader->id}})" class="custom-control-input" value="false" id="customCheck12{{$fourthHeader->id}}">
-												<label class="custom-control-label text-danger times" for="customCheck12{{$fourthHeader->id}}"><i class="fa fa-times" aria-hidden="true"></i></label>
-												</div>&nbsp;&nbsp;
-												{{-- end no --}}
-												{{-- NA --}}
-												<div class="custom-control custom-radio">
-												<input type="radio" name="{{$fourthHeader->id}}[comp]" class="custom-control-input" value="NA" id="customCheck13{{$fourthHeader->id}}">
-												<label class="custom-control-label text-danger na"  for="customCheck13{{$fourthHeader->id}}">N/A</label>
-												</div>
-												{{-- end NA --}}
-												</div>
-												</div>
-												<div class="col-md">
-													{{-- assessment combined --}}
-												{!!$fourthHeader->description ?? ""!!}
-
-												</div>
-												<div class="offset-1 col-md-4" id="el{{$fourthHeader->id}}">
-													{{-- assessment remarks --}}
-													<textarea name="{{$fourthHeader->id}}[remarks]" hidden=""></textarea>
-													<a class="text-primary" onclick="showRemark(this,{{$fourthHeader->id}})" style="cursor: pointer;">Add Remarks</a>
-													
-												</div>
-												</div>
-												</div>
+															</div>
+															<div class="offset-1 col-md-2 text-right" id="el{{$fourthHeader->id}}">
+																{{-- assessment remarks --}}
+																<textarea name="{{$fourthHeader->id}}[remarks]" hidden=""></textarea>
+																<a class="text-primary " onclick="showRemark(this,{{$fourthHeader->id}})" style="cursor: pointer;">Add Remarks</a>
+																
+															</div>
+														</div>
+													</div>
 												</div>
 												@php
 												}
