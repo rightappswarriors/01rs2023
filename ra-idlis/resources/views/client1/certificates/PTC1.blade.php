@@ -42,7 +42,7 @@
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12;
 		}
-		.contl { float: left; font-family: Cambria, Georgia, serif; }
+		.contl { float: left; font-family: Cambria, Georgia, serif; font-size: 12; }
 		@media print {
 			.card-body .row{
 				height:26px;
@@ -75,6 +75,10 @@
 		.watermarked:after {
 			
 		}
+		div {
+		white-space: normal;
+		}
+		.row, .col-md-8 { display: flex;}
 	</style>
 	<div class="container mt-5">
 		<div class="card">
@@ -102,22 +106,22 @@
 						<div class="col-md-3 leftHeader contl">
 							Owner
 						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;:&nbsp;
-						</div>
 						<div class="col-md-8 rightHeader text-justify">
 							{{((isset($retTable[0]->owner)) ? $retTable[0]->owner : 'No owner')}}
+						</div>
+						<div class="col-md-1" style="display: inline">
+							
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-3 leftHeader contl">
 							Name of Health Facility
 						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;:&nbsp;
-						</div>
 						<div class="col-md-8 rightHeader text-justify">
 							<strong>{{((isset($retTable[0]->facilityname)) ? strtoupper($retTable[0]->facilityname)  : 'No facility name')}}</strong>
+						</div>
+						<div class="col-md-1" style="display: inline">
+							
 						</div>
 					</div>
 					
@@ -125,20 +129,17 @@
 						<div class="col-md-3 leftHeader contl">
 							Type of Health Facility
 						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;:&nbsp;
-						</div>
 						<div class="col-md-8 rightHeader text-justify">
 							{{((isset($retTable[0]->hgpdesc)) ? $retTable[0]->hgpdesc : '')}}  {{((isset($retTable[0]->ocdesc)) ? ' / '.$retTable[0]->ocdesc : '')}}
 						</div>
+						<div class="col-md-1" style="display: inline">
+							
+						</div>
 					</div>
 
-					<div class="row">
+					<div class="row " style="">
 						<div class="col-md-3 leftHeader contl">
 							Location
-						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;:&nbsp;
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
 							@php
@@ -151,17 +152,20 @@
 							@endphp
 							{{((isset($retTable[0])) ?	$stringloc	: 'No Location.')}}
 						</div>
+						<div class="col-md-1" style="display: inline">
+							
+						</div>
 					</div>
 
 					<div class="row">
-						<div class="col-md-3 leftHeader contl">
+						<div class="col-md-3 contl">
 							Scope of Work
-						</div>
-						<div class="col-md-1" style="display: inline">
-							&nbsp;:&nbsp;
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
 							<strong>{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}</strong>
+						</div>
+						<div class="col-md-1" style="display: inline">
+							
 						</div>
 					</div>
 
