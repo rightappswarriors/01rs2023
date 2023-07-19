@@ -5596,7 +5596,7 @@ namespace App\Http\Controllers;
 			{
 				try 
 				{
-					$data = SELF::application_filter($request, 'app_assignmentofhferc_max_rev');
+					$data = SELF::application_filter($request, 'app_assignmentofhferc');
 
 					return view('employee.processflow.pfassignmentofhferc', ['BigData' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
 				} 
