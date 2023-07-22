@@ -12,9 +12,7 @@
 		{
 			if(!preg_match("/^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/", $word)) {
 				$word = ucfirst($word);
-			} else {
-				$word = strtoupper($word);
-			}
+			} else {	$word = strtoupper($word);	}
 			array_push($newString, $word);
 		}
 		return join(" ", $newString);  
@@ -43,19 +41,11 @@
 			font-size: 12;
 		}
 		.contl { float: left; font-family: Cambria, Georgia, serif; font-size: 12; }
+		
 		@media print {
-			.card-body .row{
-				height:26px;
-			}
-			.card-body {
-				line-height: 20px;
-			}
-			.card-header .row{
-				height:100px;
-			}
-			.card-body .row.location{
-				height:50px;
-			}
+			.card-header .row{	height:120px;	}
+			.card-body {	line-height: 20px;	}
+			.card-body .row.location{	height:50px;	}
 		}
 		.watermarked {
 			position: relative;
@@ -71,9 +61,6 @@
 			background-size: cover;
 			z-index: 0;
 			-webkit-print-color-adjust: exact;
-		}
-		.watermarked:after {
-			
 		}
 		div {
 		white-space: normal;
@@ -102,7 +89,7 @@
 				
 					<h1 class="text-center" >PERMIT TO CONSTRUCT</h1>
 
-					<div class="row">
+					<div class="row" style="margin-top:5px;">
 						<div class="col-md-3 leftHeader contl">
 							Owner
 						</div>
@@ -169,8 +156,7 @@
 						</div>
 					</div>
 
-					<br/><br/>
-					<div style="margin-top:20px;">
+					<div style="margin-top:50px;">
 						<div class="col-md-12" style="padding:0;">
 							<span style="font-size: 12; font-family: Cambria, Georgia, serif;">Terms and Conditions:</span>
 							

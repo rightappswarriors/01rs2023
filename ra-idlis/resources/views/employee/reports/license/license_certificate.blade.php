@@ -22,7 +22,7 @@
                   <td scope="col" style="text-align: center;">Type of Facility</td>
                   <td scope="col" style="text-align: center;">Complete Address</td>
 
-                  <td scope="col" style="text-align: center;">Owner and Head of Facility <br/>and Contact Info</td>
+                  <td scope="col" style="text-align: center;">Owner, Head of Facility <br/>and Contact Info</td>
                   <td scope="col" style="text-align:center">License Details</td>
                   <td scope="col" style="text-align: center;">Action</td>                 
                   
@@ -35,7 +35,14 @@
                     <tr>
                       <td style="text-align:left"><strong>{{$data->appid}}</strong></td>
                       <td style="text-align:left"><strong>{{$data->facilityname}}</strong></td>
-                      <td style="text-align:left"><strong>{{( $data->hgpdesc ?? 'NOT FOUND')}}</strong><br/> {{$data->facmdesc}}<br/>{{$data->ocdesc}}<br/>{{$data->classname}} {{$data->subclassname}}</td>
+                      <td style="text-align:left">
+                        <strong>{{( $data->hgpdesc ?? 'NOT FOUND')}}</strong><br/>
+                        {{$data->facmdesc}}<br/>
+                        {{$data->ocdesc}}<br/>
+                        {{$data->classname}} {{$data->subclassname}}<br/>
+                        @isset($data->noofbed) @if($data->noofbed > 0) {{'No.Of Bed: '}} {{$data->noofbed}} <br/> @endif  @endisset
+                        @isset($data->noofdialysis) @if($data->noofdialysis > 0) {{'Dialysis Station: '}} {{$data->noofdialysis}} <br/> @endif  @endisset
+                      </td>
                       <td style="text-align:left">
                         {{$data->street_number}} {{$data->street_name}} {{$data->brgyname}}, {{$data->cmname}},<br/>
                         {{$data->provname}} {{$data->zipcode}} <br/>
@@ -45,9 +52,9 @@
                       <td style="text-align:left">
                         Owned by: <strong>{{$data->owner}}</strong><br/>
                         {{$data->approvingauthority}}, {{$data->approvingauthoritypos}}<br/>
-                        Tel: {{$data->landline}}<br/>
-                        Fax: {{$data->faxnumber}}<br/>
-                        Email: {{$data->email}}
+                        @isset($data->landline) {{'Tel: '}} {{$data->landline}} <br/>  @endisset
+                        @isset($data->faxnumber) {{'Fax: '}} {{$data->faxnumber}} <br/>  @endisset
+                        @isset($data->email) {{'Email: '}} {{$data->email}} <br/>  @endisset
                       </td>
 
                       <td style="text-align:left">
@@ -60,20 +67,8 @@
 
                       <td style="text-align:left">
                         <center>
-                          @php
-                          $link = '';
-                          $urlFixed = 
-                            url(
-                              str_replace(
-                              array("{appid}","{hfser_id}"),
-                              array($data->appid, $data->hfser_id),
-                              $link
-                              )
-                            );
-                          @endphp
                           <a class="btn btn-primary" target="_blank" href="{{ asset('client1/certificates/'.$data->hfser_id.'/'.$data->appid) }}"><i class="fa fa-fw fa-eye"></i></a>
-                        </center>
-                
+                        </center>                
                       </td>
                     </tr>
 
