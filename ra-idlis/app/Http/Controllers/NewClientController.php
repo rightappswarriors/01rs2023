@@ -5762,6 +5762,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	}
 
 	public function viewReport(Request $request,$selected,$appid){
+
 		if(isset($selected) && isset($appid) && in_array(true,AjaxController::isSessionExist(array(['uData']))) && FunctionsClientController::existOnDB('appform',array(['appid',$appid],['uid',session()->get('uData')->uid]))){
 			try {
 
@@ -5781,7 +5782,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 										$evaluationData[$key] = $value;
 									}
 								}
-								$evaluationData['canResub'] = !FunctionsClientController::existOnDB('chgfil',array(['appform_id',$appid],['uid',session()->get('uData')->uid],['revision',(AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1)]));
+
+								$evaluationData['canResub'] = !FunctionsClientController::existOnDB('chgfil',array(['appform_id',$appid],['uid',session()->get('uData')->uid],['revision',(AjaxController::maxRevisionFor($appid) > 2 ? AjaxController::maxRevisionFor($appid) : 1)]));
 								
 								return view('client1.reports.floorplan',$evaluationData);
 							} else {
@@ -5798,16 +5800,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						case 'floorplan':
 
 							$main = AjaxController::getHighestApplicationFromX08FT($appid);
+
 							if(isset($main) && !FunctionsClientController::existOnDB('chgfil',array(['appform_id',$appid],['uid',session()->get('uData')->uid],['revision',(AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1)]))){
+
 								$data = DB::table('chg_app')
-								->join('charges', 'chg_app.chg_code', '=', 'charges.chg_code')
-								->join('orderofpayment', 'chg_app.oop_id', '=', 'orderofpayment.oop_id')
-								->join('category', 'charges.cat_id', '=', 'category.cat_id')
-								->join('apptype', 'chg_app.aptid', '=', 'apptype.aptid')
-								->leftJoin('hfaci_serv_type', 'chg_app.hfser_id', '=', 'hfaci_serv_type.hfser_id')
-								->where([['chg_app.hfser_id', 'PTC'],['category.cat_type','C'],['charges.hgpid',$main->hgpid],['charges.fprevision',1]])
-								->orderBy('chg_app.chgopp_seq','asc')
-								->first();
+										->join('charges', 'chg_app.chg_code', '=', 'charges.chg_code')
+										->join('orderofpayment', 'chg_app.oop_id', '=', 'orderofpayment.oop_id')
+										->join('category', 'charges.cat_id', '=', 'category.cat_id')
+										->join('apptype', 'chg_app.aptid', '=', 'apptype.aptid')
+										->leftJoin('hfaci_serv_type', 'chg_app.hfser_id', '=', 'hfaci_serv_type.hfser_id')
+										->where([['chg_app.hfser_id', 'PTC'],['category.cat_type','C'],['charges.hgpid',$main->hgpid],['charges.fprevision',1]])
+										->orderBy('chg_app.chgopp_seq','asc')
+										->first();
 								$shouldPay = AjaxController::isRequredToPayPTC((AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1));
 
 								$arrDataChgfil = [$data->chgapp_id, $data->chg_num, $appid, NULL, NULL, NULL, NULL, NULL, NULL, $data->chg_desc, $data->amt, Carbon::now()->toDateString(), Carbon::now()->toTimeString(), request()->ip(), FunctionsClientController::getSessionParamObj("uData", "uid"), (AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1)];

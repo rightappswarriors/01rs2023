@@ -413,21 +413,18 @@ class EvaluationController extends Controller
 
 	}
 
-
-	public function FPGenerateReportAssessment (Request $request, $appid, $revision, $uid, $isSelfAssess = null){
-
+	//this is the copy of function FPGenerateReportAssessment except that the forPrintOutof this function is true
+	public function FPGenerateReportAssessmentFPO (Request $request, $appid, $revision, $uid, $isSelfAssess = null){
 		$monid = null;
 		$arrToSend = array();
-		// $revision = 1;
-		// $revision = $revision == 1 ? 1 : $revision + 1 ;
-		// $revision = 1 ? 1 : 0;
-		// $revision += 1;//6-14-2021
 
 		if(FunctionsClientController::isExistOnAppform($appid) && FunctionsClientController::existOnDB('assessmentcombinedduplicateptc',array(['assessmentcombinedduplicateptc.appid',$appid],['evaluatedBy',$uid],['revision',$revision]))){
+			
 			$uInf = AjaxController::getAllDataEvaluateOne($appid);
 			$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['evaluatedBy',$uid],['choice','comment'],['revision',$revision]])->first();
 			$assessor = array();
 			$dataFromDB = DB::table('assessmentcombinedduplicateptc')->where([['assessmentcombinedduplicateptc.appid',$appid],['evaluatedBy',$uid],['revision',$revision]])->orderBy('assessmentSeq','ASC')->get();	
+			
 			foreach($dataFromDB as $db){
 				$arrToSend[$db->partID][$db->asmtH3ID_FK][$db->asmtH2ID_FK][$db->asmtH1ID_FK][] = $db;
 			}
@@ -445,9 +442,52 @@ class EvaluationController extends Controller
 				'isPtc' => true,
 				'reco' => $reco,
 				'revision' => $revision,
-				'datafromdb' => $dataFromDB
+				'datafromdb' => $dataFromDB,
+				'forPrintOut' => true
 			];
 			//dd($data);
+
+			return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee/processflow/pfassessmentgeneratedreportPTCFPO',$data);
+
+		} else {
+			return ($isSelfAssess ? false : back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Assessment records not found.']));
+		}
+	}
+
+	public function FPGenerateReportAssessment (Request $request, $appid, $revision, $uid, $isSelfAssess = null, $forPrintOut = false){
+
+		$monid = null;
+		$arrToSend = array();
+
+		if(FunctionsClientController::isExistOnAppform($appid) && FunctionsClientController::existOnDB('assessmentcombinedduplicateptc',array(['assessmentcombinedduplicateptc.appid',$appid],['evaluatedBy',$uid],['revision',$revision]))){
+			
+			$uInf = AjaxController::getAllDataEvaluateOne($appid);
+			$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['evaluatedBy',$uid],['choice','comment'],['revision',$revision]])->first();
+			$assessor = array();
+			$dataFromDB = DB::table('assessmentcombinedduplicateptc')->where([['assessmentcombinedduplicateptc.appid',$appid],['evaluatedBy',$uid],['revision',$revision]])->orderBy('assessmentSeq','ASC')->get();	
+			
+			foreach($dataFromDB as $db){
+				$arrToSend[$db->partID][$db->asmtH3ID_FK][$db->asmtH2ID_FK][$db->asmtH1ID_FK][] = $db;
+			}
+
+			if(DB::table('hferc_team')->where([['uid',$uid],['appid',$appid],['hasInspected',0]])->exists()){
+				DB::table('hferc_team')->where('uid',$uid)->where('appid',$appid)->update(['hasInspected' => 1, 'inspectDate' => Date('Y-m-d H:i:s')]);
+			}
+			$onWhereClause = ([$uid]);
+			
+			$data = [
+				'reports' => $arrToSend,
+				'assessor' => DB::table('x08')->whereIn('uid',$onWhereClause)->first(),
+				'hferc_evaluator' => DB::table('hferc_team')->where([['uid',$uid], ['appid',$appid]])->first(),
+				'uInf' => $uInf,
+				'isPtc' => true,
+				'reco' => $reco,
+				'revision' => $revision,
+				'datafromdb' => $dataFromDB,
+				'forPrintOut' => false
+			];
+			//dd($data);
+
 			return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee/processflow/pfassessmentgeneratedreportPTC',$data);
 
 		} else {

@@ -94,7 +94,7 @@
 							Owner
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
-							{{((isset($retTable[0]->owner)) ? $retTable[0]->owner : 'No owner')}}
+							:&nbsp;{{((isset($retTable[0]->owner)) ? $retTable[0]->owner : 'No owner')}}
 						</div>
 						<div class="col-md-1" style="display: inline">
 							
@@ -105,7 +105,7 @@
 							Name of Health Facility
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
-							<strong>{{((isset($retTable[0]->facilityname)) ? strtoupper($retTable[0]->facilityname)  : 'No facility name')}}</strong>
+							:&nbsp;<strong>{{((isset($retTable[0]->facilityname)) ? strtoupper($retTable[0]->facilityname)  : 'No facility name')}}</strong>
 						</div>
 						<div class="col-md-1" style="display: inline">
 							
@@ -117,7 +117,7 @@
 							Type of Health Facility
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
-							{{((isset($retTable[0]->hgpdesc)) ? $retTable[0]->hgpdesc : '')}}  {{((isset($retTable[0]->ocdesc)) ? ' / '.$retTable[0]->ocdesc : '')}}
+							:&nbsp;{{((isset($retTable[0]->hgpdesc)) ? $retTable[0]->hgpdesc : '')}}  {{((isset($retTable[0]->ocdesc)) ? ' / '.$retTable[0]->ocdesc : '')}}
 						</div>
 						<div class="col-md-1" style="display: inline">
 							
@@ -128,7 +128,8 @@
 						<div class="col-md-3 leftHeader contl">
 							Location
 						</div>
-						<div class="col-md-8 rightHeader text-justify">
+						<div class="col-md-8 rightHeader text-left">
+							:
 							@php
 								$loc =( ($retTable[0]->street_name ? ucwords(strtolower($retTable[0]->street_name)).', ' : ' ') 				 
 										.($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' )
@@ -149,7 +150,7 @@
 							Scope of Work
 						</div>
 						<div class="col-md-8 rightHeader text-justify">
-							<strong>{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}</strong>
+							:&nbsp;<strong>{{((isset($otherDetails->HFERC_comments)) ? $otherDetails->HFERC_comments : 'Not Specified')}}</strong>
 						</div>
 						<div class="col-md-1" style="display: inline">
 							
@@ -159,12 +160,21 @@
 					<div style="margin-top:50px;">
 						<div class="col-md-12" style="padding:0;">
 							<span style="font-size: 12; font-family: Cambria, Georgia, serif;">Terms and Conditions:</span>
-							
+							@php 
+								$employee_login = session()->get('employee_login');  
+								$rgnoffice = "";
+
+								if($employee_login) {
+									$rgnoffice = $retTable[0]->assignedRgn == 'hfsrb'? 'HFSRB': 'Regional';
+								} else {
+									$rgnoffice = "Regional";
+								}
+							@endphp
 							<ol type="1" class="text-justify" >
-								<li>That the construction, alteration, expansion or renovation of a hospital or other health facility is implemented in accordance with:
+								<li>That the construction, alteration, expansion or renovation of a Hospital or other Health Facility is implemented in accordance with:
 									<ol>
 										<li>Floor Plans prepared by a duly licensed Architect and/or Civil Engineer and approved by the Health Facilities and Services Regulatory Bureau</li>
-										<li>Architectural and engineering drawings (based on approved floor plans by the Regional Office), specifications, building permit and fire safety permit prepared by a duly licensed Architect and/or Civil Engineer and approved by the Office of the Building Official and the Bureau of Fire Protection in the locality;</li>
+										<li>Architectural and engineering drawings (based on approved floor plans by the  {{$rgnoffice}} Office), specifications, building permit and fire safety permit prepared by a duly licensed Architect and/or Civil Engineer and approved by the Office of the Building Official and the Bureau of Fire Protection in the locality;</li>
 									</ol>
 								</li>
 								<li>
@@ -177,13 +187,13 @@
 									That the permit to construct is considered lapsed and fee paid is forfeited when the work authorized by the permit does not commence within 365 days from date of issuance, or is abandoned during the period specified; in which case, another application shall be filed;
 								</li>
 								<li>
-									That the submission of progress report/status on the construction both for new and existing health facility required every six (6) months until project completion
+									That the submission of progress report/status on the construction both for new and existing health facility required every six (6) months until project completion.
 								</li>
 								<li>
 									That any addition and/or alteration of scope of work shall be reported immediately to the Health Facilities and Services Regulatory Bureau for appropriate action;
 								</li>
 								<li>
-									That any unauthorized deviation from approved floor plans or any violation of the above condition, will be sufficient ground for the imposition of sanctions as based from the provision of Administrative Order No. 2016-0042
+									That any unauthorized deviation from approved floor plans or any violation of the above condition, will be sufficient ground for the imposition of sanctions as based from the provision of Administrative Order No. 2016-0042.
 								</li>
 								<li>
 									Inspection of the facility is necessary prior to the operation, utilization or usage of the approved scope of work.

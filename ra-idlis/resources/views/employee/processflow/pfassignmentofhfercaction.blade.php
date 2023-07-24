@@ -13,15 +13,8 @@
       padding: 0;
     }
 
-    /*.modal-body {
-       max-height: calc(100vh - 200px);
-       overflow-y: auto;
-    }*/
-
     #modCont {
       height: 100%;
-      /* height: 100%; */
-      /* max-width: 100%; */
       max-width: auto;
       overflow-x: auto;
     }
@@ -92,13 +85,9 @@
             @endif
           @endif
 
-        <!-- if(isset($membDone) && $canViewOthers) -->
           <div class="col-md-2" id="toFrame">
             
           </div>
-        <!-- <div class="col-md-2">
-            <button class="btn btn-primary p-2" onclick="window.location.href='{{asset('employee/dashboard/processflow/view/hfercevaluation/'.$AppData->appid.'/'.$revisionCountCurent)}}'" data-toggle="modal" data-target="#evaluate"><i class="fa fa-file"> </i> View Evaluation</button>
-          </div> -->
           @php 
           $done = 0;
           @endphp
@@ -110,18 +99,9 @@
             @endif
           @endforeach
 
-          {{--   @if($canEval && count($membDone) != 0)  --}}
-         {{--  @if($canEval && count($membDone) != 0 && $done == 0)   && EvaluationController::checkRev($appid,$revisionCountCurent)--}}
-         
-
-         @if($isHead)
-            @if($canEval && EvaluationController::checkRev($appid,$revisionCountCurent))
+          @if($canEval && EvaluationController::checkRev($appid,$revisionCountCurent))
             <button class="btn btn-success p-2" data-backdrop="static" data-toggle="modal" data-target="#compareModal" onclick="onClickToIFrame()"><i class="fa fa-files-o" aria-hidden="true"></i> Compare Results </button>
-       
-            @endif
-            @endif
-         {{-- @endif --}}
-         <!-- endif -->
+          @endif
        
         @if(isset($evaluation) && isset($evaluation->HFERC_eval) )
           <div class="col-md-2">
@@ -271,9 +251,6 @@
                           </thead>
                           <tbody id="body_addOn">
                               <tr id="tr_addOn">
-                                  <!-- preventDef -->
-                                  <!-- onclick="if(! this.parentNode.parentNode.hasAttribute('id')) { this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); }" -->
-                                  <!-- onClick="$(this).closest('tr').remove();" -->
                                   <td onclick="return preventDef()"> <button class="btn btn-danger "  onclick="if(! this.parentNode.parentNode.hasAttribute('id')) { this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); }"><i class="fa fa-minus-circle" onclick="return preventDef()"></i></button> </td>
                                   <td>
 
@@ -297,10 +274,6 @@
 
                                   </td>
                                   <td>
-                                
-                                      <!-- <div class="col-sm">
-                                        Commitee Position:
-                                      </div> -->
                                       <div class="col-sm-11">
                                         <select name="pos" id="pos" class="form-control" required>
                                           <option value="E">Member</option>
@@ -354,7 +327,7 @@
     <div class="remthis modal fade" id="compareModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document" id="modDiag">
             <div class="modal-content" id="modCont" >
-                <div class="modal-header" id="viewHead">
+                <div class="modal-header" id="viewHead" style="float:right">
                     <h5 class="modal-title" id="actionModalCRUD">Results</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -362,42 +335,33 @@
                 </div>
                 {{-- <object data="{{asset('employee/dashboard/processflow/evaluation/compiled/HFERC1/3/PTC')}}" width="600" height="100%">
                 </object> --}}
-                  <div class="row h-100">
+                  <div class="row">
                     @isset($membDone)
                     <table>
-                      <tr>
+                      <tr>                    
+                        @foreach($membDone as $mem)
+                          @isset($currentUser)
+                            <td>
+                              <div style="display: inline-block;">
+                                
+                                <br>
+                                <p class="text-center" style="font-size:20px;">Evaluation of: <span class="font-weight-bold">{{ucfirst($mem->fname . ' ' . $mem->lname)}}</span>
 
-                    
-                      @foreach($membDone as $mem)
-                      @isset($currentUser)
-                        <td>
-                        <div style="display: inline-block;">
-                        <!-- <div class="col-md"> -->
+                                    @if($currentUser->uid != $mem->uid)                              
+                                        &nbsp; &nbsp; &nbsp; &nbsp;<a target="_blank" style="" class="btn btn-primary" href="{{url('employee/dashboard/processflow/floorPlan/parts/'.$AppData->appid.'/'.$revisionCountCurent.'/'.$mem->uid)}}"><i class="fa fa-clone" aria-hidden="true"></i> Copy Result</a>
+                                    @endif                            
 
-                          <p class="text-center mt-3">Evaluation of: <span class="font-weight-bold">{{ucfirst($mem->fname . ' ' . $mem->lname)}}</span>
-
-                              @if($currentUser->uid != $mem->uid)
-                              
-                                  <a target="_blank" style="float: right;" class="btn btn-primary" href="{{url('employee/dashboard/processflow/floorPlan/parts/'.$AppData->appid.'/'.$revisionCountCurent.'/'.$mem->uid)}}"><i class="fa fa-clone" aria-hidden="true"></i> Copy Result</a>
-                              @endif
-                            
-
-                          </p>
-                          <br>
-                          <iframe src="{{asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessments/'.$AppData->appid.'/'.$revisionCountCurent.'/'.$mem->uid.'/')}}"  width="1000px" height="550px" >Evaluation Result of {{ucfirst($mem->fname . ' ' . $mem->lname)}}</iframe>
-                          <!-- <iframe src="{{asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessments/'.$AppData->appid.'/'.$revisionCountCurent.'/'.$mem->uid.'/')}}"  width="100%" height="100%" >Evaluation Result of {{ucfirst($mem->fname . ' ' . $mem->lname)}}</iframe> -->
-                        </div>
-                        </td>
-                      @endisset
-                      @endforeach
+                                </p>
+                                <br>
+                                <iframe src="{{asset('employee/dashboard/processflow/floorPlan/GenerateReportAssessmentsFPO/'.$AppData->appid.'/'.$revisionCountCurent.'/'.$mem->uid.'/')}}"  width="1000px" height="550px" >Evaluation Result of {{ucfirst($mem->fname . ' ' . $mem->lname)}}</iframe>
+                              </div>
+                            </td>
+                          @endisset
+                        @endforeach
                       </tr>
                     </table>
                     @endisset
                   </div>
-
-                <!-- <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -435,7 +399,6 @@
                   <div class="col-md-12 mt-3">
                     <textarea required name="comments" class="form-control" cols="40" rows="10"></textarea>
                   </div>
-                  <!-- <button type="submit" class="btn btn-primary btn-block p-2">Save</button> -->
                   <div class="d-flex justify-content-center mt-4">
                     <div class="custom-control">
                       <button type="submit" class="btn btn-primary btn-block p-2">Save</button>
@@ -481,9 +444,6 @@
               {{csrf_field()}}
                 <div class="container pl-5">
                   <div class="row mb-2">
-                    <!-- <div class="col-sm">
-                      Member Name:
-                    </div> -->
               <div class="col-sm-11">
 
               Region Teams
@@ -516,13 +476,7 @@
                                             
                                         </tbody>
                                 </table>
-              <br> <br>
-
-
-
-
-
-             
+              <br> <br>           
                   
                   <input type="hidden" name="action" value="add">
                   <button class="btn btn-primary pt-2" type="submit">Submit</button>
@@ -544,126 +498,93 @@ setTimeout(function(){
  }, 1000);
 
  function getteammem(team_id){
-  console.log("team_id")
-  console.log(team_id)
-       
-       $.ajax({
-                  url: "{{ asset('employee/mf/get/users/team/ptc') }}",
-                  method: 'POST',
-                  data : {  _token : $('#token').val(),team_id : team_id},
-                  success: function(data){
-                      
-
-console.log("team")
-console.log(data)
-
+      console.log("team_id")
+      console.log(team_id)
+          
+      $.ajax({
+              url: "{{ asset('employee/mf/get/users/team/ptc') }}",
+              method: 'POST',
+              data : {  _token : $('#token').val(),team_id : team_id},
+              success: function(data){
+                console.log("team")
+                console.log(data)
                 $('#addNewRow4NewCont').empty()
 
                 var tbodyRef = document.getElementById('addNewRow4New').getElementsByTagName('tbody')[0];
 
                 // Insert a row at the end of table
-               data.map((h) => {
-                genihb(h.id,h.uid, (h.fname+' '+h.lname), h.pos,tbodyRef)
-                });
-
-
-                  }, error : function(XMLHttpRequest, textStatus, errorThrown){
-                      console.log(errorThrown);
-                      $('#EditErrorAlert').show(100);
-                  },
-               });
+                data.map((h) => {  genihb(h.id,h.uid, (h.fname+' '+h.lname), h.pos,tbodyRef)    });
+              }, 
+              error : function(XMLHttpRequest, textStatus, errorThrown){
+                  console.log(errorThrown);
+                  $('#EditErrorAlert').show(100);
+              },
+        });
     }
 
     function genihb(id,uid,name,pos, tbodyRef){
-                var newRow = tbodyRef.insertRow();
+        var newRow = tbodyRef.insertRow();
+        var newCell = newRow.insertCell();
+        var newCell1 = newRow.insertCell();    
+        var newText = document.createTextNode(name);
+        var newText1 = document.createTextNode(pos == 'C'? 'Chairperson' : (pos == 'VC'? 'Vice ChairPerson' :'Member'));
 
-          // Insert a cell at the end of the row
+        var newText3 = document.createElement("i");
+        newText3.setAttribute("onclick", "deleteMember("+id+")");
+        newText3.setAttribute("class", "fa fa-minus-circle");
+        newText3.setAttribute("style", "float:right; cursor: pointer;");
 
-          var newCell = newRow.insertCell();
-          var newCell1 = newRow.insertCell();
-          // var newCell2 = newRow.insertCell();
-
-          // Append a text node to the cell
-
-        
-
-          var newText = document.createTextNode(name);
-          var newText1 = document.createTextNode(pos == 'C'? 'Chairperson' : (pos == 'VC'? 'Vice ChairPerson' :'Member'));
-        //   var newText2 = document.createTextNode('new rddfdsow');
-        // <i class="fa fa-minus-circle" onclick="return preventDef()"></i>
-        //   var newText2 = document.createElement("i");
-        //   newText2.setAttribute("class", "fa fa-pencil-square-o");
-        //   newText2.setAttribute("style", "float:left; cursor: pointer;");
-
-         var newText3 = document.createElement("i");
-          newText3.setAttribute("onclick", "deleteMember("+id+")");
-          newText3.setAttribute("class", "fa fa-minus-circle");
-          newText3.setAttribute("style", "float:right; cursor: pointer;");
-        
-        
-          var space = document.createTextNode('   ');
-
-          newCell.appendChild(newText);
-          newCell1.appendChild(newText1);
-        //   newCell2.appendChild(newText2);
-        //   newCell2.appendChild(space);
-          // newCell2.appendChild(newText3);
-          // createSelect(newCell1, pos, id)
+        var space = document.createTextNode('   ');
+        newCell.appendChild(newText);
+        newCell1.appendChild(newText1);
     }
 
     $("#memberaddTeam").submit(function(e){
-      e.preventDefault();
-   
+        e.preventDefault();
         // getAddedmem()
-       var sArr = {
-     
-        _token: $("input[name=_token]").val(), 
-        appid:'{{ $AppData->appid }}',
-        revision:'{{$revision}}',
-        team_id: $('#team').val(),
-       }
+        var sArr = {      
+            _token: $("input[name=_token]").val(), 
+            appid:'{{ $AppData->appid }}',
+            revision:'{{$revision}}',
+            team_id: $('#team').val(),
+        }
 
-       console.log("sArr")
-       console.log(sArr)
+        console.log("sArr")
+        console.log(sArr)
         
-       if(confirm("Are you sure you want to assign this team?")){
-         $.ajax({
-          url: "{{ asset('employee/save/ptc/team') }}",
-          method: "post",
-          data: sArr,
-          success:function(a){
-            if(a == 'DONE'){
-              alert('Team selected successfully');
-              location.reload();
-            }
+        if(confirm("Are you sure you want to assign this team?")){
+            $.ajax({
+              url: "{{ asset('employee/save/ptc/team') }}",
+              method: "post",
+              data: sArr,
+              success:function(a){
+                  if(a == 'DONE'){
+                    alert('Team selected successfully');
+                    location.reload();
+                  }
+              }
+            })
           }
-        })
-}
-
      
     })
 
 
- $(document).on('submit','#evaluateSend',function(event){
- 
-  event.preventDefault();
-  console.log($(this).serialize())
-          $.ajax({
-            method: "POST",
-            data: $(this).serialize(),
-            success: function(a){
-              if(a == 'done'){
-                if(confirm("Application Approved! Reload?")){
-                  location.reload();
-                }
-                // location.reload();
-                // alert("Applciation Approved")
-              } else {
-                console.log(a);
-              }
-            }
-          })
-})
+    $(document).on('submit','#evaluateSend',function(event){
+    
+        event.preventDefault();
+        console.log($(this).serialize())
+                $.ajax({
+                  method: "POST",
+                  data: $(this).serialize(),
+                  success: function(a){
+                    if(a == 'done'){
+                      if(confirm("Application Approved! Reload?")){  location.reload();  }
+                    } else {
+                      console.log(a);
+                    }
+                  }
+                })
+      })
  
       jQuery("#buttonIdAos").click( function(event) {
               event.preventDefault()
@@ -680,25 +601,25 @@ console.log(data)
           });
 
   function getAddedmem(){
-   var uid = document.getElementsByName('uid');
-   var pos = document.getElementsByName('pos');
+    var uid = document.getElementsByName('uid');
+    var pos = document.getElementsByName('pos');
 
-    var alladdmem =[];
-    if(uid[0].options.length > 0){
-    for(var i = 0 ; i < uid.length ; i++){
-            const subs = {
-                uid: uid[i].value,
-                pos: pos[i].value,
-            }
+      var alladdmem =[];
+      if(uid[0].options.length > 0){
+      for(var i = 0 ; i < uid.length ; i++){
+              const subs = {
+                  uid: uid[i].value,
+                  pos: pos[i].value,
+              }
 
-            alladdmem.push(subs);
-    }
+              alladdmem.push(subs);
+      }
 
-    console.log("alladdmem")
-    console.log(alladdmem)
-    }
-   return alladdmem
-}
+      console.log("alladdmem")
+      console.log(alladdmem)
+      }
+    return alladdmem
+  }
       function onClickToIFrame(){
         $('iframe').contents().find('button,#menu,nav,#return-to-top,#wrapper').remove();
       }

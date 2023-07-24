@@ -10066,6 +10066,7 @@ namespace App\Http\Controllers;
 						}
 						$data = DB::table('appform')->where('appid', '=', $request->id)->update($update);
 						$hfserCheck = DB::table('appform')->where('appid', '=', $request->id)->first();
+						
 						if(isset($hfserCheck)){
 							switch (strtolower($hfserCheck->hfser_id)) {
 								case 'ptc':
