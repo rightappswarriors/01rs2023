@@ -15,7 +15,7 @@
              <h3>HFERC Assignment</h3>
              <div style="float: right;">
              @if($grpid == 'NA' || $grpid == 'DC' || $grpid == 'PO1' || $grpid == 'RDS')
-             <a style="float: right;" href="{{asset('/employee/dashboard/processflow/manage/ptc/team')}}"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<button class="btn btn-primary" >Manage Team</button></a>
+             <a style="float: right;" href="{{asset('/employee/dashboard/processflow/manage/ptc/team')}}"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<button class="btn btn-success" ><i class="fa fa-group"> &nbsp;</i> &nbsp; Manage Team</button></a>
         
              @endif
             </div>

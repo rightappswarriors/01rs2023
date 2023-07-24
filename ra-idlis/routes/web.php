@@ -636,6 +636,7 @@ Route::match(['get', 'post'], 'employee/dashboard/processflow/floorPlan/ShowAsse
 Route::post('employee/dashboard/processflow/floorPlan/ShowAssessmentsMobile/{appid}/{revision}/{headerThree}/{uid?}', 'EvaluationController@FPShowAssessmentsMobile'); // View assessment
 Route::match(['get', 'post'], 'employee/dashboard/processflow/floorPlan/SaveAssessments/{revision}/{otherUID?}', 'EvaluationController@FPSaveAssessments'); // save evaluation
 Route::match(['get', 'post'], 'employee/dashboard/processflow/floorPlan/GenerateReportAssessments/{appid}/{revision}/{uid}', 'EvaluationController@FPGenerateReportAssessment'); // generate evaluation
+Route::match(['get', 'post'], 'employee/dashboard/processflow/floorPlan/GenerateReportAssessmentsFPO/{appid}/{revision}/{uid}', 'EvaluationController@FPGenerateReportAssessmentFPO'); // generate evaluation
 /*
 end of new evaluation tool
 */

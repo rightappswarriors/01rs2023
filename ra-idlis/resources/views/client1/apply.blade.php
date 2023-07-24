@@ -441,12 +441,12 @@
 												@break
 											@endswitch
 												
-												@if($each[0]->savingStat == "final")
+												{{-- @if($each[0]->savingStat == "final")
 													<div class="dropdown-divider"></div>
 													<div style="margin-left: 10px;margin-right: 10px;">
 														<a  data-toggle="modal" data-target="#chgfilupload-doh-{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="#">Upload DOH Proof of payment</a>
 													</div>	
-												@endif
+												@endif --}}
 
 												@if($each[0]->trns_desc == "For Compliance")
 													<div class="dropdown-divider"></div>
@@ -519,7 +519,7 @@
 														</div>
 														<div class="modal-body">
 															@if( true)									
-																<label style="float: left;" for="filemach-{{$each[0]->appid}}">Machine</label>
+																<label style="float: left;" for="filemach-{{$each[0]->appid}}">X-ray Facility</label>
 																<input id="filemach-{{$each[0]->appid}}" class="form-control"  type="file" name="upmach">
 																
 																<label style="float: left;" for="filemach-{{$each[0]->appid}}">Pharmacy</label>

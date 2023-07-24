@@ -1,6 +1,6 @@
 @if (session()->exists('employee_login')) 
 
-@extends('mainEmployee')
+@extends('mainEmployeeFPO')
 @section('title', 'Generated Report assessment file') 	
 @section('content')
 	@include('employee.processflow.pfassessmentgeneratedreportPTCdetails')
