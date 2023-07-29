@@ -5281,6 +5281,92 @@ public static function checkConmem($appid)
 			}
 		}
 
+		public static function getAllApplicantionWithFilterFDA($viewtype="", $filter=array(), $limit=10, $fo_pgno = 1, $nolimit=false)
+		{
+			$rowcount = 0;
+			$Cur_useData = AjaxController::getCurrentUserAllData();
+			$uid = $Cur_useData['cur_user'];
+			
+			try 
+			{
+				switch ($viewtype) 
+				{					
+					case 'applist':			
+						$anotherData = DB::table('applist');	
+						break;
+
+					default:							
+						$anotherData = DB::table($viewtype);
+						break;
+				}
+				
+				//conditions area
+				if($Cur_useData['is_fda'] == 1){
+					if($Cur_useData['rgnid'] && $Cur_useData['rgnid'] != 'FDA'){
+						$anotherData->where('rgnid', '=', $Cur_useData['rgnid']); //bring back after
+					}
+				} else {
+					if($Cur_useData['grpid'] != "NA")
+					{
+						$anotherData->where('assignedRgn', '=', $Cur_useData['rgnid']);
+					}
+				}
+				$t_date_1 = NULL;
+				$t_date_2 = NULL;
+				
+				//Filter Area
+				foreach($filter  as $fo => $foval)
+				{
+					if($fo == 'appid' && isset($foval) )
+					{  
+						$anotherData->where($fo, 'LIKE', '%' .$foval. '%');
+					}
+					else if( $fo == 'facilityname' && isset($foval) )
+					{  
+						$anotherData->where(''.$fo.'', 'LIKE', '%' .strtolower($foval). '%');
+					}
+					else if( $fo == 'proofpaystatMach' && isset($foval) )
+					{  
+						$anotherData->where(''.$fo.'', 'LIKE', '%' .strtolower($foval). '%');
+					}
+					else if( $fo == 'proofpaystatPhar' && isset($foval) )
+					{  
+						$anotherData->where(''.$fo.'', 'LIKE', '%' .strtolower($foval). '%');
+					}
+					else if( $fo == 't_date_1' && isset($foval) )
+					{  
+						$t_date_1 = $foval;
+					}
+					else if( $fo == 't_date_2' && isset($foval) && isset($t_date_1))
+					{  
+						$t_date_2 = $foval;
+						$anotherData->whereBetween('t_date', [$t_date_1, $t_date_2]);
+					}
+					else if($fo != 'fo_rows' && $fo != 'fo_pgno' && $fo != 'fo_submit' && $fo != 'fo_rowscnt' && $fo != 'fo_session_grpid' && isset($foval)) 
+					{ 						
+						$anotherData->where($fo, '=', $foval);
+					}
+				}
+				
+				//Limit and Offset
+				$rowcount = $anotherData->count();
+
+				if($nolimit == false)
+				{
+					$anotherData->OFFSET($fo_pgno*$limit);
+					$anotherData->LIMIT($limit);
+				}				
+				
+				$data = $anotherData->get();
+
+				return array('data'=>$data, 'rowcount'=>$rowcount);
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
 
 		public static function getAll_RegisteredFacility_WithFilter($viewtype="", $filter=array(), $limit=10, $fo_pgno = 1, $nolimit=false)
 		{
@@ -6201,10 +6287,45 @@ public static function checkConmem($appid)
 			}
 		}
 
+		//joined with position
 		public static function getAllProfession(){
 			try 
 			{
 				$data = DB::table('profession')->join('position', 'profession.position_id', '=', 'position.posid')->get();
+				return $data;
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
+
+		//get profession only
+		public static function getAllProfessionOnly(){
+			try 
+			{
+				$data = DB::table('profession')->get();
+				return $data;
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
+
+
+		public static function getAllPosition(){
+			try 
+			{
+				//Arrange by FDA TYPE NULL is on last group
+				$data = DB::table('position')
+								->select('posid', 'fda_type', 'posname', 'groupRequired')
+								->orderByRaw("ISNULL(fda_type) asc")
+								->orderBy('fda_type','asc')
+								->orderBy('posname','asc')
+								->get();
 				return $data;
 			} 
 			catch (Exception $e) 

@@ -4,73 +4,72 @@
 	@include('client1.cmp.__apply')
 	@include('client1.cmp.requirementsSlider')
 	@include('client1.cmp.nav')
-		@include('client1.cmp.breadcrumb')
-		@include('client1.cmp.msg')
-		<style>
-			    fieldset 
-				{
-					border: 1px solid #ddd !important;
-					margin: 0;
-					xmin-width: 0;
-					padding: 10px;       
-					position: relative;
-					border-radius:4px;
-					background-color:#f5f5f5;
-					padding-left:10px!important;
-				}	
-				
-				legend
-				{
-					font-size:14px;
-					font-weight:bold;
-					margin-bottom: 0px; 
-					width: 35%; 
-					border: 1px solid #ddd;
-					border-radius: 4px; 
-					padding: 5px 5px 5px 10px; 
-					background-color: #ffffff;
-				}
+	@include('client1.cmp.breadcrumb')
+	@include('client1.cmp.msg')
+	<style>
+		fieldset 
+		{
+			border: 1px solid #ddd !important;
+			margin: 0;
+			xmin-width: 0;
+			padding: 10px;       
+			position: relative;
+			border-radius:4px;
+			background-color:#f5f5f5;
+			padding-left:10px!important;
+		}	
+		
+		legend
+		{
+			font-size:14px;
+			font-weight:bold;
+			margin-bottom: 0px; 
+			width: 35%; 
+			border: 1px solid #ddd;
+			border-radius: 4px; 
+			padding: 5px 5px 5px 10px; 
+			background-color: #ffffff;
+		}
 
-				@media (min-width: 576px) {
-				  .modal-dialog { max-width: none; }
-				}
+		@media (min-width: 576px) {
+			.modal-dialog { max-width: none; }
+		}
 
-				.modal-dialog {
-				  width: 98%;
-				  height: 92%;
-				  padding: 0;
-				}
+		.modal-dialog {
+			width: 98%;
+			height: 92%;
+			padding: 0;
+		}
 
-				.modal-body {
-				   max-height: calc(100vh - 200px);
-    			   overflow-y: auto;
-				}
+		.modal-body {
+			max-height: calc(100vh - 200px);
+			overflow-y: auto;
+		}
 
-				.modal-content {
-				  height: auto;
-				}
+		.modal-content {
+			height: auto;
+		}
 
-				.select2-container--default .select2-selection--single {
-				    height: 40px !important;
-				    padding: 10px 16px;
-				    font-size: 18px;
-				    line-height: 1.33;
-				    border-radius: 6px;
-				}
-				.select2-container--default .select2-selection--single .select2-selection__arrow b {
-				    top: 85% !important;
-				}
-				.select2-container--default .select2-selection--single .select2-selection__rendered {
-				    line-height: 20px !important;
-				}
-				.select2-container--default .select2-selection--single {
-				    border: 1px solid #CCC !important;
-				    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
-				    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-				}
-
-		</style>
-		<style>
+		.select2-container--default .select2-selection--single {
+			height: 40px !important;
+			padding: 10px 16px;
+			font-size: 18px;
+			line-height: 1.33;
+			border-radius: 6px;
+		}
+		.select2-container--default .select2-selection--single .select2-selection__arrow b {
+			top: 85% !important;
+		}
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+			line-height: 20px !important;
+		}
+		.select2-container--default .select2-selection--single {
+			border: 1px solid #CCC !important;
+			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+			transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+		}
+	</style>
+	<style>
 		@media print{
 			
 			footer, nav, button, #navBarWiz, div.dfn-hover, span.text-danger{
@@ -79,7 +78,6 @@
 			div.alert-warning{
 				font-size: 10px;
 			}
-
 		}
 
 		dfn {
@@ -287,6 +285,7 @@
 	                        <span aria-hidden="true">&times;</span>
 	                    </button>
 	                </div>
+
 	                <form id="personnelAdd" method="POST" enctype="multipart/form-data">
 	                <div class="modal-body" id="viewBody">
 	               		<input type="hidden" name="action" id="toChange" value="add">
@@ -391,6 +390,9 @@
 		                   			<div class="col-sm-11">
 		                   				<input class="form-control w-100" name="position" required="">
 		                   			</div>
+									<div class="col-sm-11">
+		                   				<span style="font-style:Italic; font-size: smaller">E.g. Licensing Officer II, Rad Tech III, etc.</span>
+		                   			</div>
 								</div>
 								<div class="col-md-4">
 									<div class="col-sm required">
@@ -402,8 +404,20 @@
 		                   						<!-- <select onchange="setAssignment(this.value)" name="prof"  class="form-control" required=""> -->
 		                   						<select onchange="getAss(this.value)"  name="prof" id="prof" class="form-control" required="">
 				                   					<option value="">Please Select</option>
+													@php $fda_type = ""; $newgroup=1; @endphp
 				                   					@foreach($pos as $p)
+
+														@if($fda_type != $p->fda_type)
+															@php $fda_type = $p->fda_type; $newgroup=0; @endphp
+
+													   <optgroup label="@if($p->fda_type == 'cdrr')  Pharmacy Group @elseif($p->fda_type == 'cdrrhr')  Radiology Group @else Others @endif">
+														@endif
 				                   						<option value="{{$p->posid}}" isRequired="{{$p->groupRequired}}">{{$p->posname}}</option>
+														
+														@if($newgroup == 1)
+															</optgroup>
+															@php $newgroup=0; @endphp
+														@endif
 				                   					@endforeach
 				                   				</select>
 		                   					</div>		                   	
@@ -433,30 +447,22 @@
 		                   				<input class="form-control w-100" name="qual">
 		                   			</div>
 								</div>
-								{{-- <div class="col-md-3">
-									<div class="col-sm required">
-	                   					Area of Assignment:
-		                   			</div>
-		                   			<div class="col-sm-11">
-		                   				<input class="form-control w-100" name="assignment" required="">
-		                   			</div>
-								</div> --}}
 							</div>
 							<div class="row mb-2">
 								<div class="col-md-4">
-									<div class="col-sm required">
+									<div class="col-sm prc-reg">
 	                   					PRC Reg. Number:
 		                   			</div>
 		                   			<div class="col-sm-11">
-		                   				<input class="form-control w-100 canBeNot" name="prcno" required="">
+		                   				<input class="form-control w-100 canBeNot prc-reg-input" name="prcno" id="prcno" >
 		                   			</div>
 								</div>
 								<div class="col-md-4">
-									<div class="col-sm required">
+									<div class="col-sm prc-reg">
 	                   					Validity Period Until:
 		                   			</div>
 		                   			<div class="col-sm-11">
-		                   				<input class="form-control w-100 canBeNot" type="date" name="vto" required="">
+		                   				<input class="form-control w-100 canBeNot prc-reg-input" type="date" name="vto" id="vto" >
 		                   			</div>
 								</div>
 								<div class="col-md-4">
@@ -474,24 +480,10 @@
 								</div>
 							</div>
 							<div class="row mb-2">
-								{{-- <div class="col-md-6">
-									<div class="col-sm required">
-	                   					TIN
-		                   			</div>
-		                   			<div class="col-sm-11">
-		                   				<input class="form-control w-100" name="tin" required="">
-		                   			</div>
-								</div> --}}
-{{-- 								<div class="col-md-6">
-									<div class="col-sm required">
-	                   					PRC Reg. Number:
-		                   			</div>
-		                   			<div class="col-sm-11">
-		                   				<input class="form-control w-100" name="prcno" required="">
-		                   			</div>
-								</div> --}}
+								
 							</div>
 						 </fieldset>
+
 						 <fieldset class="mt-5" id="forUpload" hidden>
 							<legend>Uploading of Credentials: <span class="text-danger" id="forCred"></span></legend>
 							<div class="row mb-2 first" hidden>
@@ -539,15 +531,18 @@
 								</div>
 							</div>
 						</fieldset>
+
 	                </div>
 	                <div class="modal-footer">
 	                	<button type="submit" class="btn btn-primary">Submit</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					</div>
 					</form>
+
 	            </div>
 	        </div>
 	    </div>
+
 	    <div class="remthis modal fade" id="editPersonnel" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
 	        <div class="modal-dialog" role="document">
 	            <div class="modal-content">
@@ -583,6 +578,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 		<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 		<script src="{{asset('ra-idlis/public/js/forall.js')}}"></script>
+
 		<script type="text/javascript">
 		function insertAfter(referenceNode, newNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -607,9 +603,16 @@
 				console.log(value)
 
 				jQuery('.profession-option').attr('hidden', '');
-				jQuery('.pos-'+value).removeAttr('hidden');
-				
-				
+				jQuery('.pos-'+value).removeAttr('hidden');		
+
+				jQuery('.prc-reg').attr('required', '');
+				jQuery('.prc-reg').removeAttr('required');	
+
+				var prcno = document.getElementById("prcno");
+                prcno.required = true;	
+
+				var vto = document.getElementById("vto");
+                vto.required = true;	
 			}
 			function chceb(name, desc){
 				var ass = document.getElementById("assignment");
@@ -618,8 +621,6 @@
                 x.setAttribute("id",'is'+name);
                 x.setAttribute("class", "col-md");
                 ass.appendChild(x);
-
-
 
 				var ids = name+"inpt";
 				var x = document.createElement("input");

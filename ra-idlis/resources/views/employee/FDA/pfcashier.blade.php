@@ -11,7 +11,7 @@
           </div>
           
           <form class="filter-options-form">
-            @include('employee.FDA.FDAtableDataFilter') 
+            @include('employee.FDA.FDAtableDataFilterMach') 
           </form>
 
           <div class="card-body table-responsive">

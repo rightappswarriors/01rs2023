@@ -220,7 +220,7 @@
             <div class="card-header @isset($AppData) @if($reco == null) list-group-item-info @elseif($reco == 1) list-group-item-success  @else list-group-item-danger @endif @endisset" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="">
               <div class="mb-0">
                 <button class="btn btn-link @isset($AppData) @if($reco == null) list-group-item-info @elseif($reco == 1) list-group-item-success  @else list-group-item-danger @endif @endisset" type="button" style="text-decoration:none">
-                  <h3>Evaluation</h3>
+                  <h3>Inspection</h3>
                 </button>
               </div>
             </div>
@@ -616,8 +616,8 @@
           <hr>
           <div class="container">
             <center>
-              <button class="btn btn-primarys" onclick="toggleModal(true)" style="background-color: #28a745" data-toggle="modal" data-target="#AccepttGodModal">Decision</button>&nbsp;
-              <button class="btn btn-primarys" onclick="toggleModal(false)" style="background-color: #FF2200" data-toggle="modal" data-target="#RFD">RFD</button>
+              <button class="btn btn-primarys" onclick="toggleModal(true)" style="background-color: #28a745" data-toggle="modal" data-target="#AccepttGodModal">Approval</button>&nbsp;
+              <button class="btn btn-primarys" onclick="toggleModal(false)" style="background-color: #FF2200" data-toggle="modal" data-target="#RFD">Disapproval</button>
             </center>
           </div>
           @endif     
@@ -751,7 +751,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content" style="border-radius: 0px;border: none;">
         <div class="modal-body" style=" background-color: #272b30;color: white;">
-          <h5 class="modal-title text-center"><strong>Set as RFD</strong></h5>
+          <h5 class="modal-title text-center"><strong>Set as Disapproved (RFD) </strong></h5>
           <hr>
           <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display: none" id="AccErrorAlert" role="alert">
             <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
@@ -761,7 +761,7 @@
           </div>
           <div class="container">
             <div class="row text-center">
-              <div class="col-sm-12 lead">Are you sure you want to apply RFD on this Facility?</div>
+              <div class="col-sm-12 lead">Are you sure you want to disapprove on this Facility?</div>
             </div>
           </div> 
           <input type="hidden" name="verd" value="RFD">

@@ -12,7 +12,6 @@
       </datalist>
     @endisset
     @if (isset($OOPs) && isset($Chrges))
-    {{-- {{dd($OOPs)}} --}}
         @foreach ($OOPs as $O)
           <datalist id="{{$O->oop_id}}_List">
             @foreach ($Chrges as $C)
@@ -27,20 +26,25 @@
     <div class="card">
       <input type="hidden" value="{{$appid}}" name="appform_id">
         <div class="card-header bg-white font-weight-bold">
-          @isset($appid)<input type="text" id="APPID" value="{{$appid}}" hidden>@endisset
-          <input type="" id="token" value="{{ Session::token() }}" hidden>
-         
-           <!-- <button class="btn btn-primary" onclick="window.history.back();">Back</button> -->
-           @if(app('request')->input('from') == 'rec')
-          <button class="btn btn-primary" onclick="window.history.back();">Back</button>&nbsp;
-          @else
-          <a  class="btn btn-primary" href="{{asset('employee/dashboard/processflow/FDA/pharma/cashier')}}">Back</a>
- @endif
+          
+          <div class="row">
+            <div class="col-md-6">
+                @isset($appid)<input type="text" id="APPID" value="{{$appid}}" hidden>@endisset
+                <input type="" id="token" value="{{ Session::token() }}" hidden>
+              
+                @if(app('request')->input('from') == 'rec')
+                  <button class="btn btn-primary" onclick="window.history.back();">Back</button>&nbsp;
+                @else
+                  <a  class="btn btn-primary" href="{{asset('employee/dashboard/processflow/FDA/pharma/cashier')}}">Back</a>
+                @endif 
+                <h4 class="col-md" style="display:inline;">Cashier Evaluation (PHARMACY) <span class="optnTD" style="display: none;">(Overide Payment Mode)</span></h4>&nbsp;
+                
+            </div>
+            <div class="col-md-6">
+               <input style="float: right; font-size:28px; text-align:center; width: 300px; background-color: {{$AppData->proofpaystatPhar == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatPhar == 'posting' ? 'For Posting' : ( $AppData->proofpaystatPhar == 'posted' ? 'Posted' : 'For Payment')}}">
+            </div>
+          </div>
 
-           Cashier Evaluation (PHARMACY) <span class="optnTD" style="display: none;">(Overide Payment Mode)</span>&nbsp;
-           <input style="float: right; width: 13%; background-color: {{$AppData->proofpaystatPhar == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatPhar == 'posting' ? 'For Posting' : ( $AppData->proofpaystatPhar == 'posted' ? 'Posted' : 'For Payment')}}">
-           <!-- <input style="float: right; width: 10%; background-color: {{$AppData->proofpaystatPhar == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatPhar == 'posting' ? 'For Posting' : ( $AppData->proofpaystatPhar == 'posted' ? 'Posted' : 'No Proof')}}"> -->
-        
         </div>
         <div class="card-body">
           <table class="table table-borderless">
@@ -49,9 +53,7 @@
               <td width="100%">
                 <h2>@isset($AppData) {{$AppData->facilityname}} @endisset</h2>
                 <h5>@isset($AppData) {{strtoupper($AppData->streetname)}}, {{strtoupper($AppData->brgyname)}}, {{$AppData->cmname}}, {{$AppData->provname}} @endisset</h5>
-                <h5>
-                  Code: <span class="font-weight-bold">{{$code}}</span>
-                </h5>
+                <h5>Code: <span class="font-weight-bold">{{$code}}</span></h5>
                 <h6>@isset($AppData) Status: @if ($AppData->isCashierApprovePharma === null) <span style="color:blue">For Payment Evaluation</span> @elseif($AppData->isCashierApprovePharma == 1)  <span style="color:green">Payment Evaluated</span> @else <span style="color:red">Rejected Payment</span> @endif @endisset</h6>
                 <h4><span class="text-danger">NOTE:</span> This cashier is for <span class="text-danger"> PHARMACY</span> only. </h4>
               </td>
@@ -65,11 +67,6 @@
         <div class="container-fluid border mb-3">
             <div class="row" style="padding: 1%">
               @if($AppData->isCashierApprovePharma != 1)
-                <!-- if(count($payables) <= 0) -->
-                  <!-- <button type="button" onclick="insert()" data-toggle="modal" data-target="#bd-example-modal-sm" class="btn btn-primary p-2 m-1">
-                    <i class="fa fa-plus" aria-hidden="true"></i> Accept Payment
-                  </button> -->
-                <!-- endif -->
 
                 @if($AppData->ispayProofFilenPhar == 1 )
                  
@@ -78,11 +75,11 @@
                   </i> View Proof of Payment
                   </button>
                   </a>
-                 @else
+                @else
                   <button style="float: right;" onclick="alert('Please wait for the proof of payment.')" type="button" class="btn btn-warning p-2 m-1">
                   </i> No proof of payment attached yet
                   </button>
-                 @endif
+                @endif
 
               @elseif($AppData->isCashierApprovePharma == 1)
                 <a target="_blank" href="{{ route('OpenFile', $AppData->payProofFilenPhar) }}" >
@@ -127,13 +124,12 @@
             <div class="modal-content" style="border-radius: 0px;border: none;">
               <div class="modal-body" style=" background-color: #272b30;color: white;">
 
-              @if($Remarks)
+            @if($Remarks)
               <h5 class="modal-title text-center"><strong>Update Remarks</strong></h5>
             @else 
-            <h5 class="modal-title text-center"><strong>Add Remarks</strong></h5>
+              <h5 class="modal-title text-center"><strong>Add Remarks</strong></h5>
             @endif
-            
-              
+                          
                 <hr>
                 <div class="container">
                   <form method="POST" action="{{asset('employee/dashboard/cashierremarksp')}}" enctype="multipart/form-data">
@@ -147,8 +143,7 @@
                           <div class="col-12">
                             <textarea class="form-control" required="" name="cr_remark" rows="10">{{$Remarks}}</textarea>
                           </div>
-                        </div>
-                        
+                        </div>                       
 
                         <div class="row mt-5 mb-5">
                           <div class="col-6">
@@ -168,21 +163,33 @@
             <br/>
                 <div style="padding-top: .4%; width: 20%;">
 
-                <select required class="form-control" style="width: 100%; " id="postAct" name="postAct">
-                            <option value="">Select Status</option>
-                            <option  value="posting">For Posting</option>
-                            <option  value="posted">Posted</option>
-                          
-                </select>
+                  <select required class="form-control" style="width: 100%; " id="postAct" name="postAct" @if (isset($AppData->proofpaystatPhar)) @if ($AppData->proofpaystatPhar ==  'posted' )  disabled="disabled" @endif @endif >
+                      <option value="">Select Status</option>
+                      <option  value="posting"  @if (isset($AppData->proofpaystatPhar)) @if ($AppData->proofpaystatPhar ==  'posting' )  selected @endif @endif>For Posting</option>
+                      <option  value="posted"  @if (isset($AppData->proofpaystatPhar)) @if ($AppData->proofpaystatPhar ==  'posted' )  selected @endif @endif >Posted</option>
+                      <option  value="insufficient"  @if (isset($AppData->proofpaystatPhar)) @if ($AppData->proofpaystatPhar ==  'insufficient' )  selected @endif @endif>Insufficient Payment</option>
+                  </select>
+                  
                 @if(!empty($AppData->isCashierApprovePharma))
-                <input type="hidden" id="typestat" value="update" />
+                  <input type="hidden" id="typestat" value="update" />
                 @else
-                <input type="hidden" id="typestat" value="new" />
+                  <input type="hidden" id="typestat" value="new" />
                 @endif
               
 
                 </div>
-                <button class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#evaluatePayment">Confirm Status</button>
+
+                @php $canevaluatePayment = true; @endphp
+
+                @if (isset($AppData->proofpaystatPhar)) 
+                    @if ($AppData->proofpaystatPhar ==  'posted' )   
+                        @php $canevaluatePayment = false; @endphp <br/>
+                    @endif 
+                @endif
+
+                @if($canevaluatePayment)
+                    <button class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#evaluatePayment">Confirm Status</button>
+                @endif
 
           </div>
           <div class="row pt-3">

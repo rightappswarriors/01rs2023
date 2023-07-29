@@ -66,16 +66,20 @@
 								<td class="text-center">
 									@isset($personnel->prc)
 										<a target="_blank" href="{{ route('OpenFile', $personnel->prc)}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
-									@else
+									@elseif($personnel->groupRequired == 1)
 										<span class="font-weight-bold">NOT DEFINED YET</span>
+									@elseif($personnel->groupRequired == 0)
+										<span class="font-weight-bold">NOT REQUIRED</span>
 									@endisset
 								</td>
 
 								<td class="text-center">
 									@isset($personnel->coe)
 										<a target="_blank" href="{{ route('OpenFile', $personnel->coe)}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
-									@else
+									@elseif($personnel->groupRequired == 1)
 										<span class="font-weight-bold">NOT DEFINED YET</span>
+									@elseif($personnel->groupRequired == 0)
+										<span class="font-weight-bold">NOT REQUIRED</span>
 									@endisset
 								</td>
 
@@ -83,7 +87,7 @@
 								<td>
 									<div class="row">
 										<div class="col-md-5">
-											<button class="btn btn-warning"  data-toggle="modal" data-target="#editPersonnel" onclick="showData('{{$personnel->id}}',/*'{{$personnel->name}}','{{$personnel->designation}}','{{$personnel->email}}',*/ '{{$personnel->area}}','{{$personnel->tin}}','{{$personnel->prc}}','{{$personnel->coe}}')"><i class="fa fa-edit"></i></button>
+											<button class="btn btn-warning"  data-toggle="modal" data-target="#editPersonnel" onclick="showData('{{$personnel->id}}',/*'{{$personnel->name}}','{{$personnel->designation}}','{{$personnel->email}}',*/ '{{$personnel->area}}','{{$personnel->tin}}','{{$personnel->prc}}','{{$personnel->coe}}', '{{$personnel->groupRequired}}')"><i class="fa fa-edit"></i></button>
 										</div>
 										<div class="col-md-5">
 											<button class="btn btn-danger" data-toggle="modal" data-target="#deletePersonnel" onclick="showDelete('{{$personnel->id}}','{{$personnel->name}}')"><i class="fa fa-trash"></i></button>
@@ -259,7 +263,7 @@
 			$(function(){
 				$("#tApp").dataTable();
 			})
-			function showData(id,/*name,pos,email,govid,*/area,tin,prcFile,coeFile){
+			function showData(id,/*name,pos,email,govid,*/area,tin,prcFile,coeFile, groupRequired){
 				$("#personnelEdit").empty().append(
 					'<div class="container pl-5">'+
 		                   		// '<div class="row mb-2">'+
@@ -309,18 +313,18 @@
 		                   		'</div>'+
 		                   		'<div class="row mb-2">'+
 		                   			'<div class="col-sm">'+
-		                   				'PRC ID:<span class="text-danger">*</span>'+
+		                   				'PRC ID: '+(prcFile == "" && groupRequired != 0 ? '<span class="text-danger">*</span>' : "") +''+
 		                   			'</div>'+
 		                   			'<div class="col-sm-11">'+
-		                   			'	<input  type="file" class="form-control w-100" name="edit_prc" '+(prcFile == "" ? "required" : "") +'>'+
+		                   			'	<input  type="file" class="form-control w-100" name="edit_prc" '+(prcFile == "" && groupRequired != 0 ? "required" : "") +'>'+
 		                   			'</div>'+
 		                   		'</div>'+
 		                   		'<div class="row mb-2">'+
 		                   			'<div class="col-sm">'+
-		                   				'Certificate of Training:<span class="text-danger">*</span>'+
+		                   				'Certificate of Training:'+(coeFile == "" && groupRequired != 0 ? '<span class="text-danger">*</span>' : "") +''+
 		                   			'</div>'+
 		                   			'<div class="col-sm-11">'+
-		                   			'	<input  type="file" class="form-control w-100" name="edit_coe" '+(coeFile == "" ? "required" : "") +'>'+
+		                   			'	<input  type="file" class="form-control w-100" name="edit_coe" '+(coeFile == "" && groupRequired != 0 ? "required" : "") +'>'+
 		                   			'</div>'+
 		                   		'</div>'+
 		                   			'<button class="btn btn-primary pt-1" type="submit">Save</button>'+

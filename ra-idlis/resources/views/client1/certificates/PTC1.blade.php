@@ -20,18 +20,6 @@
 ?>
 	<style>
 		
-		ol{
-			padding-left: 2px;list-style: decimal;list-style-type: decimal;
-		}
-		ol,li{
-			list-style: decimal;
-			font-family: Cambria, Georgia, serif;
-			margin-left: 9px;
-		}
-		li{
-			padding-top: 20px;
-    		padding-left: 15px;
-		}
 		.leftHeader{
 			font-family: Cambria, Georgia, serif;
 			font-size: 12;
@@ -66,6 +54,43 @@
 		white-space: normal;
 		}
 		.row, .col-md-8 { display: flex;}
+
+
+		ol,li{
+			font-family: Cambria, Georgia, serif;			
+			
+		}		
+
+		ol {
+			list-style-type: none;
+			counter-reset: item;
+			margin: 0;
+			padding: 0;
+		}
+
+		li{
+			padding-top: 20px;margin-left: 5px;
+		}
+
+		ol > li {
+			display: table;
+			counter-increment: item;
+		}
+
+		ol > li:before {
+			content: counters(item, ".") ". ";
+			display: table-cell;
+			padding-right: 0.6em;    
+		}
+
+		li ol > li {
+			margin: 0;
+		}
+
+		li ol > li:before {
+			content: counters(item, ".") " ";
+		}
+
 	</style>
 	<div class="container mt-5">
 		<div class="card">
@@ -144,7 +169,7 @@
 							
 						</div>
 					</div>
-
+					<br/>
 					<div class="row">
 						<div class="col-md-3 contl">
 							Scope of Work

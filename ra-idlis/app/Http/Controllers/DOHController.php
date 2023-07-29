@@ -5362,7 +5362,7 @@ namespace App\Http\Controllers;
 		{
 			try 
 			{
-				$data = SELF::application_filter($request, 'view_fda_cashier');
+				$data = SELF::application_filter_fda($request, 'view_fda_cashier');
 
 				//$data = AjaxController::getAllApplicantsProcessFlow();
 				$paymentMethod = DB::table('charges')->where('cat_id','PMT')->get();
@@ -5383,7 +5383,7 @@ namespace App\Http\Controllers;
 		{
 			try 
 			{
-				$data = SELF::application_filter($request, 'view_fda_cashier_pharma');
+				$data = SELF::application_filter_fda($request, 'view_fda_cashier_pharma');
 				//$data = AjaxController::getAllApplicantsProcessFlow();
 				$paymentMethod = DB::table('charges')->where('cat_id','PMT')->get();
 				$cur_user = AjaxController::getCurrentUserAllData();
@@ -10671,7 +10671,6 @@ namespace App\Http\Controllers;
 				try 
 				{
 					$this->setCertFDA($request, $appid, $reqType);
-
 					
 					$data = AjaxController::getRecommendationData($appid);
 					// $data1 = AjaxController::getPreAssessment($data->uid);
@@ -10694,6 +10693,7 @@ namespace App\Http\Controllers;
 					}
 					$approveForCurrentRequest = ($reqType == 'machines' ? $data->isApproveFDA : $data->isApproveFDAPharma);
 					$hasJudge = DB::table('fdacert')->where([['appid',$appid],['department',$typeOfRequest]])->exists();
+					
 					return view('employee.FDA.pfapprovaloneFDA', ['AppData'=>$data,/*'PreAss'=>$data1, */'APPID' => $appid, 'Teams4theApplication' => $data2, 'canView' => $canView, 'canjudge' => $hasJudge, 'currentRequest' => $approveForCurrentRequest, 'request' => $reqType]);
 				} 
 				catch (Exception $e) 
@@ -13008,16 +13008,14 @@ namespace App\Http\Controllers;
 			  		} elseif($request->action == 'evalute') {
 
 						
-						if($request->typestat == "new"){
+						if($request->typestat == "new" || $request->postact == "posted"){
 							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 1, 'FDAstatus' => 'FI', 'FDAStatMach' => 'For Inspection', 'proofpaystatMach' => $request->postact]);
-							// $update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 1, 'FDAstatus' => 'FI', 'FDAStatMach' => 'For Evaluation', 'proofpaystatMach' => $request->postact]);
-						}else{
-							$update = DB::table('appform')->where('appid',$request->appid)->update(['proofpaystatMach' => $request->postact]);
+						}elseif($request->postact == "insufficient"){
+							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 0, 'proofpaystatMach' => $request->postact]);
+						}elseif($request->postact == "posting"){
+							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 1, 'proofpaystatMach' => $request->postact]);
 						}
 
-			  		
-			  			// $update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 1, 'FDAstatus' => 'FI', 'FDAStatMach' => 'For Evaluation', 'proofpaystatMach' => 'posted']);
-			  			// $update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByFDA'=>$cur_user['cur_user'],'CashierApproveDateFDA' => $cur_user['date'], 'CashierApproveTimeFDA' => $cur_user['time'], 'CashierApproveIpFDA' => $cur_user['ip'], 'isCashierApproveFDA' => 1, 'FDAstatus' => 'FA', 'FDAStatMach' => 'For Evaluation', 'proofpaystatMach' => 'posted']);
 			  			if($update){
 			  				return 'DONE';
 			  			} else {
@@ -13035,12 +13033,7 @@ namespace App\Http\Controllers;
 		}
 
 		public function cashierActionsPharmaFDA(Request $request, $appid, $facid = false)
-		{
-			// if(DB::table('appform')->where([['appid', $appid],['isrecommended',1], /*['isCashierApprove',null],*/['isPayEval',1]])->count() <= 0){
-				// return redirect('employee/dashboard/processflow/cashier');
-				// return redirect()->back();
-			// }
-			
+		{			
 			$cur_user = AjaxController::getCurrentUserAllData();
 			if ($request->isMethod('get')) 
 			{
@@ -13068,7 +13061,6 @@ namespace App\Http\Controllers;
 					} else {
 						$remarks = '';
 					}
-
 
 					return view('employee.FDA.pfcashieractionspharma',['AppData'=>$data, 'Remarks' => $remarks, 'loggedIn'=>$cur_user, 'appid'=> $appid, 'paymentMethod'=>$paymentMethod, 'aptid'=>$facid, 'code' => $code, 'Sum' => $balance, 'payables' => $payables, 'canView' => $canView, 'flag' => $flag]);
 				} 
@@ -13104,20 +13096,18 @@ namespace App\Http\Controllers;
 				  					]);
 				  		$upd = array('chg_num'=>(intval($getData->chg_num) + 1));
 				  		$test2 = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->update($upd);
-			  		} elseif($request->action == 'evalute') {
 
-						if($request->typestat == "new"){
+			  		} elseif($request->action == 'evalute') {
+						
+						if($request->typestat == "new" || $request->postact == "posted"){
 							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByPharma'=>$cur_user['cur_user'],'CashierApproveDatePharma' => $cur_user['date'], 'CashierApproveTimePharma' => $cur_user['time'], 'CashierApproveIpPharma' => $cur_user['ip'], 'isCashierApprovePharma' => 1, 'FDAstatus' => 'FI', 'FDAStatPhar' => 'For Inspection', 'proofpaystatPhar' =>  $request->postact]);
-							// $update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByPharma'=>$cur_user['cur_user'],'CashierApproveDatePharma' => $cur_user['date'], 'CashierApproveTimePharma' => $cur_user['time'], 'CashierApproveIpPharma' => $cur_user['ip'], 'isCashierApprovePharma' => 1, 'FDAstatus' => 'FI', 'FDAStatPhar' => 'For Evaluation', 'proofpaystatPhar' =>  $request->postact]);
-						}else{
-							$update = DB::table('appform')->where('appid',$request->appid)->update(['proofpaystatPhar' =>  $request->postact]);
+						}elseif($request->postact == "insufficient"){
+							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByPharma'=>$cur_user['cur_user'],'CashierApproveDatePharma' => $cur_user['date'], 'CashierApproveTimePharma' => $cur_user['time'], 'CashierApproveIpPharma' => $cur_user['ip'], 'isCashierApprovePharma' => 0, 'proofpaystatPhar' =>  $request->postact]);
+						}elseif($request->postact == "posting"){
+							$update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByPharma'=>$cur_user['cur_user'],'CashierApproveDatePharma' => $cur_user['date'], 'CashierApproveTimePharma' => $cur_user['time'], 'CashierApproveIpPharma' => $cur_user['ip'], 'isCashierApprovePharma' => 1, 'proofpaystatPhar' =>  $request->postact]);
 						}
 
-			  			// $update = DB::table('appform')->where('appid',$request->appid)->update(['CashierApproveByPharma'=>$cur_user['cur_user'],'CashierApproveDatePharma' => $cur_user['date'], 'CashierApproveTimePharma' => $cur_user['time'], 'CashierApproveIpPharma' => $cur_user['ip'], 'isCashierApprovePharma' => 1, 'FDAstatus' => 'FI', 'FDAStatPhar' => 'For Evaluation', 'proofpaystatPhar' => 'posted']);
-			  		
-					
-					
-						  if($update){
+						if($update){
 			  				return 'DONE';
 			  			} else {
 			  				return 'ERROR';
@@ -13618,7 +13608,74 @@ namespace App\Http\Controllers;
 
 			return array('data'=>$data['data'], 'arr_fo'=>$arr_fo);
 		}
+		
+		public static function application_filter_fda (Request $request, $table)
+		{
+			if(empty($request->fo_submit) == false)
+			{
+				$fo_rows = $request->fo_rows;
+				$fo_pgno = 	$request->fo_pgno;
+				$fo_submit = $request->fo_submit;
+				
+				if($request->fo_submit == "prev")
+				{
+					if($fo_pgno > 1){  	$fo_pgno--;  }
+				}
+				else if($request->fo_submit == "next")
+				{
+					$fo_pgno++;
+				}
 
+				$arr_fo = array(
+					'aptid' => $request->fo_aptid,
+					'hfser_id' => $request->fo_hfser_id,
+					'ocid' => $request->fo_ocid,
+					'hgpid' => $request->fo_hgpid,
+					'status' => $request->fo_status,
+					'uid' => $request->fo_uid,
+					'rgnid' => $request->fo_rgnid,
+					'assignedRgn' => $request->fo_assignedRgn,
+					'appid' => $request->fo_appid,
+					'facilityname' => $request->fo_facilityname,
+					'proofpaystatMach' => $request->fo_proofpaystatMach,
+					'proofpaystatPhar' => $request->fo_proofpaystatPhar,
+					'fo_rows' => $request->fo_rows,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $request->fo_submit,
+					'fo_rowscnt' => '0'
+				);
+			}
+			else
+			{
+				$fo_rows = "10";
+				$fo_pgno = "1";
+				$fo_submit = "submit";
+
+				$arr_fo = array(
+					'aptid' => NULL, 
+					'hfser_id' =>  NULL,
+					'ocid' => NULL,
+					'hgpid' =>  NULL,
+					'status' =>  NULL,
+					'uid' => NULL,
+					'rgnid' => NULL,
+					'assignedRgn' =>  NULL,
+					'appid' => NULL,
+					'facilityname' => NULL,
+					'proofpaystatMach' => NULL,
+					'proofpaystatPhar' => NULL,
+					'fo_rows' => $fo_rows ,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $fo_submit,
+					'fo_rowscnt' => '0'
+				);						
+			}				
+			$data = AjaxController::getAllApplicantionWithFilterFDA($table, $arr_fo, $fo_rows, $fo_pgno-1); 
+
+			$arr_fo['fo_rowscnt']=$data['rowcount'];
+
+			return array('data'=>$data['data'], 'arr_fo'=>$arr_fo);
+		}
 
 	}
 

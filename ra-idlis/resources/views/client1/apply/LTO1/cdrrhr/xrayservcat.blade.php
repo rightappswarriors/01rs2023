@@ -25,7 +25,7 @@
 			<form id="servAdd">
 			<p class="text-center">
 				GENERAL RADIOGRAPHY (TICK APPROPRIATE SERVICES)<br>	
-				<span class="text-danger">Note: on choosing higher levels of X-RAY, you must also choose any lower levels of X-Ray.</span>
+				<span class="text-danger">Note: If you select a higher service xray category, you must select any lower level xray examination service.</span>
 			</p>
 			{{csrf_field()}}
 			<div class="container">

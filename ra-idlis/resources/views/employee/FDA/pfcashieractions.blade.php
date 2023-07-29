@@ -27,20 +27,26 @@
     <div class="card">
       <input type="hidden" value="{{$appid}}" name="appform_id">
         <div class="card-header bg-white font-weight-bold">
-          @isset($appid)<input type="text" id="APPID" value="{{$appid}}" hidden>@endisset
-          <input type="" id="token" value="{{ Session::token() }}" hidden>
-        
-           <!-- <button class="btn btn-primary" onclick="window.history.back();">Back</button>  -->
-           @if(app('request')->input('from') == 'rec')
-          <button class="btn btn-primary" onclick="window.history.back();">Back</button>&nbsp;
-          @else
-          <a class="btn btn-primary" href="{{asset('employee/dashboard/processflow/FDA/cashier')}}">Back</a>
-          @endif
-          Cashier Evaluation (RADIATION FACILITY) <span class="optnTD" style="display: none;">(Overide Payment Mode)</span>&nbsp;
-           <!-- <a href="{{asset('employee/dashboard/processflow/FDA/cashier')}}"> -->
-           <input style="float: right; width: 13%; background-color: {{$AppData->proofpaystatMach == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatMach == 'posting' ? 'For Posting' : ( $AppData->proofpaystatMach == 'posted' ? 'Posted' : 'For Payment')}}">
-           <!-- <input style="float: right; width: 10%; background-color: {{$AppData->proofpaystatMach == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatMach == 'posting' ? 'For Posting' : ( $AppData->proofpaystatMach == 'posted' ? 'Posted' : 'No Proof')}}"> -->
-        
+
+          <div class="row">
+            <div class="col-md-6">
+
+                @isset($appid)<input type="text" id="APPID" value="{{$appid}}" hidden>@endisset
+                <input type="" id="token" value="{{ Session::token() }}" hidden>
+              
+                @if(app('request')->input('from') == 'rec')
+                <button class="btn btn-primary" onclick="window.history.back();">Back</button>&nbsp;
+                @else
+                <a class="btn btn-primary" href="{{asset('employee/dashboard/processflow/FDA/cashier')}}">Back</a>
+                @endif
+                <h4 class="col-md" style="display:inline;">Cashier Evaluation (RADIATION FACILITY) <span class="optnTD" style="display: none;">(Overide Payment Mode)</span></h4>&nbsp;
+                
+            </div>
+            <div class="col-md-6">
+              <input style="float: right; font-size:28px; text-align:center; width: 300px; background-color: {{$AppData->proofpaystatMach == 'posted' ? '#BDE5F8' : 'orange'}}"  class="form-control" type="text" disabled value="{{$AppData->proofpaystatMach == 'posting' ? 'For Posting' : ( $AppData->proofpaystatMach == 'posted' ? 'Posted' : 'For Payment')}}">
+            </div>
+          </div>
+
         </div>
         <div class="card-body">
           <table class="table table-borderless">
@@ -177,12 +183,13 @@
       </div>
         <div style="padding-top: .4%; width: 20%;">
 
-        <select required class="form-control" style="width: 100%; " id="postAct" name="postAct">
-                    <option value="">Select Status</option>
-                    <option  value="posting">For Posting</option>
-                    <option  value="posted">Posted</option>
-                  
+        <select required class="form-control" style="width: 100%; " id="postAct" name="postAct"  @if (isset($AppData->proofpaystatMach)) @if ($AppData->proofpaystatMach ==  'posted' )  disabled="disabled" @endif @endif >
+            <option value="">Select Status</option>
+            <option  value="posting"  @if (isset($AppData->proofpaystatMach)) @if ($AppData->proofpaystatMach ==  'posting' )  selected @endif @endif>For Posting</option>
+            <option  value="posted"  @if (isset($AppData->proofpaystatMach)) @if ($AppData->proofpaystatMach ==  'posted' )  selected @endif @endif>Posted</option>
+            <option  value="insufficient"  @if (isset($AppData->proofpaystatMach)) @if ($AppData->proofpaystatMach ==  'insufficient' )  selected @endif @endif>Insufficient Payment</option>
         </select>
+        
         @if(!empty($AppData->isCashierApproveFDA))
          <input type="hidden" id="typestat" value="update" />
          @else
@@ -191,7 +198,18 @@
        
 
         </div>
-        <button class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#evaluatePayment">Confirm Status</button>
+        
+        @php $canevaluatePayment = true; @endphp
+
+        @if (isset($AppData->proofpaystatMach)) 
+            @if ($AppData->proofpaystatMach ==  'posted' )   
+                @php $canevaluatePayment = false; @endphp <br/>
+            @endif 
+        @endif
+
+        @if($canevaluatePayment)
+            <button class="btn btn-primary p-2 m-1" data-toggle="modal" data-target="#evaluatePayment">Confirm Status</button>
+        @endif
 
           <!-- <div class="row pt-3">
             <div class="col text-left">

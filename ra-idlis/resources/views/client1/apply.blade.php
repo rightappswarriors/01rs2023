@@ -155,7 +155,7 @@
 
 										@case('P')
 											@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
-												<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">{{$each[0]->trns_desc}}</a>
+												<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">For Selection of Payment Method</a>
 											@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
 												<a style="color:#FFF; font-weight: bold;"  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" title="View Order of Payment on DOH" >For Payment Confirmation</a>
 											@else 
