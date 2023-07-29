@@ -106,8 +106,13 @@
 
 			9. Duly filled out and notarized affidavit of continuous compliance.
 			(FOR RENEWAL APPLICATION ONLY)">
-			<i class="fa fa-question-circle" aria-hidden="true"></i></dfn>
+			
+			<button class="btn btn-default mb-3" data-toggle="modal" data-target="#viewModalInfo"><i class="fa fa-question-circle" aria-hidden="true"></i> See the Details Info</button>
+			</dfn>
 			</div>
+
+		
+
 			<div class="container">
 				<table class="table table-hover" id="tApp">
 		      		<thead style="background-color: #428bca; color: white" id="theadapp">
@@ -154,7 +159,8 @@
 							<div class="container pl-5">
 								<div class="row mb-2">
 		                   			<div class="col-sm req">
-		                   				Attachment For1:
+		                   				Attachment For: 
+										   <button class="btn btn-default mb-3" data-toggle="modal" data-target="#viewModalInfo"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 		                   			</div>
 		                   			<div class="col-sm-11">
 		                   				<select name="req" id="req" class="form-control" required="">
@@ -185,6 +191,64 @@
 							</div>
 	                   	</form>
 	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+		<div class="remthis modal fade" id="viewModalInfo" tabindex="-1" role="dialog" aria-labelledby="viewModalInfoLabel" aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header" id="viewHead">
+	                    <h5 class="modal-title" id="viewModalLabel"> 
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+								<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+								<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+								</svg>  
+								Type of Other Attachments Requirements
+						</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <div class="modal-body">
+	                   	<ol>
+							<li>Photocopy of the certificate of all the radiologist/s for being a Fellow of the Philippine College of
+							Radiology (FPCR) or Diplomate of the Philippine Board of Radiology (DPBR).
+							(FOR RENEWAL APPLICATION WITH NO CHANGES ON CURRENT RADIOLOGIST/S,
+							THIS REQUIREMENT IS OPTIONAL)</li>
+
+							<li>Photocopy of the certificate of training of the radiologic/x-ray technologist who will act as the
+							radiation protection officer (RPO) as proof that he/she completed the RPO training provided by an
+							FDA- or DOH-recognized training</li>
+
+							<li>Photocopy of certificate of training in radiology of the head of the facility if he/she is not an
+							FPCR/DPBR for government facilities and for facilities in areas with no FPCR/DPBR within 45 km
+							vicinity radius</li>
+
+							<li>Photocopy of valid notarized contract of employment of all the radiologist/s and radiologic/x-ray
+							technologist/s. The CDRRHR recommends that the contract be valid for at least one (1) year.</li>
+
+							<li>Photocopy of the Official Receipt of the personal dose monitor (TLD or OSL) from the provider of
+							personnel dose monitoring service</li>
+
+							<li>Photocopy of machine calibration report from FDA – CSL/DTI – PAB-accredited testing body.
+							(FOR INITIAL/VARIATION APPLICATION). For facilities with changes/additional in machine</li>
+
+							<li>Duly filled out Self-Assessment Forms. Refer to FDA Circular 2020-035 for the guide.
+							(FOR INITIAL/VARIATION APPLICATION). For facilities with changes/additional in machine</li>
+
+							<li>Photocopy of performance test report from FDA – CSL/DTI – PAB accredited testing body.
+							(FOR INITIAL/VARIATION APPLICATION OF CT SCAN/MAMMOGRAPHY ONLY). For facilities with changes/additional in machine</li>
+
+							<li>Duly filled out and notarized affidavit of continuous compliance.
+							(FOR RENEWAL APPLICATION ONLY)</li>
+						</ol>
+	                </div>
+					<div class="modal-footer text-center">
+						
+						<button type="button" class="btn" data-dismiss="modal" aria-label="Close">Close</button>
+						
+					</div>
 	            </div>
 	        </div>
 	    </div>
