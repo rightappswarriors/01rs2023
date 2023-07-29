@@ -3295,8 +3295,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession', 'position.groupRequired')
 				->where('cdrrpersonnel.appid',$appid)->get();
 
-				//dd($cdrrnew);
-
 				if(count($cdrr) > 0){
 					foreach ($cdrr as $key) {
 						if(!in_array($key->id, $inHF)){
@@ -3305,15 +3303,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					}
 					$inHF = implode(',', $inHF);
 				}
-				// dd($inHF);
 				$professions = DB::table('profession')->get();
 				$profession = array();
+
 				foreach ($professions as $key => $value) {
 					$profession[$value->id.'-'.$value->type] = $value->description;
 				}
-
-				// dd($cdrrnew);
-				// dd($profession);
 
 				$arrRet = [
 					'cdrrpersonnelnew' => $cdrrnew,
@@ -3322,7 +3317,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'annexa' => DB::table('hfsrbannexa')->where('appid',$appid)->whereNotIn('id',(is_array($inHF) ? [] : [$inHF]) )->get(),
 					'appid' => $appid
 				];
-				// dd($arrRet);
+
 				return view('client1.apply.LTO1.cdrr.personnel',$arrRet);
 			} else if($request->isMethod('post')) {
 				if($request->action == 'add'){
@@ -3964,8 +3959,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				   'appid' => $appid];
 
 
-				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment];
-				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto];
+				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment, 'isdelete'=>'false'];
+				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto, 'isdelete'=>'false'];
 
 				// for custom addition to FDA
 				// if($request->po == 1 || $request->head == 1){
@@ -4041,20 +4036,31 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$returnToSender = DB::table('hfsrbannexa')
 					->where('id',$request->id)->update($toInsert);
 					
-					DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
-					DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 
 					if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
 
 						$pharma['hfsrbannexaID'] = $request->id;
 						$mach['hfsrbannexaID'] = $request->id;
-						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````																																																																																																																																																																																																																																
-						if($hgpid!='12' && (in_array($request->prof, $arrPharma)  || $customInsertPhar)){
-							$returnToSender = DB::table('cdrrpersonnel')->insert($pharma);
+						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````
+
+						if($hgpid=='12'){
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 						}
+
+						if(in_array($request->prof, $arrPharma ) || $customInsertPhar){
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update($pharma);
+						}else{
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update($pharma);
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
+						}
+
 						if(in_array($request->prof, $arrMach) || $customInsertMach){
-							$returnToSender = DB::table('cdrrhrpersonnel')->insert($mach);
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
+						}else{
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
 						}
+
 					}
 				} else if($request->action == 'delete') {
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->select('status')->first()->status;
@@ -4078,7 +4084,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$professions = AjaxController::getAllProfessionOnly();
 			$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
 
-			// dd($professions);
 			if($request->isMethod('get')){
 				$arrRet = [
 					'workstat' => AjaxController::getAllWorkStatus(),
@@ -4143,9 +4148,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				//    'ismainpo' => ($request->po == 1 ? $request->po : ($request->po1 == 1 ? $request->po1 : null)), 
 				   'appid' => $appid];
 
-
-				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment];
-				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto];
+				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment, 'isdelete'=>'false'];
+				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto, 'isdelete'=>'false'];
 
 				// for custom addition to FDA
 				// if($request->po == 1 || $request->head == 1){
@@ -4194,8 +4198,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					}
 				}
 				if($request->action == 'add'){
+
 					$returnToSender = DB::table('hfsrbannexa')->insertGetId($toInsert);
+
 					if($returnToSender){
+						
 						if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
 
 							$pharma['hfsrbannexaID'] = $returnToSender;
@@ -4212,6 +4219,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				} else if($request->action == 'edit'){
 
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->first();
+
+					$pharmaExistsOnDB = DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->exists();
+					$radExistsOnDB = DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->exists(); 
 					
 					if(!empty($filename) && !empty($curStat)){
 						foreach ($filename as $key => $value) {
@@ -4220,26 +4230,43 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							}
 						}
 					}
-					$returnToSender = DB::table('hfsrbannexa')
-					->where('id',$request->id)->update($toInsert);				
+
+					$returnToSender = DB::table('hfsrbannexa')->where('id',$request->id)->update($toInsert);				
 					
+					if($pharmaExistsOnDB) {
+						DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
+					}
+					if($radExistsOnDB){
+						DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
+					}
+
 					if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
 
 						$pharma['hfsrbannexaID'] = $request->id;
 						$mach['hfsrbannexaID'] = $request->id;
 						//MFOWS  not included in```````````````````````````````````````````````````````````````````````````````````````													
-						if($hgpid!='12' && (in_array($request->prof, $arrPharma)  || $customInsertPhar)){
-							$returnToSender = DB::table('cdrrpersonnel')->insert($pharma);
+						if($hgpid=='12'){
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 						}
+
+						if(in_array($request->prof, $arrPharma ) || $customInsertPhar){
+							if($pharmaExistsOnDB) {
+								DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update($pharma);
+							}else {
+								DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->insert($pharma);
+							}
+						}
+
 						if(in_array($request->prof, $arrMach) || $customInsertMach){
-							$returnToSender = DB::table('cdrrhrpersonnel')->insert($mach);
+							if($radExistsOnDB){
+								DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
+							}else {
+								DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->insert($mach);
+							}
 						}
 					}
-					else
-					{
-						DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
-						DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
-					}
+					
+					
 				} else if($request->action == 'delete') {
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->select('status')->first()->status;
 					$returnToSender = DB::table('hfsrbannexa')->where('id',$request->id)->update(['status' => ($curStat == 1 ? 2 : 1)]);

@@ -4,9 +4,9 @@
 	@include('client1.cmp.__apply')
 	@include('client1.cmp.requirementsSlider')
 	@include('client1.cmp.nav')
-		@include('client1.cmp.breadcrumb')
-		@include('client1.cmp.msg')
-		{{-- cdrrhr = pharmacy --}}
+	@include('client1.cmp.breadcrumb')
+	@include('client1.cmp.msg')
+	{{-- cdrrhr = pharmacy --}}
 		<?php 
 			$toProceed = (FunctionsClientController::hasRequirementsFor('cdrrhr',$appid) ? true : false);
 		?>
