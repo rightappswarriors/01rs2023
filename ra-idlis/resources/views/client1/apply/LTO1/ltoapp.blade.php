@@ -681,18 +681,7 @@
 	<script src="{{asset('ra-idlis/public/js/forall.js')}}"></script>
 	<script type="text/javascript">
 		"use strict";
-		// var ___div = document.getElementById('__applyBread'), ___wizardcount = document.getElementsByClassName('wizardcount');
-		// document.getElementById('stepDetails').innerHTML = 'Application LTO Details';
-		// if(___wizardcount != null || ___wizardcount != undefined) {
-		// 	for(let i = 0; i < ___wizardcount.length; i++) {
-		// 		if(i < 2) {
-		// 			___wizardcount[i].parentNode.classList.add('past');
-		// 		}
-		// 		if(i == 2) {
-		// 			___wizardcount[i].parentNode.classList.add('active');
-		// 		}
-		// 	}
-		// }
+		
 		var mclass = JSON.parse('{!!$class!!}'), 
 		msubclass = JSON.parse('{!!$subclass!!}'), 
 		mserv_cap = JSON.parse('{!!addslashes($serv_cap)!!}'), 

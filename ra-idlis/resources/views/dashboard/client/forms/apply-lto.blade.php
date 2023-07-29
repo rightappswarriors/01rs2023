@@ -150,7 +150,7 @@
                                 
                 <div class="col-md-12"> &nbsp;</div>
 
-                @if((app('request')->input('grp') != 'c' || app('request')->input('grp') != 'C')  && app('request')->input('cont') != 'yes' && app('request')->input('grpn') != 'c' )
+                @if((app('request')->input('grp') != 'c' && app('request')->input('grp') != 'C')  && app('request')->input('cont') != 'yes' && app('request')->input('grpn') != 'c' )
                                         <!-- <div class="col-lg-3 col-md-3 col-xs-12 mb-5">
                                         <div class="col-md-12" id="divRem" >
                                             <label for="remarks" >Remarks</label>

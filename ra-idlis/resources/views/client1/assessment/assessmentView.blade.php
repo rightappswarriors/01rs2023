@@ -88,13 +88,7 @@
 						<i class="fas fa-arrow-alt-circle-left text-primary" style="font-size: 30px;"> Back</i>
 					</a>
 				</div>
-			@else
-				<div class="col-md col-sm-3">
-					<a class="col-sm-3 btn btn-block btn-success" href="{{url('client1/apply')}}">
-						<i class="fa fa-fw fa-floppy-o" style="font-size: 25px"></i> <span style="font-size: 25px;"> Save As Draft</span>
-					</a>
-				</div>
-				<div class="col-md col-sm-9"></div>
+			
 			@endif
 			
 			<table>

@@ -112,7 +112,7 @@
           </div>
         </div>      
         
-        <div class="col-md-2" style="display:none">
+        <div class="col-md-3" >
           <div class="form-group">
             <label>X-Ray Payment Status</label>
             <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_proofpaystatMach" id="fo_proofpaystatMach">
@@ -124,7 +124,7 @@
           </div>
         </div> 
 
-        <div class="col-md-2" style="display:none">
+        <div class="col-md-3" style="display:none">
           <div class="form-group">
             <label>Pharma Payment Status</label>
             <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_proofpaystatPhar" id="fo_proofpaystatPhar">

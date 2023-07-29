@@ -2424,6 +2424,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	public function __applyfda(Request $request, $hfser, $appid, $hideExtensions = NULL) {
 		try {
 			if($request->isMethod('get')){
+
 				$hfLocs = ['client1/apply/app/LTO/'.$appid, 'client1/apply/app/LTO/'.$appid.'/hfsrb', 'client1/apply/app/LTO/'.$appid.'/fda', 'client1/printPaymentFDA/'.FunctionsClientController::getToken().'/'.$appid, 'client1/printPaymentFDACDRR/'.FunctionsClientController::getToken().'/'.$appid];
 				
 				if(isset($hideExtensions)) {
@@ -3268,9 +3269,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				}
 			} catch (Exception $e) {
 				return $e;
-			}
-			
-
+			}		
 		}
 	}
 	public function viewcdrrhrxrayservcat(Request $request, $appid){
@@ -3285,18 +3284,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function cdrrpersonnel(Request $request, $appid){
+
 		if(FunctionsClientController::isUserApplication($appid)){
+
 			if($request->isMethod('get')){
 				$inHF = array();
 				$cdrr = DB::table('cdrrpersonnel')->where('appid',$appid)->get();
 				$cdrrnew = DB::table('cdrrpersonnel')->join('hfsrbannexa', 'cdrrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
-				// ->join('cdrrhrpersonnel','hfsrbannexa.id','cdrrhrpersonnel.hfsrbannexaID')
 				->join('position','position.posid','hfsrbannexa.prof')
-				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession')
-				// ->where('hfsrbannexa.appid',$appid)->get();
+				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession', 'position.groupRequired')
 				->where('cdrrpersonnel.appid',$appid)->get();
 
-				// dd($cdrrnew);
+				//dd($cdrrnew);
 
 				if(count($cdrr) > 0){
 					foreach ($cdrr as $key) {
@@ -3830,19 +3829,21 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 	public function cdrrhrattachments(Request $request, $appid){
 		if(FunctionsClientController::isUserApplication($appid)){
+			
+			$arrRet = [
+				'cdrrhrotherattachment' => DB::table('cdrrhrotherattachment')->select('cdrrhrotherattachment.*', 'cdrrhrrequirements.reqName')->leftJoin('cdrrhrrequirements','cdrrhrrequirements.reqID','cdrrhrotherattachment.reqID')->where('appid',$appid)->get(),
+				'attType' => DB::table('cdrrhrrequirements')->get(),
+				'appid' => $appid
+			];
+
 			if($request->isMethod('get')){
-				$arrRet = [
-					'cdrrhrotherattachment' => DB::table('cdrrhrotherattachment')->leftJoin('cdrrhrrequirements','cdrrhrrequirements.reqID','cdrrhrotherattachment.reqID')->where('appid',$appid)->get(),
-					'attType' => DB::table('cdrrhrrequirements')->get(),
-					'appid' => $appid
-				];
 				// dd($arrRet);
 				return view('client1.apply.LTO1.cdrrhr.attachment',$arrRet);
 			} else if($request->isMethod('post')) {
 				// return $request->all();
 				if($request->action == 'add'){
 					$filename = FunctionsClientController::uploadFile($request->add_attachment);
-						$returnToSender = DB::table('cdrrhrotherattachment')->insert(['attachmentdetails' => $request->add_details, 'attachment' => $filename['fileNameToStore'],  'appid' => $appid]);
+						$returnToSender = DB::table('cdrrhrotherattachment')->insert(['reqID' => $request->req, 'attachmentdetails' => $request->add_details, 'attachment' => $filename['fileNameToStore'],  'appid' => $appid]);
 						// $returnToSender = DB::table('cdrrhrotherattachment')->insert(['attachmentdetails' => $request->add_details, 'attachment' => $filename['fileNameToStore'], 'reqID' => $request->req, 'appid' => $appid]);
 				} else if($request->action == 'delete'){
 					if(Storage::exists('public/uploaded/'.$request->deleteFile)){
@@ -4070,9 +4071,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	}
 
 	public function annexa(Request $request, $appid){
+
 		if(FunctionsClientController::isUserApplication($appid)){
-			$pos = DB::table('position')->get();
-			$professions = DB::table('profession')->get();
+
+			$pos = AjaxController::getAllPosition();
+			$professions = AjaxController::getAllProfessionOnly();
 			$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
 
 			// dd($professions);
@@ -4082,29 +4085,31 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'pos' => $pos,
 					'professions' => $professions,
 					'hfsrbannexa' => [DB::table('hfsrbannexa')
-					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
-					->leftJoin('position','position.posid','hfsrbannexa.prof')
-					->where('appid',$appid)->get(),
-					
-					DB::table('hfsrbannexa')->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
-					->leftJoin('position','position.posid','hfsrbannexa.prof')
-					->where([['appid',$appid],['isMainRadio',1]])
-					->doesntExist(),DB::table('hfsrbannexa')
-					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
-					->leftJoin('position','position.posid','hfsrbannexa.prof')
-					->where([['appid',$appid],['isMainRadioPharma',1]])
-					->doesntExist(),DB::table('hfsrbannexa')
-					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
-					->leftJoin('position','position.posid','hfsrbannexa.prof')
-					->where([['appid',$appid],['ismainpo',1]])
-					->doesntExist()],
+											->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+											->leftJoin('position','position.posid','hfsrbannexa.prof')
+											->where('appid',$appid)->get(),
+											
+											DB::table('hfsrbannexa')->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+											->leftJoin('position','position.posid','hfsrbannexa.prof')
+											->where([['appid',$appid],['isMainRadio',1]])
+											->doesntExist(),DB::table('hfsrbannexa')
+											->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+											->leftJoin('position','position.posid','hfsrbannexa.prof')
+											->where([['appid',$appid],['isMainRadioPharma',1]])
+											->doesntExist(),DB::table('hfsrbannexa')
+											->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+											->leftJoin('position','position.posid','hfsrbannexa.prof')
+											->where([['appid',$appid],['ismainpo',1]])
+											->doesntExist()],
 					// 'canAdd' => DB::table('appform')->where([['appid',$appid],['isReadyForInspec',0]])->exists()
 					'canAdd' => true,
 					'appid' =>$appid
 				];
 				// dd($arrRet);
 				return view('client1.apply.LTO1.hfsrb.annexa',$arrRet);
+
 			} else if($request->isMethod('post')) {
+
 				$customInsertMach = $customInsertPhar = false;
 				$filename = $returnToSender = null;
 				$arrName = $arrFiles = $arrPharma = $arrMach = array();
@@ -4205,7 +4210,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						}
 					}
 				} else if($request->action == 'edit'){
+
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->first();
+					
 					if(!empty($filename) && !empty($curStat)){
 						foreach ($filename as $key => $value) {
 							if(Storage::exists('public/uploaded/'.$curStat->$key)){
@@ -4214,22 +4221,24 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						}
 					}
 					$returnToSender = DB::table('hfsrbannexa')
-					->where('id',$request->id)->update($toInsert);
+					->where('id',$request->id)->update($toInsert);				
 					
-					DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
-					DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
-
 					if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
 
 						$pharma['hfsrbannexaID'] = $request->id;
 						$mach['hfsrbannexaID'] = $request->id;
-						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````																																																																																																																																																																																																																																
+						//MFOWS  not included in```````````````````````````````````````````````````````````````````````````````````````													
 						if($hgpid!='12' && (in_array($request->prof, $arrPharma)  || $customInsertPhar)){
 							$returnToSender = DB::table('cdrrpersonnel')->insert($pharma);
 						}
 						if(in_array($request->prof, $arrMach) || $customInsertMach){
 							$returnToSender = DB::table('cdrrhrpersonnel')->insert($mach);
 						}
+					}
+					else
+					{
+						DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
+						DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 					}
 				} else if($request->action == 'delete') {
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->select('status')->first()->status;

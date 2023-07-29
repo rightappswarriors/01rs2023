@@ -34,6 +34,10 @@
 				      	<table class="table table-striped">
 				      		<tbody>
 				      			<tr>
+				      				<th style="background-color: #4682B4; color: white;">Type of Process</th>
+				      				<td>{{((count($fAddress) > 0) ? (($fAddress[0]->aptid == 'IN') ? "Initial New" : "Renewal" ) : "No Type of Application")}}</td>
+				      			</tr>
+				      			<tr>
 				      				<th style="background-color: #4682B4; color: white;">Type of Application</th>
 				      				<td>{{((count($fAddress) > 0) ? $fAddress[0]->hfser_desc : "No Type of Application")}}</td>
 				      			</tr>
@@ -59,7 +63,7 @@
 				      </div>
 				    </div>
 				  </div>
-				  <div class="card">
+				  <!-- div class="card">
 				    <div class="card-header" id="headingOne">
 				      <h5 class="mb-0">
 				        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -73,7 +77,8 @@
 
 				      </div>
 				    </div>
-				  </div>
+				  </div -->
+
 				</div>
 			</div>
 
@@ -98,45 +103,49 @@
                     </span>
                 </div>
 
-				<center  style="padding-top: 40px; font-size: 30px;"><p>Pharmacy</p></center>
+				<center  style="padding-top: 40px;"><h3>Pharmacy</h3></center>
 				
 				<div class="row marginbottom-md">
-					<div class="col-md-4" style="text-align: center;">
-						<div class="col-12 mb-3">
-						<div class="col-12 mb-3">
-							 @if(!empty($data[0][2][0]))
+					
+					@if(count($fAddress) > 0)  @if($fAddress[0]->aptid == 'R')
+						<div class="col-md-4" style="text-align: center;">
+							<div class="col-12 mb-3">
+								<div class="col-12 mb-3">
+									@if(!empty($data[0][2][0]))
 
-							<div class="modal fade" id="modal_or_pharma" tabindex="-1" role="dialog" aria-labelledby="header_or_pharma" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="header_or_pharma">{{$data[0][1]}}</h5>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-										</button>
+									<div class="modal fade" id="modal_or_pharma" tabindex="-1" role="dialog" aria-labelledby="header_or_pharma" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="header_or_pharma">{{$data[0][1]}}</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body" id="body_or_pharma">
+												@php echo nl2br($data[0][2][0]->remarks); @endphp
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											</div>
+											</div>
+										</div>
 									</div>
-									<div class="modal-body" id="body_or_pharma">
-										@php echo nl2br($data[0][2][0]->remarks); @endphp
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									</div>
-									</div>
+								
+										@if($data[0][2][0]->evaluation === 1)
+											<i class="fa fa-check text-success"></i>
+											<button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
+										@elseif($data[0][2][0]->evaluation === 0)
+											<i class="fa fa-times text-danger"></i>
+											<button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
+										@endif
+									@endif
 								</div>
 							</div>
-						
-                                @if($data[0][2][0]->evaluation === 1)
-                                    <i class="fa fa-check text-success"></i>
-                                    <button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
-                                @elseif($data[0][2][0]->evaluation === 0)
-                                    <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" data-toggle="modal" data-target="#modal_or_pharma">Show Remarks</button>
-                                @endif
-                            @endif
+							<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRR/coc/'.$appid)}}'"><i class="fa fa-paperclip"></i> Official Reciept (For Renewal)</button>
 						</div>
-						</div>
-						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRR/coc/'.$appid)}}'"><i class="fa fa-paperclip"></i> Official Reciept (For Renewal)</button>
-					</div>
+					@endif @endif
+
 					<div class="col-md-4" style="text-align: center;">
 						<div class="col-12 mb-3">
 							 @if(!empty($data[2][2][0]))
@@ -214,44 +223,50 @@
 				@endif
 
 				@if($hasRadio)
-				<center style="margin-top: 130px; margin-bottom: 50px; font-size: 30px;"><p>Radiology</p></center>
-				<div class="row marginbottom-md mt-3">
-					<div class="col-md-4" style="text-align: center;">
-						<div class="col-12 mb-3">
-						@if(!empty($data[1][2][0]))
 
-						<div class="modal fade" id="modal_or_rad" tabindex="-1" role="dialog" aria-labelledby="header_or_rad" aria-hidden="true">
-							<div class="modal-dialog" role="document">
-								<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="header_or_rad">{{$data[1][1]}}</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<div class="modal-body" id="body_or_rad">
-									@php echo nl2br($data[1][2][0]->remarks); @endphp
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								</div>
+				<center style="margin-top: 130px; margin-bottom: 50px; "><h3>Radiology</h3></center>
+
+				<div class="row marginbottom-md">
+					
+					@if(count($fAddress) > 0)  @if($fAddress[0]->aptid == 'R')
+						<div class="col-md-4 mt-3" style="text-align: center;">
+							<div class="col-12 mb-3">
+							@if(!empty($data[1][2][0]))
+
+							<div class="modal fade" id="modal_or_rad" tabindex="-1" role="dialog" aria-labelledby="header_or_rad" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="header_or_rad">{{$data[1][1]}}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body" id="body_or_rad">
+										@php echo nl2br($data[1][2][0]->remarks); @endphp
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									</div>
+									</div>
 								</div>
 							</div>
-						</div>
 
-                                @if($data[1][2][0]->evaluation === 1)
+									@if($data[1][2][0]->evaluation === 1)
 
-                                    <i class="fa fa-check text-success"></i>
-                                    <button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
-                                @elseif($data[1][2][0]->evaluation === 0)
-                                    <i class="fa fa-times text-danger"></i>
-                                    <button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
-                                @endif
-                            @endif
+										<i class="fa fa-check text-success"></i>
+										<button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
+									@elseif($data[1][2][0]->evaluation === 0)
+										<i class="fa fa-times text-danger"></i>
+										<button class="btn" data-toggle="modal" data-target="#modal_or_rad">Show Remarks</button>
+									@endif
+								@endif
+							</div>
+							<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRRHR/coc/'.$appid)}}'"><i class="fa fa-paperclip"></i> COC (For Renewal)</button>
 						</div>
-						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRRHR/coc/'.$appid)}}'"><i class="fa fa-paperclip"></i> COC (For Renewal)</button>
-					</div>
-					<div class="col-md-4" style="text-align: center;">
+					@endif @endif
+
+					<div class="col-md-4 mt-3" style="text-align: center;">
 						<div class="col-12 mb-3">
                             @if(!empty($data[3][2][0]))
 
@@ -286,7 +301,8 @@
                         </div>
 						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;"  onclick="window.location.href='{{asset('client1/apply/fda/CDRRHR/personnel/'.$appid)}}'"><i class="fa fa-users"></i> LIST OF PERSONNEL</button>
 					</div>
-					<div class="col-md-4" style="text-align: center;">
+
+					<div class="col-md-4 mt-3" style="text-align: center;">
 						<div class="col-12 mb-3">
                             @if(!empty($data[4][2][0]))
 
@@ -320,12 +336,9 @@
                         </div>
 						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRRHR/xrayservcat/'.$appid)}}'"><i class="fa fa-heartbeat"></i> X-RAY SERVICE CATEGORY</button>
 					</div>
-					
-				</div>
-			
-				<div class="row marginbottom-md" style="margin-top: 50px;">
+				
 
-					<div class="col-md-4" style="text-align: center;">
+					<div class="col-md-4 mt-3" style="text-align: center;">
 						<div class="col-12 pb-3">
                             @if(!empty($data[5][2][0]))
 
@@ -362,8 +375,8 @@
 					</div>
 	
 		
-					 <div class="col-md-4" style="text-align: center;">
-					 <div class="col-12 pb-3">
+					 <div class="col-md-4 mt-3" style="text-align: center;">
+					 	<div class="col-12 pb-3">
 							</div>
 						<button class="btn btn-info" style="white-space: normal; width: 100%; height: 100%;" onclick="window.location.href='{{asset('client1/apply/fda/CDRRHR/attachments/'.$appid)}}'"><i class="fa fa-paperclip"></i> Other Attachments (CDRRHR)</button>
 					</div> 

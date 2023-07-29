@@ -89,7 +89,7 @@ COC - FDA
 						This certificate is the basis of the HFSRB/ROs for the inclusion of the medical x-ray facility in the license to
 						operate/certificate of accreditation of facilities under the one-stop-shop licensure system.
 						The facility shall report to the CDRRHR/HFSRB in writing any change/s affecting the condition/s of this
-						certificate of compliance (COC). This certificate is valid until <span class=" font-weight-bold"> <u>{{Date('F j, Y',strtotime($data->issuedate))}}</span></u> , provided no change/s on the
+						certificate of compliance (COC). This certificate is valid until <span class=" font-weight-bold"> <u>December 31, {{Date('Y',strtotime($data->issuedate))}}</span></u> , provided no change/s on the
 						condition of this COC has been made.
 					</div>
 					<div class="text-justify mt-4 font-weight-bold">
@@ -106,7 +106,7 @@ COC - FDA
 								</div>
 								<div class="container text-center">
 									<span class="text-center font-weight-bold">
-										MARIA CECILIA C. MATIENZA
+										MARIA CECILIA C. MATIENZO
 									</span>
 									<br>
 									<span class="text-center">

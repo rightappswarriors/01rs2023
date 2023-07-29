@@ -201,11 +201,11 @@
 		                   			</div>
 		                   		</div>
 								   <div class="row mb-2">
-		                   			<div class="col-sm ">
+		                   			<div class="col-sm required">
 		                   			Application Use
 		                   			</div>
 		                   			<div class="col-sm-11">
-		                   				<input type="text" class="form-control w-100" name="appuse" required="">
+		                   				<input type="text" class="form-control w-100" name="appuse"  required="">
 		                   			</div>
 		                   		</div>
 		                   			<button class="btn btn-primary pt-1" type="submit" id="getpersonnel">Submit</button>
