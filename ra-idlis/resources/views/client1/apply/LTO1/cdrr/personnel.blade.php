@@ -39,12 +39,10 @@
 		      		</thead>
 		      		<tbody id="loadHere">
 		      			@foreach($cdrrpersonnelnew as $personnel)
-		      			{{-- @foreach($cdrrpersonnel as $personnel) --}}
 							<tr>
-								<td>{{ucwords($personnel->name) }}</td>
+								<td>{{ucwords($personnel->firstname) }} {{ucwords($personnel->middlename) }} {{ucwords($personnel->surname) }} {{ucwords($personnel->suffix) }}</td>
 								<td>{{$personnel->posname}}</td>
 							
-								{{-- <td>{{$personnel->pos}}</td> --}}
 								<td>{{$personnel->designation}}</td>
 								<td>
 									@php 

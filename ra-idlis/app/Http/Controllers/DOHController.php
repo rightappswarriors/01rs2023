@@ -12988,8 +12988,7 @@ namespace App\Http\Controllers;
 					if(empty($request->action)){
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 				  		$getData = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->select('chg_num')->first();
-				  		$test = DB::table('chgfil')->insert(
-			  			[
+				  		$test = DB::table('chgfil')->insert([
 	  						'chgapp_id' => $request->id,
 	  						'chg_num' => $getData->chg_num,
 	  						'appform_id' => $request->appid,
@@ -13001,8 +13000,7 @@ namespace App\Http\Controllers;
 	  						'uid' => $Cur_useData['cur_user'],
 	  						'sysdate' => $Cur_useData['date'],
 	  						'systime' => $Cur_useData['time'],
-			  			]
-			  			);
+			  			]);
 				  		$upd = array('chg_num'=>(intval($getData->chg_num) + 1));
 				  		$test2 = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->update($upd);
 			  		} elseif($request->action == 'evalute') {
