@@ -3289,11 +3289,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 			if($request->isMethod('get')){
 				$inHF = array();
-				$cdrr = DB::table('cdrrpersonnel')->where('appid',$appid)->get();
+				
+				$cdrr = DB::table('cdrrpersonnel')->where('appid','=',$appid)->where('isdelete','=','0')->get();
 				$cdrrnew = DB::table('cdrrpersonnel')->join('hfsrbannexa', 'cdrrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
 				->join('position','position.posid','hfsrbannexa.prof')
 				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession', 'position.groupRequired')
-				->where('cdrrpersonnel.appid',$appid)->get();
+				->where('cdrrpersonnel.appid',$appid)->where('isdelete','=','0')->get();
 
 				if(count($cdrr) > 0){
 					foreach ($cdrr as $key) {
