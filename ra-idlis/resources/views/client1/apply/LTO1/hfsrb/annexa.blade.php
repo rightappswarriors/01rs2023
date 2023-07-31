@@ -81,9 +81,9 @@
 		}
 
 		dfn {
-		cursor: help;
-		font-style: normal;
-		position: relative;
+			cursor: help;
+			font-style: normal;
+			position: relative;
 		
 		}
 		dfn::after {
@@ -105,15 +105,15 @@
 			transition: opacity 250ms, top 250ms;
 		}
 		dfn::before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: 12px; left: 10px;
-		opacity: 0;
-		width: 0; height: 0;
-		border: solid transparent 5px;
-		border-bottom-color: rgba(0,0,0,0.8);
-		transition: opacity 250ms, top 250ms;
+			content: '';
+			display: block;
+			position: absolute;
+			top: 12px; left: 10px;
+			opacity: 0;
+			width: 0; height: 0;
+			border: solid transparent 5px;
+			border-bottom-color: rgba(0,0,0,0.8);
+			transition: opacity 250ms, top 250ms;
 		}
 		dfn:hover {z-index: 2;} /* Keeps the info boxes on top of other elements */
 		dfn:hover::after,
@@ -339,7 +339,6 @@
 										Suffix:
 									</div>
 									<div class="col-sm-11">
-										{{-- <input class="form-control w-100" name="suffix"> --}}
 										<select name="suffix" class="form-control">
 											<option value="" selected>None</option>
 											<option value="Jr">Jr</option>
@@ -781,12 +780,12 @@
 					});
 				}
 				
-				console.log(profession);
+				//console.log(profession);
 				$("#actionModalCRUD").empty().html('Edit Personnel');
 				$("#toChange").val('edit');
 				$("#idToAdd").val(id);
 				$("#forCred").empty().append('(You may resubmit or if not, details of credentials will be retained)');
-				console.log(arguments)
+				//console.log(arguments)
 				// if(arguments.length == fieldsForInput.length){
 					// if(head != ""){
 					// 	$('[name=head]').show();
@@ -803,9 +802,9 @@
 					// 	$('[name=pharmahead]').attr('value',1);
 					// 	$('[name=pharmahead]').prop('checked',true);
 					// }
-console.log("head")
-console.log(isXrayTech)
-console.log(isChiefRadTech)
+				//console.log("head")
+				//console.log(isXrayTech)
+				//console.log(isChiefRadTech)
 					if(head == 1){
 						
 						$('[name=head1]').attr('value',1);
@@ -827,8 +826,8 @@ console.log(isChiefRadTech)
 						$('[name=po1]').attr('value',1);
 						$('[name=po1]').prop('checked',true);
 					}
-					console.log("pharmahead")
-					console.log(pharmahead)
+					//console.log("pharmahead")
+					//console.log(pharmahead)
 					if(pharmahead == 1){
 						
 						$('[name=pharmahead1]').attr('value',1);
