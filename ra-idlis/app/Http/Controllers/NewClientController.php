@@ -3289,13 +3289,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 			if($request->isMethod('get')){
 				$inHF = array();
-<<<<<<< Updated upstream
-				$cdrr = DB::table('cdrrpersonnel')->where('appid',$appid)->get();
-				$cdrrnew = DB::table('cdrrpersonnel')->join('hfsrbannexa', 'cdrrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
-				->join('position','position.posid','hfsrbannexa.prof')
-				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession', 'position.groupRequired')
-				->where('cdrrpersonnel.appid',$appid)->get();
-=======
 				
 				/* $cdrr = DB::table('cdrrpersonnel')->where('appid','=',$appid)->get();
 				$cdrrnew = DB::table('cdrrpersonnel')->join('hfsrbannexa', 'cdrrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
@@ -3308,7 +3301,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 								->join('position','position.posid','hfsrbannexa.prof')
 								->select('hfsrbannexa.firstname', 'hfsrbannexa.middlename', 'hfsrbannexa.surname', 'hfsrbannexa.suffix', 'hfsrbannexa.profession', 'cdrrpersonnel.*', 'position.posname', 'position.groupRequired')
 								->where('hfsrbannexa.appid',$appid)->get();
->>>>>>> Stashed changes
 
 				if(count($cdrr) > 0){
 					foreach ($cdrr as $key) {
