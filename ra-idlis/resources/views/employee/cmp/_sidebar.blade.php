@@ -835,13 +835,7 @@
                                 <!-- <li class="FDAM_allow"><a href="#machines" data-toggle="collapse">&nbsp;&nbsp;<i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Machines</a> -->
                                     <ul id="machines" class="list-unstyled collapse">
                                         
-                                        <li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>
-
-                                        <span class="FD008_allow">
-
-                                            <li><a href="{{ asset('employee/dashboard/processflow/FDA/machines/orderofpayment') }}">&nbsp;&nbsp;&nbsp;&nbsp;Override Order of Payment</a></li>
-
-                                        </span>
+                                    {{--<li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>--}}
 
                                         <span class="FDAMPA_allow">
 
@@ -881,13 +875,7 @@
                                 <li class="FDAP_allow"><a href="#pharma" data-toggle="collapse">&nbsp;&nbsp;<i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;Pharmacy</a>
                                     <ul id="pharma" class="list-unstyled collapse">
 
-                                        <li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>
-
-                                        <span class="FD008_allow">
-
-                                            <li><a href="{{ asset('employee/dashboard/processflow/FDA/pharma/orderofpayment') }}">&nbsp;&nbsp;&nbsp;&nbsp;Override Order of Payment</a></li>
-
-                                        </span>
+                                    {{-- <li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>--}}
 
                                         <span class="FDAPPA_allow">
 

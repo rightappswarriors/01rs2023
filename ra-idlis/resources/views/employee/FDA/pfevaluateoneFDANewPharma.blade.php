@@ -224,8 +224,18 @@
 	            				<div class="col-md text-center pb-2 pt-3" style="font-size: 20px;">
 	            					Evaluation Recommendation 
 	            				</div>
+                      @if(isset($eval->uploadfilename))
+                        <div class="row pt-5 pb-4">
+                          <div class="col-md-12 text-center" style="font-size: 30px;">
+                            Download File
+                          </div>
+                          <div class="col-md d-flex justify-content-center pt-3">
+                            <a href="{{url('file/download/'.$eval->uploadfilename)}}" class="btn btn-primary p-3">Download File</a>
+                          </div>
+                        </div>
+                      @endif
 	            				<div class="col-md d-flex justify-content-center">
-	            					<select name="recommendation" class="form-control" required style="width: 30%;">
+	            					<select name="recommendation" class="form-control" required style="width: 43%;" onchange="showDiv(this)">
 	            						<option disabled hidden selected>Please Select</option>
                         @if($choosen == "machines")
 	            						<option value="Certificate of Compliance  ">Certificate of Compliance  </option>
@@ -235,9 +245,9 @@
                           <option value="Recommendation for Disapproval including forfeiture of payment">Recommendation for Disapproval including forfeiture of payment</option>
                       
                         @else
-                        <option value="COCN">Certificate of Compliance</option>
-                        <option value="NOD">Notice of Deficiency (30 Days compliance)</option>
-                        <option value="RLN">Recommendation Letter </option>
+                          <option value="COCN">Certificate of Compliance</option>
+                          <option value="NOD">Notice of Deficiency (30 Days compliance)</option>
+                          <option value="RLN">Recommendation Letter </option>
                         @endif
                           
                           <!-- <option value="COC">COC</option>
@@ -247,8 +257,21 @@
 
 	            					</select>
 	            				</div>
+
 	            			</div>
 	            		</div>
+
+                  <div class="row pt-3" id="hidden_div" style="display:none;">
+	            			<div class="col-md-12">
+	            				<div class="col-md text-center pb-2 pt-3" style="font-size: 20px; ">
+                      Validity Date
+	            				</div>
+	            				<div class="col-md d-flex justify-content-center">
+                      <input type="date" name="validitydate" id="validitydate" class="form-control" placeholder="Click Me" style="width: 43%">
+                      </div>
+	            			</div>
+	            		</div>
+
 	            		<div class="row pt-3">
 	            			<div class="col-md-12">
 	            				<div class="col-md text-center pb-2 pt-3" style="font-size: 20px;">
@@ -319,9 +342,6 @@
                             Recommendation Letter
                         @break
 						       		@endswitch
-                       
-                      
-                      
                       
                       </u>
 
@@ -458,9 +478,20 @@
           $("[name=fileUp]").attr('required',true).show();
         }
       });
-    </script>
 
+      function showDiv(select){ 
+        const input = document.getElementById('validitydate');
 
+          // ✅ Set required attribute
+        if(select.value=='Certificate of Compliance  ' || select.value=='Certificate of Compliance' || select.value=='COCN'){
+          document.getElementById('hidden_div').style.display = "block";
+          input.setAttribute('required', '');
+        } else{
+          document.getElementById('hidden_div').style.display = "none";
+          input.removeAttribute('required');
+        }
+      } 
+      </script>
     
     
     @endsection
