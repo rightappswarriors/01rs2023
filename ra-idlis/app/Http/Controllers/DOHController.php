@@ -4297,7 +4297,7 @@ namespace App\Http\Controllers;
 				$coaFlag = ($forhfsrb && strtolower($data->hfser_id) == 'coa');
 				
 				if ($request->isMethod('get')) 
-				{
+				{ 
 					$Cur_useData  = AjaxController::getCurrentUserAllData();
 					$curForm = FunctionsClientController::getUserDetailsByAppform($appid);
 					$documentDate = (isset($curForm[0]->documentSent) ? $curForm[0]->documentSent :  Date('Y-m-d',strtotime('now')));
@@ -4364,7 +4364,8 @@ namespace App\Http\Controllers;
 							session()->flash('system_error','ERROR');
 							return view('employee.processflow.pfevaluteone');
 						}
-					} else {
+					} else 
+					{
 					//if FDA Office belong
 						$tables = array();
 						$arrTemp = [];
@@ -4415,7 +4416,7 @@ namespace App\Http\Controllers;
 								AjaxController::setAppForm_UpdatedDate($appid);
 						}
 						
-						return view('employee.processflow.pfevaluateoneLTO', ['type'=> 'docu','AppData'=> $data, 'requirements' => $req, 'appID' => $appid, 'documentDate' => $documentDate, 'linkToEdit' => $linkToEdit, 'ActualString' => $data8->toDateString(), 'DateString' => $data8->toFormattedDateString(),'appID' => $appid, 'DateNow' => $data9->toDateString(), 'AfterDay'=> $data10->toDateString(), 'tables' => json_encode($tables), 'forhfsrb' => $forhfsrb, 'office' => $office, 'coaFlag' => $coaFlag, 'redirect' => $boolRedirect]);
+						return view('employee.processflow.pfevaluateoneLTO', ['type'=> 'docu','AppData'=> $data, 'requirements' => $req, 'appID' => $appid, 'documentDate' => $documentDate, 'linkToEdit' => $linkToEdit, 'ActualString' => $data8->toDateString(), 'DateString' => $data8->toFormattedDateString(),'appID' => $appid, 'DateNow' => $data9->toDateString(), 'AfterDay'=> $data10->toDateString(), 'tables' => json_encode($tables), 'forhfsrb' => $forhfsrb, 'office' => $office, 'coaFlag' => $coaFlag, 'redirect' => $boolRedirect,'tagcount'=>NewClientController::getTaggedCount($appid)]);
 					}
 				}
 				if ($request->isMethod('post')) {
@@ -4790,117 +4791,126 @@ namespace App\Http\Controllers;
 
 		public function EvaluateOneProcessFlowFDA(Request $request, $appid, $requestOfClient = 'machines')
 		{
-			if(in_array(true, AjaxController::isSessionExist(['employee_login'])) && FunctionsClientController::hasRequirementsFor((AjaxController::isRequestForFDA($requestOfClient) == 'machines' ? 'cdrrhr' : 'cdrr'),$appid)){
-				$requestOfClient = AjaxController::isRequestForFDA($requestOfClient);
-				if($request->isMethod('get')){
-					try {
-						$arrRet = [
-							'choosen' => $requestOfClient,
-							'AppData' => AjaxController::getAllDataEvaluateOne($appid),
-							'eval' => DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',($requestOfClient == 'machines' ? 'machines' : 'pharma')]])->orderBy('evalid', 'DESC')->first(),
-							// 'eval' => DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',($requestOfClient == 'machines' ? 'machines' : 'pharma')]])->first(),
-							'list' => AjaxController::getRequirementsFDA($appid),
-							'appid' => $appid
-						];
-						// dd($arrRet);
-						if($requestOfClient == 'machines'){
-							return view('employee.FDA.pfevaluateoneFDANew',$arrRet);
-						}else if($requestOfClient == 'pharma'){
-							return view('employee.FDA.pfevaluateoneFDANewPharma',$arrRet);
+			if(session()->has('employee_login'))
+			{
+				if(in_array(true, AjaxController::isSessionExist(['employee_login'])) && FunctionsClientController::hasRequirementsFor((AjaxController::isRequestForFDA($requestOfClient) == 'machines' ? 'cdrrhr' : 'cdrr'),$appid)){
+					$requestOfClient = AjaxController::isRequestForFDA($requestOfClient);
+					if($request->isMethod('get')){
+						try {
+							$arrRet = [
+								'choosen' => $requestOfClient,
+								'AppData' => AjaxController::getAllDataEvaluateOne($appid),
+								'eval' => DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',($requestOfClient == 'machines' ? 'machines' : 'pharma')]])->orderBy('evalid', 'DESC')->first(),
+								// 'eval' => DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',($requestOfClient == 'machines' ? 'machines' : 'pharma')]])->first(),
+								'list' => AjaxController::getRequirementsFDA($appid),
+								'appid' => $appid
+							];
+							// dd($arrRet);
+							if($requestOfClient == 'machines'){
+								return view('employee.FDA.pfevaluateoneFDANew',$arrRet);
+							}else if($requestOfClient == 'pharma'){
+								return view('employee.FDA.pfevaluateoneFDANewPharma',$arrRet);
+							}
+
+						} catch (Exception $e) {
+							dd($e);
 						}
 
-					} catch (Exception $e) {
-						dd($e);
 					}
 
-				}
+					if($request->isMethod('post')){
 
-				if($request->isMethod('post')){
+						$capp = DB::table('appform')->where([['appid', $appid]])->first();
 
-					$capp = DB::table('appform')->where([['appid', $appid]])->first();
-
-					$uData = AjaxController::getCurrentUserAllData();
-					if($requestOfClient == 'machines'){
-						$forAppform = [
-							'isrecommendedFDA',
-							'recommendedbyFDA',
-							'recommendedtimeFDA',
-							'recommendeddateFDA',
-							'recommendedippaddrFDA',
-							'FDAStatMach',
-							'corResubmit'
-						];
-						$corm = 1;
-						$corp = $capp->corResubmitPhar;
-
-					} else {
-						$forAppform = [
-							'isrecommendedFDAPharma',
-							'recommendedbyFDAPharma',
-							'recommendedtimeFDAPharma',
-							'recommendeddateFDAPharma',
-							'recommendedippaddrFDAPharma',
-							'FDAStatPhar',
-							'corResubmitPhar'
-						];
-						$corm =  $capp->corResubmit;
-						$corp = 1;
-					}
-
-					
-
-					$fstat = 'For Recommendation' ;
-					// $fstat = $requestOfClient == 'machines' ? 'For Recommendation' : 'For Final Decision';
-					$resub = $requestOfClient == 'machines' ? $corm : $corp;
-					$answers = [
-						1,
-						$uData['cur_user'],
-						$uData['time'],
-						$uData['date'],
-						$uData['ip'],
-						$fstat,
-						$resub
-					];
-					if($request->hasFile('fileUp')){
-						$uploadName = FunctionsClientController::uploadFile($request->fileUp)['fileNameToStore'];
-						$toInsertFieldsAndValue = array([
-							'requestFrom' => $requestOfClient,
-							'uploadfilename' => $uploadName,
-							'decision' => $request->recommendation,
-							'remarks' => $request->remarks,
-							't_ip' => $request->ip(),
-							't_eval' => session()->get('employee_login')->uid,
-							'appid' => $appid
-						]);
-
+						$uData = AjaxController::getCurrentUserAllData();
 						
-						$isRedirect = DB::table('fdaevaluation')->insert($toInsertFieldsAndValue);
+						if($requestOfClient == 'machines'){
 
-						if($isRedirect){
-							if(strtolower($request->recommendation) != 'rfc'){
-								DB::table('appform')->where('appid',$appid)->update(array_combine($forAppform, $answers));
-							}
-							if($request->recommendation == 'COC'){
-								$department = ($requestOfClient == 'machines' ? 'cdrrhr' : 'cdrr');
-								DB::table('fdacert')->insert(['appid' => $appid, 'department' => $department, 'certtype' => 'COC', 'issueby' => session()->get('employee_login')->uid]);
-							}
-							return redirect('employee/dashboard/processflow/evaluate/FDA/'.$appid.'/'.$requestOfClient);
+							$forAppform = [
+								'isrecommendedFDA',
+								'recommendedbyFDA',
+								'recommendedtimeFDA',
+								'recommendeddateFDA',
+								'recommendedippaddrFDA',
+								'FDAStatMach',
+								'corResubmit'
+							];
+							$corm = 1;
+							$corp = $capp->corResubmitPhar;
+
+						} else {
+							$forAppform = [
+								'isrecommendedFDAPharma',
+								'recommendedbyFDAPharma',
+								'recommendedtimeFDAPharma',
+								'recommendeddateFDAPharma',
+								'recommendedippaddrFDAPharma',
+								'FDAStatPhar',
+								'corResubmitPhar'
+							];
+							$corm =  $capp->corResubmit;
+							$corp = 1;
 						}
+						
+						$fstat = 'For Recommendation' ;
+						// $fstat = $requestOfClient == 'machines' ? 'For Recommendation' : 'For Final Decision';
+						$resub = $requestOfClient == 'machines' ? $corm : $corp;
+						$answers = [
+							1,
+							$uData['cur_user'],
+							$uData['time'],
+							$uData['date'],
+							$uData['ip'],
+							$fstat,
+							$resub
+						];
 
-					}
-					if(array_key_exists('isupdate', $request->all())){
-						$oldData = DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',$requestOfClient]])->first();
-						if(isset($oldData)){
-							DB::table('fdaevaluationhistory')->insert(['evaluation' => $oldData->decision, 'requestfrom' => $oldData->requestFrom, 'remarks' => $oldData->remarks, 'old_ip' => $oldData->t_ip, 'old_tdate' => $oldData->t_det, 't_ip' => $uData['ip'], 'old_teval' => $oldData->t_eval,  'appid' => $appid, 'changedby' => $uData['cur_user']]);
-							if(DB::table('fdaevaluation')->where('evalid', $oldData->evalid)->update(['decision' => $request->recommendation, 't_det' => $uData['date'], 't_ip' => $uData['ip'], 't_eval' => $uData['cur_user']])){
+						if($request->hasFile('fileUp')){
+
+							$uploadName = FunctionsClientController::uploadFile($request->fileUp)['fileNameToStore'];
+							$toInsertFieldsAndValue = array([
+								'requestFrom' => $requestOfClient,
+								'uploadfilename' => $uploadName,
+								'decision' => $request->recommendation,
+								'remarks' => $request->remarks,
+								't_ip' => $request->ip(),
+								't_eval' => session()->get('employee_login')->uid,
+								'appid' => $appid
+							]);
+							
+							$isRedirect = DB::table('fdaevaluation')->insert($toInsertFieldsAndValue);
+
+							if($isRedirect){
 								if(strtolower($request->recommendation) != 'rfc'){
 									DB::table('appform')->where('appid',$appid)->update(array_combine($forAppform, $answers));
 								}
-								return back()->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Application Updated']);
+								if($request->recommendation == 'COC'){
+									$department = ($requestOfClient == 'machines' ? 'cdrrhr' : 'cdrr');
+									DB::table('fdacert')->insert(['appid' => $appid, 'department' => $department, 'certtype' => 'COC', 'issueby' => session()->get('employee_login')->uid]);
+								}
+								return redirect('employee/dashboard/processflow/evaluate/FDA/'.$appid.'/'.$requestOfClient);
+							}
+
+						}
+
+						if(array_key_exists('isupdate', $request->all())){
+							$oldData = DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',$requestOfClient]])->first();
+							if(isset($oldData)){
+								DB::table('fdaevaluationhistory')->insert(['evaluation' => $oldData->decision, 'requestfrom' => $oldData->requestFrom, 'remarks' => $oldData->remarks, 'old_ip' => $oldData->t_ip, 'old_tdate' => $oldData->t_det, 't_ip' => $uData['ip'], 'old_teval' => $oldData->t_eval,  'appid' => $appid, 'changedby' => $uData['cur_user']]);
+								if(DB::table('fdaevaluation')->where('evalid', $oldData->evalid)->update(['decision' => $request->recommendation, 't_det' => $uData['date'], 't_ip' => $uData['ip'], 't_eval' => $uData['cur_user']])){
+									if(strtolower($request->recommendation) != 'rfc'){
+										DB::table('appform')->where('appid',$appid)->update(array_combine($forAppform, $answers));
+									}
+									return back()->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Application Updated']);
+								}
 							}
 						}
 					}
 				}
+			}
+			else 
+			{
+				return redirect()->route('employee');
 			}
 		}
 

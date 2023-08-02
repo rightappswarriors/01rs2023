@@ -159,7 +159,9 @@
               <input type="" id="token" value="{{ Session::token() }}" hidden>
               
               @if($office == 'xray')
-              <button class="btn btn-primary ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold" onclick="window.history.back();">Back</button>
+                <a href="{{asset('employee/dashboard/processflow/pre-assessment/FDA/xray')}}">
+                  <button class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold" >Back</button>
+                </a>
               @elseif($office == 'pharma')
                 <a href="{{asset('employee/dashboard/processflow/pre-assessment/FDA/pharma')}}">
                   <button class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold" >Back</button>
@@ -169,11 +171,20 @@
                   <button class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold" >Back</button>
                 </a>
               @endif 
-              &nbsp; Technical Evaluation
+              &nbsp; 
+              
+              @if($office == 'xray')
+                    Pre-assessment (Radiation)
+              @elseif($office == 'pharma')
+                    Pre-assessment (Pharmacy)
+              @else
+                    Technical Evaluation
+              @endif 
+              
               
                @if($office == 'pharma')
                     <div style="float: right;">
-                      <a class="btn {{(FunctionsClientController::existOnDB('cdrrpersonnel',[['appid',$AppData->appid],['isTag',1]]) ? 'bg-danger': 'btn-primary')}} p-3 text-white" target="_blank" href="{{url('client1/apply/fda/CDRR/view/personnel/').'/'.$AppData->appid.'/tag'}}">Tag Pharmacist</a>
+                      <a class="btn {{(FunctionsClientController::existOnDB('cdrrpersonnel',[['appid',$AppData->appid],['isTag',1]]) ? 'bg-danger': 'btn-primary')}} p-3 text-white" target="_blank" href="{{url('client1/apply/fda/CDRR/view/personnel/').'/'.$AppData->appid.'/tag'}}">({{$tagcount}}) Tag Pharmacist</a>
                     </div>
                @endif
 
@@ -230,27 +241,35 @@
                     <strong>Requirements </strong>
 
                   </td>
-                  <td scope="col" width="40%">
+                  <td scope="col">
                     <a style="float: right;" href="{{$linkToEdit}}?grplo=rlo{{$AppData->aptid == 'R' ? '&type=r': ''}}" target="_blank" class="btn btn-info">
                         <i class="fa fa-eye" aria-hidden="true"></i> View Application
                       </a>                      
                   <span style="float: right;">&nbsp;&nbsp;</span>
-                  
-
-
+                
                   @if($office == 'xray')
 				
 
                       <a style="float: right;" href="{{asset('client1/printPaymentFDA')}}/{{FunctionsClientController::getToken()}}/{{$AppData->appid}}" target="_blank" class="btn btn-info">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Order of Payment
-                  </a>
+                    <i class="fa fa-eye" aria-hidden="true"></i> Preview Order of Payment</a>
+                    <span style="float: right;">&nbsp;&nbsp;</span>
 									@endif
 									@if($office == 'pharma')
-							
+
                       <a style="float: right;" href="{{asset('client1/printPaymentFDACDRR')}}/{{FunctionsClientController::getToken()}}/{{$AppData->appid}}" target="_blank" class="btn btn-info">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Order of Payment
-                  </a>
+                    <i class="fa fa-eye" aria-hidden="true"></i> Preview Order of Payment</a>
+                    <span style="float: right;">&nbsp;&nbsp;</span>
 									@endif		
+
+                  @if($office == 'xray'  || $office == 'pharma')
+				
+
+                      <a style="float: right;" href="{{asset('employee/dashboard/processflow/FDA/pharma/orderofpayment/')}}/{{$AppData->appid}}" target="_blank" class="btn btn-primary ">
+                      <i class="fa fa-edit" aria-hidden="true"></i> Override Order of Payment</a>
+                      <span style="float: right;">&nbsp;&nbsp;</span>
+                  @endif
+
+
                   </td>
                 </tr>
               </thead>
@@ -405,16 +424,13 @@
             {{-- @endif --}}
             
             <div class="col-sm-12 d-flex justify-content-center">
-
           @if($office == 'pharma' || $office == 'xray')
               @if(!empty($documentDate))
                 @isset($AppData)
                   @if ($triggerThis)
                   {{-- @if ($AppData->isrecommended == 2 || $AppData->isrecommended == null) --}}
                   @if(count($requirements) != $forNosent || $office == 'pharma')
-
-                 
-                         
+                                   
                  <button type="button" id="approveButton" class="btn btn-success" onclick="Recommended4Inspection('ApproveApplication');">Approve</button>
                 @endif
                   &nbsp;
@@ -558,6 +574,7 @@
            
         var ifCheck = [], chckRmrks = [];
         var x = 0, y = '';
+        
         if(IDs.length > 0) {
           var inpt = 0;
             for (var i = 0; i < IDs.length; i++) {

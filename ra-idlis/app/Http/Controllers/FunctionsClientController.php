@@ -1199,6 +1199,36 @@ class FunctionsClientController extends Controller {
 		}
 	}
 
+
+	public static function hasEmptyDBFieldsByJoinTables ($pharmaJoinTableResult_withoutGET = null, $fields = []) {
+		$haslist = false;
+		$arrEmpty = array();
+		
+		if(isset($pharmaJoinTableResult_withoutGET) && isset($fields)){
+			
+			if($pharmaJoinTableResult_withoutGET->first()){
+
+				foreach ($pharmaJoinTableResult_withoutGET as $key) {
+					foreach ($fields as $field) {
+						if(empty($key->$field)){
+							if(!in_array($field, $arrEmpty)){
+								array_push($arrEmpty, $field);
+							}
+						}
+					}
+				}
+
+				$haslist = true;
+				
+			}else{
+				$arrEmpty = array();
+				$haslist = false;
+			}
+			return [(empty($arrEmpty) ? false : true),$arrEmpty, $haslist];
+			// return [(empty($arrEmpty) ? false : true),$arrEmpty, $haslist];
+		}
+	}
+
 	public static function insPaymentCharges() { 
 		$cAppid = ""; $retArr = true; $tPayment = 0; $arrSaveChgfil = ['chgapp_id', 'chg_num', 'appform_id', 'chgapp_id_pmt', 'orreference', 'deposit', 'other', 'au_id', 'au_date', 'reference', 'amount', 't_date', 't_time', 't_ipaddress', 'uid'];
 		$payment = self::getSessionParamObj("payment"); 

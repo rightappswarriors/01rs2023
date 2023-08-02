@@ -2203,13 +2203,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				
 					// $view = ($data->certtype == 'COC' ? 'client1.FDA.coc' : 'client1.FDA.rl');
 				} else {
-					// $view = ($data->certtype == 'COC' ? 'client1.FDA.linac' : 'client1.FDA.cdrrhrRL');
-					
+					// $view = ($data->certtype == 'COC' ? 'client1.FDA.linac' : 'client1.FDA.cdrrhrRL');					
 					
 					// $view = ($data->certtype == 'COC' ? 'client1.FDA.cdrrhrCOC' : 'client1.FDA.cdrrhrRL');
 
 					$getannexa = DB::table('hfsrbannexa')->where([['appid', $appid]])->get();
-
 						
 					foreach($getannexa as $a){
 						if($a->isChiefRadTech == 1){
@@ -2242,8 +2240,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 								}
 							}
 						}
-
-
 					}
 
 					$required = array(
@@ -2471,15 +2467,24 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			}
 			else {
 				if(isset($request->readyNow)){
+					
 					$toAppform = [];
-					$pharma = FunctionsClientController::hasEmptyDBFields('cdrrpersonnel',['appid' => $appid],['prc','coe']);
+					$pharmaJoinTableResult_withoutGET = DB::table('cdrrpersonnel')
+												->select('cdrrpersonnel.coe', 'cdrrpersonnel.prc', 'position.groupRequired')
+												->leftJoin('hfsrbannexa','cdrrpersonnel.hfsrbannexaID','=','hfsrbannexa.id')
+												->leftJoin('position','position.posid','=','hfsrbannexa.prof')
+												->where('cdrrpersonnel.appid','=', $appid)
+												->where('position.groupRequired','=','1')
+												->whereNull('cdrrpersonnel.coe')
+												->whereNull('cdrrpersonnel.prc');
+					$pharma = FunctionsClientController::hasEmptyDBFieldsByJoinTables($pharmaJoinTableResult_withoutGET,['prc','coe']);
 					$mach = FunctionsClientController::hasEmptyDBFields('cdrrhrpersonnel',['appid' => $appid],['prc','bc','coe']);
 					$pharmaattc = DB::table('cdrrhrotherattachment')->where([['appid', $appid]])->first();  // this is not pharmacy, but, other attachment of Radiology.
 					$servcat = DB::table('cdrrhrxrayservcat')->where([['appid', $appid]])->first();
 					$requiredQualifications =  DB::table('cdrrhrpersonnel')
-					->select('cdrrhrpersonnel.*','hfsrbannexa.*')
-					->join('hfsrbannexa', 'cdrrhrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
-					->where([['cdrrhrpersonnel.appid', $appid]])->get();
+												->select('cdrrhrpersonnel.*','hfsrbannexa.*')
+												->join('hfsrbannexa', 'cdrrhrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
+												->where([['cdrrhrpersonnel.appid', $appid]])->get();
 					
 					$required1 = false;
 					$required2 = false;
@@ -2499,7 +2504,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 									$required2 = true;
 								}
 
-								if($profession == '3' || $profession == '5'){
+								if($profession == '3' || $profession == '5' || $profession == '28'  || $profession == '29'){
 									$required3 = true;
 								}
 							}
@@ -3490,6 +3495,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	}
 
 
+	public static function  getTaggedCount($appid)
+	{
+		return DB::table('cdrrpersonnel')->where(['appid'=>$appid, 'isTag'=>1])->count();
+	}
+
+
 	public function viewcdrrpersonnel(Request $request, $appid, $tag = false){
 		if($tag && !session()->has('employee_login')){
 			return redirect('employee')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Please login first']);
@@ -3511,6 +3522,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 				$arrRet = [
 					'tag' => $tag,
+					'AppData' => AjaxController::getAllDataEvaluateOne($appid),
 					'cdrrpersonnel' => $cdrrnew,
 					'profession' => $profession
 				];
@@ -3518,7 +3530,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				return view('client1.apply.LTO1.cdrrview.personnel',$arrRet);
 			} else {
 				if($tag && $request->has('action')){
-					if(DB::table('cdrrpersonnel')->where('id',$request->id)->update(['isTag' => $request->action, 'tagBy' => AjaxController::getCurrentUserAllData()['cur_user']])){
+
+					date_default_timezone_set('Asia/Manila');
+
+					if(DB::table('cdrrpersonnel')->where('id',$request->id)->update(['isTag' => $request->action, 'tagBy' => AjaxController::getCurrentUserAllData()['cur_user'], 'remarkstag' => $request->remarkstag])){
+						
 						return 'DONE';
 					}
 				}

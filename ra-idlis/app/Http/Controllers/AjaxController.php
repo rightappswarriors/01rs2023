@@ -5606,7 +5606,7 @@ public static function checkConmem($appid)
 		{
 			try 
 			{
-				$data = DB::table('appform')
+				/*$data = DB::table('appform')
 						->leftJoin('x08', 'appform.uid', '=', 'x08.uid')
 						->leftJoin('barangay', 'appform.brgyid', '=', 'barangay.brgyid')
 						->leftJoin('city_muni', 'appform.cmid', '=', 'city_muni.cmid')
@@ -5623,7 +5623,10 @@ public static function checkConmem($appid)
 						$data->formattedPropTime = $newT->format('g:i A');
 						$newD = Carbon::parse($data->proposedInspectiondate);
 						$data->formattedPropDate = $newD->toFormattedDateString();
-					}
+					}*/
+
+				$data = DB::table('applist_details')->where('appid', '=', $appid)->first();
+
 				return $data;
 			
 				
@@ -5705,6 +5708,15 @@ public static function checkConmem($appid)
 				// [asset('client1/apply/hfsrb/view/annexh/'), 'LIST OF EQUIPMENT, LABORATORY WARE AND MATERIALS (Annex H)', $annexh, 'hfsrbannexh'],
 				// [asset('client1/apply/hfsrb/view/annexi/'), 'LIST OF TESTING MATERIALS (Annex I)', $annexi, 'hfsrbannexi']
 			];
+			
+		}
+
+		public static function getCdrrPersonnellistById()
+		{
+			return DB::table('cdrrpersonnel')->join('hfsrbannexa', 'cdrrpersonnel.hfsrbannexaID', '=', 'hfsrbannexa.id')
+				->join('position','position.posid','hfsrbannexa.prof')
+				->select('cdrrpersonnel.*', 'position.posname', 'hfsrbannexa.profession', 'hfsrbannexa.dob', 'hfsrbannexa.prcno', 'hfsrbannexa.validityPeriodTo as validity')
+				->where('cdrrpersonnel.appid',$appid)->get();
 		}
 
 		public static function getRequirementsFDA($appid){
