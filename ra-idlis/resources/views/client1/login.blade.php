@@ -200,6 +200,7 @@
 	<br/><br/>
 	<p>If you have no chrome browser, please click this <a href="https://www.google.com/chrome/">link</a> to download.</p>
 </div>
+
   {{csrf_field()}}
   @include('client1.cmp.msg')
   <div class="container mt-5 mb-5">
@@ -209,7 +210,10 @@
         <img src="{{asset('ra-idlis/public/img/doh2.png')}}" style="width: 100%; max-height: 120px; object-fit: contain;">
       </div>
       <div class="col-lg-8">
-        <center><h2 class="pb-3 pt-2" style="margin-top: 35px;">DOH Online Licensing Regulatory System</h2></center>
+        <center>
+          <h2 class="pb-3 pt-2" style="margin-top: 35px;">DOH Online Licensing Regulatory System</h2>
+          <span style="color: #b5b5b5; margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">Version {{env('APP_VERSION')}}</span>
+        </center>
       </div>
       <div class="col-lg-2">
         {{-- <img src="{{asset('ra-idlis/public/img/doh2.png')}}" style="width: 100%; max-height: 120px; object-fit: contain;"> --}}
