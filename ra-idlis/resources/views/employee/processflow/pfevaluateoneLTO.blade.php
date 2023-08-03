@@ -260,7 +260,7 @@
                     <i class="fa fa-eye" aria-hidden="true"></i> Preview Order of Payment</a>
                     <span style="float: right;">&nbsp;&nbsp;</span>
 									@endif		
-
+                  {{-- 
                   @if($office == 'xray'  || $office == 'pharma')
 				
 
@@ -268,7 +268,7 @@
                       <i class="fa fa-edit" aria-hidden="true"></i> Override Order of Payment</a>
                       <span style="float: right;">&nbsp;&nbsp;</span>
                   @endif
-
+                  --}}
 
                   </td>
                 </tr>

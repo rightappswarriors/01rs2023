@@ -5109,15 +5109,15 @@ namespace App\Http\Controllers;
 					{
 						$data = AjaxController::getAllDataEvaluateOne($appid);
 						$getOrderOfPayment = DB::table('fda_chgfil')
-						->leftJoin('fdarange','fda_chgfil.fchg_code','fdarange.id')
-						->where([['appid',$appid],['amount', '>', 0],['uid','<>','SYSTEM']])
-						->whereNull('MAvalue')
-						->get();
+									->leftJoin('fdarange','fda_chgfil.fchg_code','fdarange.id')
+									->where([['appid',$appid],['amount', '>', 0],['uid','<>','SYSTEM']])
+									->whereNull('MAvalue')
+									->get();
 						$charges = DB::table('fdarange')->get();
 						$sum = DB::table('fda_chgfil')->where([['appid',$appid],['amount', '>', 0],['uid', '<>', 'SYSTEM']])->whereNull('MAvalue')->sum('amount');
 						// $lrf = ($sum / 100 > 10 ? $sum / 100 : 10);
 						// $sum += $lrf;
-						// dd($getOrderOfPayment);
+						dd($getOrderOfPayment);
 						$canView = AjaxController::canViewFDAOOP($appid);
 						$code = $data->hfser_id.'R'.$data->rgnid.'-'.$data->appid;
 						return view('employee.FDA.pforderofpaymentoneFDA',['AppData' => $data, 'payables' => $getOrderOfPayment, 'code' => $code, 'Sum' => $sum, 'appid' => $appid, 'charges' => $charges, 'canView' => $canView, 'request' => 'Pharma']);
@@ -5136,6 +5136,7 @@ namespace App\Http\Controllers;
 					{
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 						if(empty($request->getCharge)){
+
 					  		$getData = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->select('chg_num')->first();
 					  		$test = DB::table('chgfil')->insert([
 					  						'chgapp_id' => $request->id,
@@ -5153,9 +5154,11 @@ namespace App\Http\Controllers;
 					  		$upd = array('chg_num'=>(intval($getData->chg_num) + 1));
 					  		$test2 = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->update($upd);
 					  		return 'DONE';
+
 				  		} elseif($request->getCharge == 'charges') {
 				  			$choosen = $request->selected;
 				  			return json_encode(DB::table('fdarange')->where('id',$request->id)->select($choosen)->first()->$choosen);
+
 				  		} elseif($request->getCharge == 'newpayment'){
 				  			$data = AjaxController::getAllDataEvaluateOne($appid);
 				  			switch (true) {
@@ -5166,9 +5169,11 @@ namespace App\Http\Controllers;
 									$findIn = 'renewal_amnt';
 									break;
 							}
+
 				  			$fdarange = DB::table('fdarange')->where('id',$request->id)->select($findIn)->first()->$findIn;
 				  			$test = DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => $request->id, 'amount' => $fdarange, 't_date' => $Cur_useData['date'], 't_time' => $Cur_useData['time'], 'ipaddress' => $Cur_useData['ip'], 'uid' => $Cur_useData['cur_user']]);
-				  			if($test){
+				  			
+							if($test){
 				  				return 'done';
 				  			}
 				  		}

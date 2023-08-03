@@ -2469,15 +2469,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				if(isset($request->readyNow)){
 					
 					$toAppform = [];
-					$pharmaJoinTableResult_withoutGET = DB::table('cdrrpersonnel')
-												->select('cdrrpersonnel.coe', 'cdrrpersonnel.prc', 'position.groupRequired')
-												->leftJoin('hfsrbannexa','cdrrpersonnel.hfsrbannexaID','=','hfsrbannexa.id')
-												->leftJoin('position','position.posid','=','hfsrbannexa.prof')
-												->where('cdrrpersonnel.appid','=', $appid)
-												->where('position.groupRequired','=','1')
-												->whereNull('cdrrpersonnel.coe')
-												->whereNull('cdrrpersonnel.prc');
-					$pharma = FunctionsClientController::hasEmptyDBFieldsByJoinTables($pharmaJoinTableResult_withoutGET,['prc','coe']);
+					//$pharma = NewClientController::hasEmptyRequiredReqFDAPersonnel(['prc','coe']);
+					$pharma = FunctionsClientController::hasEmptyDBFields('cdrrpersonnel',['appid' => $appid],['prc','coe']);
 					$mach = FunctionsClientController::hasEmptyDBFields('cdrrhrpersonnel',['appid' => $appid],['prc','bc','coe']);
 					$pharmaattc = DB::table('cdrrhrotherattachment')->where([['appid', $appid]])->first();  // this is not pharmacy, but, other attachment of Radiology.
 					$servcat = DB::table('cdrrhrxrayservcat')->where([['appid', $appid]])->first();
@@ -2495,6 +2488,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 					
 						if(is_array($professions)){
+
 							foreach($professions as $profession){
 								if($profession == '1' || $profession == '27'){
 									$required1 = true;
@@ -2508,18 +2502,16 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 									$required3 = true;
 								}
 							}
-
 						}
 					}
 	
 
 					$checkRadio = DB::table('x08_ft')->where([['appid', $appid]])
-					->whereIn('facid',['H1A1LXR', 'H2A2LX', 'H3A3XR', 'mfowsRMF', 'S-SLBMF', 'S-SSMF'])
-					->first();
+								->whereIn('facid',['H1A1LXR', 'H2A2LX', 'H3A3XR', 'mfowsRMF', 'S-SLBMF', 'S-SSMF'])
+								->first();
 
 					$machfilt1 = $mach[2];
 					$machfilt2 = $mach[0];
-
 
 					if(!is_null($checkRadio)){
 						$machfilt1 =  $mach[2];
@@ -2553,9 +2545,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						}
 					}
 
-
 					if(($required1 == true && $required2 == true && $required3 == true ) && ($pharma[2] == true || $appform->hfser_id == 'COA') && $machfilt1 == true && !is_null($pharmaattc)&& $chkserve == true && $renewal_checker == true){
-
 
 						if(!$pharma[0] && !$machfilt2  && !is_null($pharmaattc) && $chkserve == true ){
 				
@@ -2603,7 +2593,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 										DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => null, 'xray_listID' => null ,'MAvalue' => null, 'amount' => isset($cdrr[2]) ? $cdrr[2] : null, 't_date' => Carbon::now()->toDateString(), 't_time' => Carbon::now()->toTimeString(), 'uid' => session()->get('uData')->uid, 'ipaddress' => request()->ip()]);
 										DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => null, 'xray_listID' => null ,'MAvalue' => null, 'amount' => $lrfForPharma, 't_date' => Carbon::now()->toDateString(), 't_time' => Carbon::now()->toTimeString(), 'uid' => 'SYSTEM', 'lrfFor' => 'cdrr', 'ipaddress' => request()->ip()]);
-
 									}
 								}			
 
@@ -2729,6 +2718,46 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on FDA Module. Contact the admin.']);
 		}
 	}
+
+	public static function hasEmptyRequiredReqFDAPersonnel ($fields = []) {
+		$haslist = false;
+		$arrEmpty = array();
+
+		$res = DB::table('cdrrpersonnel')
+					->select('cdrrpersonnel.coe', 'cdrrpersonnel.prc', 'position.groupRequired')
+					->leftJoin('hfsrbannexa','cdrrpersonnel.hfsrbannexaID','=','hfsrbannexa.id')
+					->leftJoin('position','position.posid','=','hfsrbannexa.prof')
+					->where([['cdrrpersonnel.appid'=> $appid, 'position.groupRequired'=>'1' ]]);
+
+		if(isset($fields)){
+			$res2 = $res;
+
+			if($res2->first()){
+
+				$test = $res->get();
+
+				foreach ($test as $key) {
+					foreach ($fields as $field) {
+						if(empty($key->$field)){
+							if(!in_array($field, $arrEmpty)){
+								array_push($arrEmpty, $field);
+							}
+						}
+					}
+				}
+
+				$haslist = true;
+				
+			}else{
+				$arrEmpty = array();
+				$haslist = false;
+			}
+			
+			return [(empty($arrEmpty) ? false : true),$arrEmpty, $haslist];
+			// return [(empty($arrEmpty) ? false : true),$arrEmpty, $haslist];
+		}
+	}
+
 	public function __novm(Request $request, $appid = "") {
 		try {
 			if(! empty($appid)) {

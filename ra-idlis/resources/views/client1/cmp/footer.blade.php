@@ -93,7 +93,7 @@
 <li><a href="">About Us</a></li>
 </ul> --}}
 <!--foote_bottom_ul_amrc ends here-->
-<p class="text-center" style="margin: 8px 8px">Copyright @<?php echo Date('Y'); ?> | HFSRB</p>
+<p class="text-center" style="margin: 8px 8px">Copyright @<?php echo Date('Y'); ?> | HFSRB | DOH Online Licensing Regulatory System | Version {{env('APP_VERSION')}}</p>
 
 {{-- <ul class="social_footer_ul">
 <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
