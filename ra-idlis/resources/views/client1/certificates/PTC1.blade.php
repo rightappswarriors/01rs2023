@@ -160,10 +160,10 @@
 										.($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' )
 										.ucwords(strtolower($retTable[0]->brgyname)).', '.ucwords(strtolower($retTable[0]->cmname)).', '
 										.ucwords(strtolower($retTable[0]->provname)).' '.strtoupper($retTable[0]->rgn_desc));
-
+								$loc =  ucwords(strtolower(utf8_encode($retTable[0]->street_number))).', ' . ucwords(strtolower(utf8_encode($retTable[0]->street_name))).', ' .ucwords(strtolower(utf8_encode($retTable[0]->brgyname))).', '.ucwords(strtolower(utf8_encode($retTable[0]->cmname))).', '.ucwords(strtolower(utf8_encode($retTable[0]->provname))).' '.strtoupper($retTable[0]->rgn_desc);
 								$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
 							@endphp
-							{{((isset($retTable[0])) ?	$stringloc	: 'No Location.')}}
+							{{((isset($retTable[0])) ?	utf8_decode($loc)	: 'No Location.')}}
 						</div>
 						<div class="col-md-1" style="display: inline">
 							

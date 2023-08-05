@@ -176,36 +176,36 @@
 							</td>
 						</tr>
 						<tr id="chgfil{{$each[0]->appid}}" hidden><td colspan="12">
-						@if(count($each[1]) > 0) <?php $isDone = false; ?>
-						<table class="table ">
-							<thead class="thead-dark">
-								<tr>
-									<th>Date</th>
-									<th>Reference</th>
-									<th>Amount</th>
-									<th>Option</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach($each[1] AS $anEach)
-								<tr>
-									<td>{{date("F j, Y", strtotime($anEach->t_date))}}</td>
-									<td>{{$anEach->reference}}</td>
-									<td>&#8369;&nbsp;{{number_format($anEach->amount, 2)}}</td>
-									@if(! $isDone)
-										<td class="text-center" rowspan="{{count($each[1])}}" style="vertical-align: middle;">
-											{{-- <button class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Add Payment"><i class="fas fa-money-check-alt"></i></button> --}}
-											<a href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}"><button class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print"></i></button></a>
-										</td>
-										<?php $isDone = true; ?>
-									@endif
-								</tr>
-								@endforeach
-							</tbody>
-						</table>
-						@else
-							<center>No record in payment.</center>
-						@endif
+								@if(is_array($each[1])) <?php $isDone = false; ?>
+								<table class="table ">
+									<thead class="thead-dark">
+										<tr>
+											<th>Date</th>
+											<th>Reference</th>
+											<th>Amount</th>
+											<th>Option</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach($each[1] AS $anEach)
+										<tr>
+											<td>{{date("F j, Y", strtotime($anEach->t_date))}}</td>
+											<td>{{$anEach->reference}}</td>
+											<td>&#8369;&nbsp;{{number_format($anEach->amount, 2)}}</td>
+											@if(! $isDone)
+												<td class="text-center" rowspan="{{count($each[1])}}" style="vertical-align: middle;">
+													{{-- <button class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Add Payment"><i class="fas fa-money-check-alt"></i></button> --}}
+													<a href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}"><button class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print"></i></button></a>
+												</td>
+												<?php $isDone = true; ?>
+											@endif
+										</tr>
+										@endforeach
+									</tbody>
+								</table>
+								@else
+									<center>No record in payment.</center>
+								@endif
 						</td> <td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td><td hidden></td> </tr>
 						@endif @endforeach @else
 						<tr>
