@@ -192,10 +192,13 @@ class FunctionsClientController extends Controller {
 								LEFT JOIN region AS assRgn ON assRgn.rgnid = appform.assignedRgn 
 
 								WHERE appform.uid = '$curUser' AND appform.draft = 1"; 
+
+								
+						$retArr = DB::select($sql);
 						break;
 					
 					default:
-						$sql = "SELECT autoTimeDate, appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office,assRgn.address,assRgn.iso_desc,province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner, CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA, /*HFERC_comments,*/ assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime,fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos ,addonDesc,savingStat,noofdialysis,con_number,appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation,appform.assignedRgn,appform.appComment,appform.approvedDate,appform.savedRenewalOpt, signatoryname, signatorypos
+						/*$sql = "SELECT autoTimeDate, appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office,assRgn.address,assRgn.iso_desc,province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner, CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA, /*HFERC_comments,*/ /* assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime,fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos ,addonDesc,savingStat,noofdialysis,con_number,appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation,appform.assignedRgn,appform.appComment,appform.approvedDate,appform.savedRenewalOpt, signatoryname, signatorypos
 						
 						FROM appform 
 						LEFT JOIN region ON region.rgnid = appform.rgnid 
@@ -211,11 +214,16 @@ class FunctionsClientController extends Controller {
 						LEFT JOIN facmode ON facmode.facmid = appform.facmode 
 						LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid
 						LEFT JOIN region AS assRgn ON assRgn.rgnid = appform.assignedRgn 
-					WHERE appform.appid = '$appid' "; // AND appform.uid = '$curUser' // LEFT JOIN (SELECT facname, servtype_id FROM facilitytyp WHERE facid IN (SELECT facid FROM x08_ft WHERE appid = '$appid')) facilitytyp ON 1=1 LEFT JOIN (SELECT GROUP_CONCAT(hgpdesc) AS hgpdesc FROM hfaci_grp WHERE hgpid IN (SELECT hgpid FROM facilitytyp WHERE facid IN (SELECT facid FROM x08_ft WHERE appid = '$appid'))) hfaci_grp ON 1=1 LEFT JOIN serv_type ON serv_type.servtype_id = facilitytyp.servtype_id
+					WHERE appform.appid = '$appid' "; */
+					
+					//$retArr = DB::select($sql);
+					
+					// AND appform.uid = '$curUser' // LEFT JOIN (SELECT facname, servtype_id FROM facilitytyp WHERE facid IN (SELECT facid FROM x08_ft WHERE appid = '$appid')) facilitytyp ON 1=1 LEFT JOIN (SELECT GROUP_CONCAT(hgpdesc) AS hgpdesc FROM hfaci_grp WHERE hgpid IN (SELECT hgpid FROM facilitytyp WHERE facid IN (SELECT facid FROM x08_ft WHERE appid = '$appid'))) hfaci_grp ON 1=1 LEFT JOIN serv_type ON serv_type.servtype_id = facilitytyp.servtype_id
+
+					$retArr = DB::table('applist_details')->where('appid','=', $appid);
 						break;
 				}
 				
-				$retArr = DB::select($sql);
 			// }
 			return $retArr;
 		} catch(Exception $e) {
@@ -636,6 +644,7 @@ class FunctionsClientController extends Controller {
 			return $e;
 		}
 	}
+	
 	public static function getDistinctByFacilityName() {
 		try {
 			$sql = "SELECT facilityname, region.rgn_desc, province.provname, city_muni.cmname, barangay.brgyname FROM appform LEFT JOIN region ON region.rgnid = appform.rgnid LEFT JOIN province ON province.provid = appform.provid LEFT JOIN city_muni ON city_muni.cmid = appform.cmid LEFT JOIN barangay ON barangay.brgyid = appform.brgyid WHERE appid IN (SELECT MAX(appid) AS appid FROM appform GROUP BY UPPER(facilityname))";
