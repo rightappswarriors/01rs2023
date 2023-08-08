@@ -93,7 +93,8 @@
 						Location
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family: Arial; font-size: 13pt">
-						 :&nbsp;&nbsp;&nbsp;{{((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : "CURRENT_LOCATION")}}
+						 :&nbsp;&nbsp;&nbsp;
+						 {{((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : "CURRENT_LOCATION")}}
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>

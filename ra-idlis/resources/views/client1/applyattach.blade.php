@@ -202,6 +202,7 @@
 
 	@if(!isset($submitted) || $findups != 0)	
 		@if($appform->isrecommended ==  2 || $appform->isrecommended ==  null )
+		
 			<!-- if($appform->isReadyForInspec == 0 ) -->
 				<div class="container">
 					<div class="float-right">

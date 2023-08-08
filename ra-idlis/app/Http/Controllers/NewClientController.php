@@ -2581,15 +2581,14 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 										// main
 										if(isset($cdrr[3][0]) && isset($prices)){
 											for ($i=0; $i < $cdrr[3][0]; $i++) { 
-												$lrfForPharma += ($prices[0]->price <= 1000 ? 10 : ($prices[0]->price /100));
+												$lrfForPharma += ($prices[0]->price * 0.01) /* ($prices[0]->price <= 1000 ? 10 : ($prices[0]->price /100)) */;
 											}
 										}
 										// sattelite
 										if(isset($cdrr[3][1]) && isset($prices)){
 											for ($j=0; $j < $cdrr[3][1]; $j++) { 
-												$lrfForPharma += ($prices[1]->price <= 1000 ? 10 : ($prices[1]->price /100));
-											}
-										}
+												$lrfForPharma +=  ($prices[0]->price * 0.01) /* ($prices[1]->price <= 1000 ? 10 : ($prices[1]->price /100)) */;
+											}										}
 
 										DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => null, 'xray_listID' => null ,'MAvalue' => null, 'amount' => isset($cdrr[2]) ? $cdrr[2] : null, 't_date' => Carbon::now()->toDateString(), 't_time' => Carbon::now()->toTimeString(), 'uid' => session()->get('uData')->uid, 'ipaddress' => request()->ip()]);
 										DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => null, 'xray_listID' => null ,'MAvalue' => null, 'amount' => $lrfForPharma, 't_date' => Carbon::now()->toDateString(), 't_time' => Carbon::now()->toTimeString(), 'uid' => 'SYSTEM', 'lrfFor' => 'cdrr', 'ipaddress' => request()->ip()]);

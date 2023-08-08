@@ -5,37 +5,39 @@
 	@include('client1.cmp.nav')
 	@include('client1.cmp.breadcrumb')
 	@include('client1.cmp.msg')
+
 	<style type="text/css">
-  #style-15::-webkit-scrollbar-track
-{
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
-  background-color: #F5F5F5;
-  border-radius: 10px;
-}
+		#style-15::-webkit-scrollbar-track
+		{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+		background-color: #F5F5F5;
+		border-radius: 10px;
+		}
 
-#style-15::-webkit-scrollbar
-{
-  width: 10px;
-  background-color: #F5F5F5;
-}
+		#style-15::-webkit-scrollbar
+		{
+		width: 10px;
+		background-color: #F5F5F5;
+		}
 
-#style-15::-webkit-scrollbar-thumb
-{
-  border-radius: 10px;
-  background-color: #FFF;
-  background-image: -webkit-gradient(linear,
-                     40% 0%,
-                     75% 84%,
-                     from(#4D9C41),
-                     to(#19911D),
-                     color-stop(.6,#54DE5D))
-}
+		#style-15::-webkit-scrollbar-thumb
+		{
+		border-radius: 10px;
+		background-color: #FFF;
+		background-image: -webkit-gradient(linear,
+							40% 0%,
+							75% 84%,
+							from(#4D9C41),
+							to(#19911D),
+							color-stop(.6,#54DE5D))
+		}
+	</style>
 
-</style>
 	<div class="container mb-5">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="row">
+					
 					<div class="_forIntro col-lg-6">
 			          {{-- <div class="card flex-lg-row mb-4 box-shadow h-lg-250" style="border-radius: 1rem; box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);">
 			            <div class="card-body d-flex flex-column align-items-start">

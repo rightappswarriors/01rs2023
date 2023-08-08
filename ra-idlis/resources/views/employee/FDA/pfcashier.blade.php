@@ -53,7 +53,6 @@
                                 <td>
                                     <div class="container">
                                       <div class="row">
-                                        {{-- {{dd($data->appid)}} --}}
                                         <div class="col-6">
                                           <button type="button"  onclick="window.location.href = '{{ asset('employee/dashboard/processflow/FDA/actions') }}/{{$data->appid}}/{{$data->aptid}}'" {{$ifdisabled}} class="btn btn-outline-primary" ><i class="fa fa-credit-card"></i></button>
                                         </div>

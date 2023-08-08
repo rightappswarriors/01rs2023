@@ -9,11 +9,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-/* ---- 
-Proper Routing
-
----- */
+/* ---- Proper Routing ---- */
 
 // New
 
@@ -118,9 +114,7 @@ Route::prefix('client1')->group(function() {
 		Route::match(['get', 'post'], '/complianceattachment/{complianceid}/{appid}', 'NewClientController@__complianceAttachment');
 		Route::match(['get', 'post'], '/complianceremarks/{complianceid}/{appid}', 'NewClientController@__complianceRemarks');
 		Route::match(['get', 'post'], '/complianceaddremarks', 'NewClientController@__complianceAddRemarks');
-		Route::match(['get', 'post'], '/complianceaddattachment', 'NewClientController@__complianceAddAttachment');
-
-		
+		Route::match(['get', 'post'], '/complianceaddattachment', 'NewClientController@__complianceAddAttachment');		
 
 		Route::match(['get', 'post'], '/assessmentReady/{appid}', 'NewClientController@assessmentReady');
 		Route::match(['get', 'post'], '/HeaderOne/{appid}/{part}/{montype?}', 'NewClientController@assessmentHeaderOne'); // View each

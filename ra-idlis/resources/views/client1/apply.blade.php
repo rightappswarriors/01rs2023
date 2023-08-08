@@ -102,19 +102,16 @@
 			<table class="table table-bordered" id="tAppCl" style="border-bottom: none;border-collapse: collapse;">
 				<thead class="thead-dark">
 					<tr>
-						<th style="white-space: nowrap;" class="text-center">Process</th>
+						<th style="white-space: wrap;" class="text-center">Process & Type of Application</th>
 						<th style="white-space: nowrap;" class="text-center">Application <br/> Code</th>
-						<th style="white-space: nowrap;" class="text-center">Facility Name</th>
-						<th style="white-space: nowrap;" class="text-center">Type of <br/> Application</th>
-						<th style="white-space: nowrap;" class="text-center">Owner</th>
-						<th style="white-space: nowrap;" class="text-center">Official Date <br/>of Application</th>
+						<th style="white-space: nowrap;" class="text-center">Name, Type, Owner of Facility <br/>& Date of Application</th>
 						<th style="white-space: nowrap;" class="text-center">Attachments</th>
 						<th style="white-space: nowrap;" class="text-center">DOH Status</th>
-						<th style="white-space: nowrap;" class="text-center">FDA Radiation</br>Facility Status</th>
-						<th style="white-space: nowrap;" class="text-center">FDA Pharmacy </br> Status</th>
+						<th style="white-space: nowrap;" class="text-center">FDA<br/>Radiation</br>Facility Status</th>
+						<th style="white-space: nowrap;" class="text-center">FDA<br/>Pharmacy </br> Status</th>
 						{{-- <th>Self-Assement Complied (%)</th> --}}
-						<th style="white-space: nowrap;" class="text-center">Document <br/> Received On</th>
-						<th style="white-space: nowrap;" class="text-center">DOH/FDA <br/>Requirements</th>
+						<th style="white-space: nowrap;" class="text-center">Document<br/>Received<br/>On</th>
+						<th style="white-space: nowrap;" class="text-center">DOH &/ FDA <br/>Requirements</th>
 						<th style="white-space: nowrap;" class="text-center">Options</th>
 					</tr>
 				</thead>
@@ -136,13 +133,25 @@
 							<?php $_tColor = (($each[0]->canapply == 0) ? "success" : (($each[0]->canapply == 1) ? "warning" : "primary")); ?>
 
 								<tr>
-									<td>@if ($each[0]->aptid == 'IN') Initial New @elseif ($each[0]->aptid == 'R') Renewal @else Initial Change @endif</td>
-									<td>{{$each[0]->hfser_id}}R{{$each[0]->rgnid}}-{{$each[0]->appid}}</td>
-									<td style="width: 10%; height: auto;">{{$each[0]->facilityname}}</td>
-									<td>{{$each[0]->hfser_desc}}</td>
-									<td>{{$each[0]->owner}}</td>
-									<td>{{$each[0]->t_date}}</td>
-									<td>
+									<td class="text-center">
+										<strong>@if ($each[0]->aptid == 'IN') Initial New @elseif ($each[0]->aptid == 'R') Renewal @else Initial Change @endif</strong>
+										<br/>{{$each[0]->hfser_desc}}
+									</td>
+									<td class="text-center">
+										{{$each[0]->hfser_id}}R{{$each[0]->rgnid}}-{{$each[0]->appid}}
+										@isset($each[0]->nhfcode)<br/><strong style="font-size:smaller">NHFR Code:<br/><strong>{{$each[0]->nhfcode}}</strong></span>
+										@endisset
+									</td>
+									<td style="width: 10%; height: auto;" class="text-center">
+										<strong>{{$each[0]->facilityname}}</strong>
+										<br/><br/><span style="font-size:smaller">Facility Type: <strong>{{$each[0]->hgpdesc}}</strong></span>
+										<br/><span style="font-size:smaller">Owner: <span style="color:#228B22;">{{$each[0]->owner}}</span></span>
+										@isset($each[0]->t_date)<br/><span style="font-size:smaller">Applied on <strong>{{$each[0]->t_date}}</strong></span>
+										@else <br/><span style="font-size:smaller; color:red">Not officially applied yet.</span>
+										@endisset
+
+									</td>
+									<td class="text-center">
 										@if(isset($each[0]->submittedReq)) 
 											Submitted.
 										@else 
@@ -150,41 +159,41 @@
 											<small class="text-center">To submit attachments, click the button <a href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a> or check the DOH Requirements or FDA Requirements if applicable.</small>
 										@endif
 									</td>
-									<td style="background-color : {{$each[0]->dohcolor}}">
-									@switch($each[0]->status)
+									<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
+										@switch($each[0]->status)
 
-										@case('P')
-											@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
-												<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">For Selection of Payment Method</a>
-											@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
-												<a style="color:#FFF; font-weight: bold;"  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" title="View Order of Payment on DOH" >For Payment Confirmation</a>
-											@else 
+											@case('P')
+												@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
+													<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">For Selection of Payment Method</a>
+												@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
+													<a style="color:#FFF; font-weight: bold;"  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" title="View Order of Payment on DOH" >For Payment Confirmation</a>
+												@else 
+													{{$each[0]->trns_desc}}
+												@endif
+											@break
+											@default
 												{{$each[0]->trns_desc}}
-											@endif
-										@break
-										@default
-											{{$each[0]->trns_desc}}
-										@break
+											@break
 
-									@endswitch
+										@endswitch
 									</td>		
-									<td>
-										@if($each[0]->noofmain > 0 || $each[0]->hasRadio )
-											{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA' ? (isset($each[0]->FDAStatMach) ? $each[0]->FDAStatMach : 'Evaluation In Process') : 'Not Applicable'!!}
-										@else
-											Not Applicable
-										@endif
-									</td>
-									<td>
-										@if($each[0]->noofmain > 0)
-											{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA' ? (isset($each[0]->FDAStatPhar) ? $each[0]->FDAStatPhar : 'Evaluation In Process') : 'Not Applicable'!!}
-										@else
-											Not Applicable
-										@endif
-									</td>
-									<td>{{$each[0]->documentSent}}</td>
 									<td class="text-center">
-										@if(in_array(strtolower($each[0]->hfser_id), ['lto','coa']))
+										@if($each[0]->noofmain > 0 || $each[0]->hasRadio )
+											{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA'  || $each[0]->hfser_id == 'ATO'   || $each[0]->hfser_id == 'COR'  ? (isset($each[0]->FDAStatMach) ? $each[0]->FDAStatMach : 'Evaluation In Process') : 'Not Applicable'!!}
+										@else
+											Not Applicable
+										@endif
+									</td>
+									<td class="text-center">
+										@if($each[0]->noofmain > 0)
+											{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA'  || $each[0]->hfser_id == 'ATO'   || $each[0]->hfser_id == 'COR' ? (isset($each[0]->FDAStatPhar) ? $each[0]->FDAStatPhar : 'Evaluation In Process') : 'Not Applicable'!!}
+										@else
+											Not Applicable
+										@endif
+									</td>
+									<td class="text-center">{{$each[0]->documentSent}}</td>
+									<td class="text-center">
+										@if(in_array(strtolower($each[0]->hfser_id), ['lto','coa','ato','cor']))
 
 											<div class="btn-group mb-1">
 											<button class="btn btn-block btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -279,7 +288,8 @@
 														<div style="margin-left: 10px;margin-right: 10px;">
 															<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
 														</div>
-													@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
+													{{-- @elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1) --}}
+													@elseif(isset($each[0]->t_date))
 														<div class="dropdown-divider"></div>
 														<div style="margin-left: 10px;margin-right: 10px;">
 															<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
