@@ -854,7 +854,6 @@ namespace App\Http\Controllers;
 		}
 
 		function importDataREF(Request $request){
-
 		
 
 			$the_file = $request->file('uploaded_file');
@@ -4238,17 +4237,16 @@ namespace App\Http\Controllers;
 		////// EVALUATE ONE
 		public function saveDocEvalFiles(Request $request){
 			
-						// $addedby = session()->get('employee_login');
-						// $dt = Carbon::now();
-			          	// $dateNow = $dt->toDateString();
-			          	// $timeNow = $dt->toTimeString();
+				// $addedby = session()->get('employee_login');
+				// $dt = Carbon::now();
+				// $dateNow = $dt->toDateString();
+				// $timeNow = $dt->toTimeString();
 
 				// $updateData = array(
 				// 	'evaluatedBy' => $addedby->uid,
 				// 	'evaltime' => $timeNow, 
 				// 	'evaldate' => $dateNow,
 				// );
-
 
 				$updateData = array(
 					'evaluation'=>$request->check ,
@@ -4273,12 +4271,7 @@ namespace App\Http\Controllers;
 					$msg = "failed";
 				}
 
-				return response()->json(
-					[
-						'msg' => $msg
-					],
-					200
-				);		
+				return response()->json([ 'msg' => $msg ],200	);		
 		}
 
 		//This is the function of the content for evaluate applicant, either to go to Technical Evaluation or Documentary Evaluation. 
@@ -5852,8 +5845,8 @@ namespace App\Http\Controllers;
 				$members = AjaxController::getMembersInHFERC($data->appid,$data->rgnid,2,$revision);
 
 				// dd($dataOfEntry['reco']->details);
-				$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['choice','comment'],['revision',$revision]])->first();
-
+				$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['choice','comment'],['revision',$revision], ['evaluatedby', $evaluation->HFERC_evalBy]])->first();
+				
 				return AjaxController::sendTo($isSelfAssess,$this->agent,$request->all(),'employee.processflow.hferceval',
 					['appdata'=>$data,
 					'reco' => $reco, 
@@ -10137,8 +10130,16 @@ namespace App\Http\Controllers;
 			{	
 				$extra = false;
 				$clientRequest = AjaxController::isRequestForFDA($clientRequest);
-				$data = AjaxController::getAllApplicantsProcessFlow();
-				return view('employee.FDA.pfrecommendation', ['BigData'=>$data, 'request' => $clientRequest, 'extra' => $extra]);
+
+				if($clientRequest == "machines")
+				{
+					$data = SELF::application_filter($request, 'view_fda_reco');
+				}
+				else {
+					$data = SELF::application_filter($request, 'view_fda_reco_pharma');
+				}
+				//$data = AjaxController::getAllApplicantsProcessFlow();
+				return view('employee.FDA.pfrecommendation', ['BigData'=>$data['data'], 'arr_fo'=>$data['arr_fo'], 'request' => $clientRequest, 'extra' => $extra]);
 			} 
 			catch (Exception $e) 
 			{
@@ -10154,9 +10155,17 @@ namespace App\Http\Controllers;
 			{	
 				$extra = false;
 				$clientRequest = AjaxController::isRequestForFDA($clientRequest);
-				$data = AjaxController::getAllApplicantsProcessFlow();
+
+				if($clientRequest == "machines")
+				{
+					$data = SELF::application_filter($request, 'view_fda_approval');
+				}
+				else {
+					$data = SELF::application_filter($request, 'view_fda_approval_pharma');
+				}
+				// $data = AjaxController::getAllApplicantsProcessFlow();
 				// dd($data);
-				return view('employee.FDA.pfapprovalFDA', ['BigData'=>$data, 'request' => $clientRequest, 'extra' => $extra]);
+				return view('employee.FDA.pfapprovalFDA', ['BigData'=>$data['data'], 'arr_fo'=>$data['arr_fo'], 'request' => $clientRequest, 'extra' => $extra]);
 			} 
 			catch (Exception $e) 
 			{
