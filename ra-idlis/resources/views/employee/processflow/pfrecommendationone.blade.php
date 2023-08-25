@@ -896,7 +896,7 @@
                             title: 'Success',
                             text: 'Successfully Recommended this application to approval.',
                           }).then(() => {
-                            window.location.href = '{{ asset('employee/dashboard/processflow/pfrecommendationone') }}';
+                            window.location.href = '{{ asset('employee/dashboard/processflow/recommendation') }}';
                           });
                       } else if (data == 'ERROR'){
                         $('#AccErrorAlert').show(100);  

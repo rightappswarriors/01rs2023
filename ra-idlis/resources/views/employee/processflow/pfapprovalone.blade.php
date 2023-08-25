@@ -822,6 +822,16 @@
                           });
                           {{--window.location.href = '{{ asset('employee/dashboard/processflow/approval') }}';                         
                           window.location.href = '{{url('employee/dashboard/processflow/approval')}}' --}}
+                      } else if (data == 'DISAPPROVED') {
+                          Swal.fire({
+                            type: 'success',
+                            title: 'Success',
+                            text: 'Successfully disapproved application',
+                          }).then(() => {
+                            window.location.href = '{{ asset('employee/dashboard/processflow/approval') }}';
+                          });
+                          {{--window.location.href = '{{ asset('employee/dashboard/processflow/approval') }}';                         
+                          window.location.href = '{{url('employee/dashboard/processflow/approval')}}' --}}
                       } else if (data == 'ERROR'){
                         $('#AccErrorAlert').show(100);  
                       } else if(data == 'WRONGPASSWORD'){

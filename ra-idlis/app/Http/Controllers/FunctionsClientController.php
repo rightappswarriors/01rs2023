@@ -299,8 +299,11 @@ class FunctionsClientController extends Controller {
 				$sql = "SELECT appform.status,isRecommended,submittedReq ,savingStat,isApprove,requestReeval, appid, proofpaystat, FDAStatMach, FDAStatPhar , FDAstatus, uid, licenseNo, approvedDate, facilityname, hfser_desc, hfaci_serv_type.hfser_id, owner, 
 				DATE_FORMAT(t_date, '%M %d, %Y') AS t_date, 
 				appform.CashierApproveDate, CASE WHEN appform.CashierApproveDate IS NOT NULL THEN DATE_FORMAT(appform.CashierApproveDate, '%M %d, %Y') ELSE NULL END AS CashierApproveformattedDate,
-				trans_status.trns_desc, trans_status.color as dohcolor,
-				FDA.color as fdacolor, FDA.trns_desc as FDAstat, trans_status.allowedpayment, trans_status.canapply, trans_status.isapproved, rgnid, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(documentSent, '%b %d, %Y') AS documentSent, aptid, isNotified, noofsatellite, isPayEval, noofsatellite, pharCOC, xrayCOC, pharValidity, xrayVal, noofmain, hfaci_grp.hgpdesc,  appform.nhfcode
+				trans_status.trns_desc, trans_status.color as dohcolor, FDA.color as fdacolor, FDA.trns_desc as FDAstat, trans_status.allowedpayment, 
+				trans_status.allowedlegend, trans_status.canapply, trans_status.isapproved, 
+				rgnid, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(documentSent, '%b %d, %Y') AS documentSent, 
+				aptid, isNotified, noofsatellite, isPayEval, noofsatellite, pharCOC, xrayCOC, pharValidity, xrayVal, noofmain, 
+				hfaci_grp.hgpdesc,  appform.nhfcode, appform.isRecoForApproval
 				
 				FROM appform 
 				LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid
@@ -313,8 +316,8 @@ class FunctionsClientController extends Controller {
 			}  else { 
 				$sql = "SELECT appform.status, appform.isRecommended, appform.submittedReq, appform.savingStat, appform.isApprove, requestReeval, appform.appid, proofpaystat, FDAStatMach, FDAStatPhar , FDAstatus, appform.uid, appform.licenseNo, appform.approvedDate, 	appform.facilityname, hfser_desc, hfaci_serv_type.hfser_id, appform.owner, DATE_FORMAT(appform.t_date, '%b %d, %Y') AS t_date, trans_status.trns_desc, trans_status.color as dohcolor, FDA.color as fdacolor, FDA.trns_desc as FDAstat, trans_status.allowedpayment, trans_status.canapply, trans_status.isapproved, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(appform.documentSent, '%b %d, %Y') AS documentSent, appform.aptid, isNotified, appform.noofsatellite, appform.isPayEval, appform.noofsatellite, appform.pharCOC, appform.xrayCOC, appform.pharValidity, appform.xrayVal, appform.noofmain, registered_facility.regfac_id, registered_facility.nhfcode,	appform.hgpid, hfaci_grp.hgpdesc, appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname,  region.rgn_desc, appform.zipcode, 
 				appform.rgnid, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
-				appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail,
-				appform.approvingauthority, appform.approvingauthoritypos
+				appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, 
+				appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos
 				
 				FROM appform 
 				LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid

@@ -160,19 +160,24 @@
 										@endif
 									</td>
 									<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
-										@switch($each[0]->status)
+										
+										@switch($each[0]->allowedlegend)
 
-											@case('P')
-												@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
-													<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">For Selection of Payment Method</a>
-												@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
-													<a style="color:#FFF; font-weight: bold;"  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" title="View Order of Payment on DOH" >For Payment Confirmation</a>
+											@case(1)
+												@if($each[0]->status == "P")
+													@if(($each[0]->isRecommended && $each[0]->isRecommended != 2 && AjaxController::checkExitPay($each[0]->appid) == "no" && AjaxController::getAllDataOrderOfPaymentUploads($each[0]->appid ,4) != 0) || $each[0]->status=="CRFE")
+														<a style="color:#FFF; font-weight: bold;" href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">For Selection of Payment Method</a>
+													@elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1)
+														<a style="color:#FFF; font-weight: bold;"  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" title="View Order of Payment on DOH" >For Payment Confirmation</a>
+													@else 
+														{{$each[0]->trns_desc}}
+													@endif
 												@else 
 													{{$each[0]->trns_desc}}
 												@endif
 											@break
 											@default
-												{{$each[0]->trns_desc}}
+												{{"On Process"}}
 											@break
 
 										@endswitch
@@ -264,8 +269,8 @@
 
 												@break											
 												@case('PTC')
-												
-													@if($each[0]->isApprove === 0 && $each[0]->requestReeval === null)									
+													
+													@if($each[0]->isRecoForApproval === 0 && $each[0]->requestReeval === null)									
 														<div style="margin-left: 10px;margin-right: 10px;">
 															<a class="dropdown-item ddi bg-warning" style="border-radius: 3px;" onclick="requestReEval('{!! $each[0]->appid !!}')"  href="#">Request for re-evaluation</a>
 														</div>
@@ -289,7 +294,7 @@
 															<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;"  href="{{url('client1/payment/'.FunctionsClientController::getToken().'/'.$each[0]->appid)}}">Select Payment Method</a>
 														</div>
 													{{-- @elseif($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1) --}}
-													@elseif(isset($each[0]->t_date))
+													@elseif(isset($each[0]->submittedReq) || ($each[0]->status != null && ($each[0]->t_date) == true && $each[0]->isPayEval == 1) ) 
 														<div class="dropdown-divider"></div>
 														<div style="margin-left: 10px;margin-right: 10px;">
 															<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>

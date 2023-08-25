@@ -251,7 +251,7 @@
 				<div class="col-md-{{$col}} mt-3">
 					<u>{{ucfirst($m->fname.' '.(isset($m->mname) ? $m->mname.'. ' :''). $m->lname)}}</u>
 					<div class="container">
-						{{$posname}}
+					{{$m->position}} / {{$posname}}
 					</div>
 				</div>
 	      @endforeach

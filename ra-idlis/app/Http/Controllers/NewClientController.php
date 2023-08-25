@@ -5888,6 +5888,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							$evaluationData = $dohC->viewhfercresult($request,$appid,(AjaxController::maxRevisionFor($appid) != 0 ? AjaxController::maxRevisionFor($appid) : 1),true);
 							
 							if(is_array($evaluationData)){
+								
 								$dataOfEntry = $evalC->FPGenerateReportAssessment($request, $appid, $evaluationData['evaluation']->revision, $evaluationData['evaluation']->HFERC_evalBy, true);
 								if($dataOfEntry){
 									$evaluationData['dataOfEvaluation'] = true;
@@ -5895,6 +5896,10 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 										$evaluationData[$key] = $value;
 									}
 								}
+
+								//same comments to back office final revision
+								$reco = DB::table('assessmentrecommendation')->where([['appid',$appid],['choice','comment'],['revision',$evaluationData['evaluation']->revision], ['evaluatedby',$evaluationData['evaluation']->HFERC_evalBy]])->first();
+								$evaluationData['evaluation']->HFERC_comments = $reco->details;
 
 								$evaluationData['canResub'] = !FunctionsClientController::existOnDB('chgfil',array(['appform_id',$appid],['uid',session()->get('uData')->uid],['revision',(AjaxController::maxRevisionFor($appid) > 2 ? AjaxController::maxRevisionFor($appid) : 1)]));
 								

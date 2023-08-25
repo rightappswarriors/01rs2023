@@ -4817,46 +4817,37 @@ namespace App\Http\Controllers;
 
 						$uData = AjaxController::getCurrentUserAllData();
 						
+						$fstat = 'For Recommendation' ;
+						// $fstat = $requestOfClient == 'machines' ? 'For Recommendation' : 'For Final Decision';
+						$resub = $requestOfClient == 'machines' ? $corm : $corp;
+
 						if($requestOfClient == 'machines'){
 
-							$forAppform = [
-								'isrecommendedFDA',
-								'recommendedbyFDA',
-								'recommendedtimeFDA',
-								'recommendeddateFDA',
-								'recommendedippaddrFDA',
-								'FDAStatMach',
-								'corResubmit'
-							];
+							$forAppform = array([
+								'isrecommendedFDA' => 1,
+								'recommendedbyFDA' => $uData['cur_user'],
+								'recommendedtimeFDA' => $uData['time'],
+								'recommendeddateFDA' => $uData['date'],
+								'recommendedippaddrFDA' => $uData['ip'],
+								'FDAStatMach' => $fstat,
+								'corResubmit' => $resub
+							]);
 							$corm = 1;
 							$corp = $capp->corResubmitPhar;
 
 						} else {
-							$forAppform = [
-								'isrecommendedFDAPharma',
-								'recommendedbyFDAPharma',
-								'recommendedtimeFDAPharma',
-								'recommendeddateFDAPharma',
-								'recommendedippaddrFDAPharma',
-								'FDAStatPhar',
-								'corResubmitPhar'
-							];
+							$forAppform = array([
+								'isrecommendedFDAPharma' => 1,
+								'recommendedbyFDAPharma' => $uData['cur_user'],
+								'recommendedtimeFDAPharma'  => $uData['time'],
+								'recommendeddateFDAPharma' => $uData['date'],
+								'recommendedippaddrFDAPharma' => $uData['ip'],
+								'FDAStatPhar' => $fstat,
+								'corResubmitPhar' => $resub
+							]);
 							$corm =  $capp->corResubmit;
 							$corp = 1;
 						}
-						
-						$fstat = 'For Recommendation' ;
-						// $fstat = $requestOfClient == 'machines' ? 'For Recommendation' : 'For Final Decision';
-						$resub = $requestOfClient == 'machines' ? $corm : $corp;
-						$answers = [
-							1,
-							$uData['cur_user'],
-							$uData['time'],
-							$uData['date'],
-							$uData['ip'],
-							$fstat,
-							$resub
-						];
 
 						if($request->hasFile('fileUp')){
 
@@ -4873,9 +4864,10 @@ namespace App\Http\Controllers;
 							
 							$isRedirect = DB::table('fdaevaluation')->insert($toInsertFieldsAndValue);
 
-							if($isRedirect){
+							if($isRedirect)
+							{
 								if(strtolower($request->recommendation) != 'rfc'){
-									DB::table('appform')->where('appid',$appid)->update(array_combine($forAppform, $answers));
+									DB::table('appform')->where('appid',$appid)->update($forAppform);
 								}
 								if($request->recommendation == 'COC'){
 									$department = ($requestOfClient == 'machines' ? 'cdrrhr' : 'cdrr');
@@ -4883,16 +4875,20 @@ namespace App\Http\Controllers;
 								}
 								return redirect('employee/dashboard/processflow/evaluate/FDA/'.$appid.'/'.$requestOfClient);
 							}
-
 						}
 
-						if(array_key_exists('isupdate', $request->all())){
+						if(array_key_exists('isupdate', $request->all()))
+						{
 							$oldData = DB::table('fdaevaluation')->where([['appid',$appid],['requestFrom',$requestOfClient]])->first();
-							if(isset($oldData)){
+
+							if(isset($oldData))
+							{
 								DB::table('fdaevaluationhistory')->insert(['evaluation' => $oldData->decision, 'requestfrom' => $oldData->requestFrom, 'remarks' => $oldData->remarks, 'old_ip' => $oldData->t_ip, 'old_tdate' => $oldData->t_det, 't_ip' => $uData['ip'], 'old_teval' => $oldData->t_eval,  'appid' => $appid, 'changedby' => $uData['cur_user']]);
-								if(DB::table('fdaevaluation')->where('evalid', $oldData->evalid)->update(['decision' => $request->recommendation, 't_det' => $uData['date'], 't_ip' => $uData['ip'], 't_eval' => $uData['cur_user']])){
+
+								if(DB::table('fdaevaluation')->where('evalid', $oldData->evalid)->update(['decision' => $request->recommendation, 't_det' => $uData['date'], 't_ip' => $uData['ip'], 't_eval' => $uData['cur_user']]))
+								{
 									if(strtolower($request->recommendation) != 'rfc'){
-										DB::table('appform')->where('appid',$appid)->update(array_combine($forAppform, $answers));
+										DB::table('appform')->where('appid',$appid)->update($forAppform);
 									}
 									return back()->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Application Updated']);
 								}
@@ -5818,15 +5814,15 @@ namespace App\Http\Controllers;
 		}
 
 		public function viewhfercresult(Request $request, $appid, $revision, $isSelfAssess = false){
-			//try {
+			try {
 				// $revision =  0;
 				// $revision = $revision == 1 ? 1 : 0;
 				$reco = null;
 				$data = AjaxController::getAllDataEvaluateOne($appid);
 				$evaluation = AjaxController::maxRevisionFor($appid, ['revision',$revision], 1);
-
 				// $evaluation = AjaxController::maxRevisionFor($appid, ['revision',$revision], 1);
 				$dataOfEntry = null;
+
 				if(!isset($evaluation->HFERC_eval)){
 					return ($isSelfAssess ? false : back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Evaluation Doesnt\' exist.']) );
 				}
@@ -5834,7 +5830,6 @@ namespace App\Http\Controllers;
 					$evalC = new EvaluationController();
 					$dataOfEntry = $evalC->FPGenerateReportAssessment($request, $appid, $evaluation->revision, $evaluation->HFERC_evalBy, true);
 					
-
 					if(empty($dataOfEntry)){
 						return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Application record Doesnt\' exist.']);
 					}
@@ -5855,11 +5850,11 @@ namespace App\Http\Controllers;
 					'data' => $dataOfEntry, 
 					'hferc_evaluator' => DB::table('hferc_team')->where([['pos','C'], ['appid',$appid]])->first()]);
 
-			/*} catch (Exception $e) {
+			} catch (Exception $e) {
 				AjaxController::SystemLogs($e);
 				session()->flash('system_error','ERROR');
 				return ($this->agent ? response()->json(array('error' => $e)) :view('employee.processflow.hferceval'));
-			}*/
+			}
 		}
 
 		public function committeTeam(Request $request)
@@ -9998,14 +9993,13 @@ namespace App\Http\Controllers;
 			if(DB::table('appform')->where([['appid', $appid], ['isCashierApprove', 1], ['isPayEval',1], /*['isRecoForApproval', null]*/])->count() <= 0){
 				return back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Please finish all requirements first!.']);
 			}
-			//dd(back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Please finish all requirements first!.']));
-			
+			//dd(back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Please finish all requirements first!.']));			
 			//dd($request->isMethod('post'));
+
 			if ($request->isMethod('get')) 
 			{
 				// $canView = null;
-				$apdata =DB::table('appform')->where([['appid', $appid]])->first();
-				
+				$apdata =DB::table('appform')->where([['appid', $appid]])->first();				
 				$data = AjaxController::getRecommendationData($appid);
 				
 				// $data1 = AjaxController::getPreAssessment($data->uid);
@@ -10058,6 +10052,8 @@ namespace App\Http\Controllers;
 				try {
 					// return $request->all();
 						$Cur_useData = AjaxController::getCurrentUserAllData();
+						$hfserCheck = DB::table('appform')->where('appid', '=', $request->id)->first();
+
 						$update = array(
 							'isRecoForApproval' => $request->isOk,
 							'RecoForApprovalby' => $Cur_useData['cur_user'],
@@ -10066,12 +10062,30 @@ namespace App\Http\Controllers;
 							'RecoForApprovalIpAdd' => $Cur_useData['ip'],
 							'RecoRemark' => $request->desc
 						);
-						if ($request->isOk == 1) {
-							$update['status'] = 'FA';
-						} else if ($request->isOk == 0) 
+
+						if ($request->isOk == 1) 
 						{
-							$update['status'] = 'DND';
+							$update['status'] = 'FA';
+						} 
+						else if ($request->isOk == 0) 
+						{
+							if($hfserCheck->hfser_id == "PTC")
+							{
+								if(is_null($hfserCheck->requestReeval))
+								{
+									$update['status'] = 'RDA';
+								}
+								else
+								{
+									$update['status'] = 'DND';
+								}
+							}
+							else
+							{
+								$update['status'] = 'RDA';
+							}							
 						}
+
 						$data = DB::table('appform')->where('appid', '=', $request->id)->update($update);
 						$hfserCheck = DB::table('appform')->where('appid', '=', $request->id)->first();
 						
@@ -10079,7 +10093,11 @@ namespace App\Http\Controllers;
 							switch (strtolower($hfserCheck->hfser_id)) {
 								case 'ptc':
 									$selected = AjaxController::getUidFrom($appid);
-									AjaxController::notifyClient($appid,$selected,56);
+
+									if($hfserCheck->isRecoForApproval === 0 || is_null($hfserCheck->requestReeval))
+									{	AjaxController::notifyClient($appid,$selected,80); }
+									else
+									{	AjaxController::notifyClient($appid,$selected,56);	}
 									break;
 								default:
 									$selected = AjaxController::getUidFrom($request->id);
@@ -10220,6 +10238,7 @@ namespace App\Http\Controllers;
 			if ($request->isMethod('post')) 
 			{
 				$code = $license = $faci = $appform = $branchData = $hferID = $dateOnFormat = null;
+				$next_code = "0";
 				
 				try {
 						$ChckPassword = AjaxController::checkPassword($request->pass);
@@ -10238,10 +10257,12 @@ namespace App\Http\Controllers;
 		
 							for ($i=strlen($branchData->$hferID); $i < (5 - strlen($branchData->$hferID)) ; $i++) 
 							{ 
-								$code = $code."0";
+								$next_code = $code;
+								$code = $code."00";
 							}
 							$code = $code.($branchData->$hferID+1);
-
+							$next_code = $branchData->$hferID +1;
+							
 							if($appform->hfser_id == 'LTO' || $appform->hfser_id == 'COA' || $appform->hfser_id == 'ATO' || $appform->hfser_id == 'COR')
 							{
 								$dateOnFormat = (substr(Date('Y',strtotime($request->validity)),-2) != substr(Date('Y',strtotime($request->validityDateFrom)),-2) ? substr(Date('Y',strtotime($request->validityDateFrom)),-2).substr(Date('Y',strtotime($request->validity)),-2) : substr(Date('Y',strtotime($request->validity)),-2));
@@ -10249,6 +10270,7 @@ namespace App\Http\Controllers;
 							} 
 							else if($appform->hfser_id == 'CON' || $appform->hfser_id == 'PTC')
 							{
+
 								$license = Date('Y',strtotime('now')).'-'.$code;
 							}	
 		
@@ -10303,6 +10325,8 @@ namespace App\Http\Controllers;
 								$brgyid = $appform->brgyid;
 								$subclass = $appform->subClassid;
 								$exists_regfac_id = null;
+								
+								DB::table('branch')->where('regionid',$appform->assignedRgn)->update([strtoupper($hferID) => $next_code]);
 		
 								if($appform->subClassid == "Please select"){ $subclass = null;}							
 		
@@ -10442,11 +10466,17 @@ namespace App\Http\Controllers;
 							if ($success) 
 							{
 								//Increment Sequential Number for Certificate
-								DB::table('branch')->where('regionid',$appform->rgnid)->update([$hferID => ($code)]);
 								$selected = AjaxController::getUidFrom( $appform->appid);
 								AjaxController::notifyClient( $appform->appid,$selected,($request->isOk == 1 ? 21 : 22));
 								
-								return 'DONE';
+								if($status == 'A')
+								{
+
+									return 'DONE';
+								}
+								else{
+									return 'DISAPPROVED';
+								}
 							} else 
 							{
 								return 'Error';
@@ -10512,6 +10542,7 @@ namespace App\Http\Controllers;
 
 					} else{
 						$typeOfRequest = 'cdrr';
+						
 						if(isset($canView[1])){
 							$canView[1] = false;
 						}

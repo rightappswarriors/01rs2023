@@ -166,7 +166,7 @@
 			</div>
 	      </div>
 	      <div class="container text-center" style="margin-top: 50px; font-size: 20px;">
-	      	HEALTH FACILITY EVALUATION REVIEW COMMITEE(HFERC) IS RECOMMENDING FOR
+	      	HEALTH FACILITY EVALUATION REVIEW COMMITTEE(HFERC) IS RECOMMENDING FOR
 	      	<span class="text-center font-weight-bold">
 	      		<u>
 		      	@if(isset($evaluation->HFERC_eval))
