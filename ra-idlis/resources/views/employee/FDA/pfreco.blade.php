@@ -233,6 +233,7 @@
                             <td>@isset($recoEvalBy) <span style="color:green;font-weight: bolder">
                             <!-- <td>isset($AppData->recommendedbyFDA) <span style="color:green;font-weight: bolder"> -->
                             <!-- {{$AppData->recommendedbyFDA}} -->
+                            
 
                             {{$AppData->evalby_pre}}
                             {{$AppData->evalby_fname}}
