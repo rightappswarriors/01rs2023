@@ -63,18 +63,44 @@
 
       <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="form-group">
             <label>Applied Dates Within</label>            
             <div class="row">
-              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_1" id="fo_date_1" value="2022-01-01"></div>
-              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_2" id="fo_date_2" value="2022-12-31"></div>
+              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_1" id="fo_date_1" value="2023-01-01"></div>
+              <div class="col-md-6"><input type="date" class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_date_2" id="fo_date_2" value="2023-12-31"></div>
             </div>
           </div>         
 
         </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Process Type</label>
+            <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_aptid" id="fo_aptid">
+              <option value="" @if (!isset($fo_aptid))  selected @endif  >All</option>
+              <option value="IN" @if (isset($fo_aptid)) @if ($fo_aptid ==  'IN' )  selected @endif @endif >Initial New</option>
+              <option value="R" @if (isset($fo_aptid))  @if ($fo_aptid == 'R' )  selected  @endif @endif >Renewal</option>
+              <option value="IC" @if (isset($fo_aptid))  @if ($fo_aptid == 'IC' )  selected  @endif @endif >Initial Change</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Application Type</label>
+            <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_hfser_id" id="fo_hfser_id">
+              <option value="" @if (!isset($fo_hfser_id))  selected @endif  >All</option>
+              <option value="CON" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'CON' )  selected @endif @endif >Certificate Of Need</option>
+              <option value="PTC" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'PTC' )  selected @endif @endif >Permit To Construct</option>
+              <option value="LTO" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'LTO' )  selected @endif @endif >License To Operate</option>
+              <option value="ATO" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'ATO' )  selected @endif @endif >Authority To Operate</option>
+              <option value="COA" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'COA' )  selected @endif @endif >Certificate of Accreditation</option>
+              <option value="COR" @if (isset($fo_hfser_id)) @if ($fo_hfser_id ==  'COR' )  selected @endif @endif >Certificate of Registration</option>
+            </select>
+          </div>
+          
+        </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
 
           <div class="form-group">
             <label>Facility Type</label>
@@ -106,7 +132,7 @@
           
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="form-group">
             <label>Process Type</label>
             <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_aptid" id="fo_aptid">
@@ -124,13 +150,13 @@
 
       <div class="row">
 
-        <div class="col-md-4 ">
+        <div class="col-md-3 ">
           <div class="form-group ">
           
           </div>
         </div>
 
-        <div class="col-md-4 ">       
+        <div class="col-md-3 ">       
           <div class="form-group">
             <label>Facility Region</label>
             <select class="form-control" style="width: 100%;" tabindex="-1" aria-hidden="true" name="fo_rgnid" id="fo_rgnid">
@@ -156,7 +182,7 @@
           </div>
         </div>
 
-        <div class="col-md-4 ">       
+        <div class="col-md-3 ">       
           
           
           <div class="form-group">
