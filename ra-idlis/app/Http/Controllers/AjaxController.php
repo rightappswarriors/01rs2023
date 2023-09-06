@@ -6758,77 +6758,93 @@ public static function checkConmem($appid)
 		}
 		/////// Assignment of Team
 		/////// Recommendation One
-		public static function getRecommendationData($appid)
+		/*public static function getRecommendationData($appid)
 		{
 			//try{
 				$data0 = DB::table('appform')
-						->join('x08', 'appform.uid', '=', 'x08.uid')
-						->leftJoin('x08 AS comeval', 'appform.concommittee_evalby', '=', 'comeval.uid')
-						->leftJoin('x08 AS cashval', 'appform.CashierApproveByFDA', '=', 'cashval.uid')
-						->leftJoin('x08 AS recfdaval', 'appform.recommendedbyFDA', '=', 'recfdaval.uid')
-						->leftJoin('x08 AS recbyfda', 'appform.RecobyFDA', '=', 'recbyfda.uid')
-						->leftJoin('x08 AS recbyfdaphar', 'appform.RecobyFDAPhar', '=', 'recbyfdaphar.uid')
-						->leftJoin('x08 AS recbyfdaph', 'appform.CashierApproveByPharma', '=', 'recbyfdaph.uid')
-						->leftJoin('x08 AS evalby', 'appform.recommendedby', '=', 'evalby.uid')
-						->leftJoin('x07', 'comeval.grpid', '=', 'x07.grp_id')
-						->leftJoin('barangay', 'appform.brgyid', '=', 'barangay.brgyid')
-						->leftJoin('city_muni', 'appform.cmid', '=', 'city_muni.cmid')
-						->leftJoin('province', 'appform.provid', '=', 'province.provid')
-						// ->join('type_facility', 'appform.hfser_id', '=', 'type_facility.hfser_id') 
-						->leftjoin('trans_status', 'appform.status', '=', 'trans_status.trns_id')
-						// ->join('orderofpayment', 'type_facility.oop_id', '=', 'orderofpayment.oop_id')
-						// , 'orderofpayment.*'
-						->select('appform.*', 'appform.street_number',  'x08.*',  'comeval.fname as com_fname',  'comeval.pre as com_pre',  'comeval.suf as com_suf',  'comeval.mname as com_mname', 'comeval.lname as com_lname', 
+					->join('x08', 'appform.uid', '=', 'x08.uid')
+					->leftJoin('x08 AS comeval', 'appform.concommittee_evalby', '=', 'comeval.uid')
+					->leftJoin('x08 AS cashval', 'appform.CashierApproveByFDA', '=', 'cashval.uid')
+					->leftJoin('x08 AS recfdaval', 'appform.recommendedbyFDA', '=', 'recfdaval.uid')
+					->leftJoin('x08 AS recbyfda', 'appform.RecobyFDA', '=', 'recbyfda.uid')
+					->leftJoin('x08 AS recbyfdaphar', 'appform.RecobyFDAPhar', '=', 'recbyfdaphar.uid')
+					->leftJoin('x08 AS recbyfdaph', 'appform.CashierApproveByPharma', '=', 'recbyfdaph.uid')
+					->leftJoin('x08 AS evalby', 'appform.recommendedby', '=', 'evalby.uid')
+					->leftJoin('x08 AS FDApreassesedby', 'appform.ispreassessedby', '=', 'FDApreassesedby.uid')
+					->leftJoin('x08 AS FDAPharmapreassesedby', 'appform.ispreassessedbypharma', '=', 'FDAPharmapreassesedby.uid')
+					->leftJoin('x07', 'comeval.grpid', '=', 'x07.grp_id')
+					->leftJoin('barangay', 'appform.brgyid', '=', 'barangay.brgyid')
+					->leftJoin('city_muni', 'appform.cmid', '=', 'city_muni.cmid')
+					->leftJoin('province', 'appform.provid', '=', 'province.provid')
+					->leftjoin('trans_status', 'appform.status', '=', 'trans_status.trns_id')
+					->select('appform.*', 'appform.street_number',  'x08.*',
 
-						'cashval.fname as cash_fname',  
-						'cashval.pre as cash_pre',  
-						'cashval.suf as cash_suf',  
-						'cashval.mname as cash_mname', 
-						'cashval.lname as cash_lname', 
+					'comeval.fname as com_fname',  
+					'comeval.pre as com_pre',  
+					'comeval.suf as com_suf',  
+					'comeval.mname as com_mname', 
+					'comeval.lname as com_lname', 
 
-						'recfdaval.fname as recfdaval_fname',  
-						'recfdaval.pre as recfdaval_pre',  
-						'recfdaval.suf as recfdaval_suf',  
-						'recfdaval.mname as recfdaval_mname', 
-						'recfdaval.lname as recfdaval_lname',   
-							
-						'evalby.fname as evalby_fname',  
-						'evalby.pre as evalby_pre',  
-						'evalby.suf as evalby_suf',  
-						'evalby.mname as evalby_mname', 
-						'evalby.lname as evalby_lname', 
+					'cashval.fname as cash_fname',  
+					'cashval.pre as cash_pre',  
+					'cashval.suf as cash_suf',  
+					'cashval.mname as cash_mname', 
+					'cashval.lname as cash_lname', 
 
-						'recbyfda.fname as recbyfda_fname',  
-						'recbyfda.pre as recbyfdal_pre',  
-						'recbyfda.suf as recbyfda_suf',  
-						'recbyfda.mname as recbyfda_mname', 
-						'recbyfda.lname as recbyfda_lname',  
+					'FDApreassesedby.pre as preassesedbyFDA_pre',  
+					'FDApreassesedby.fname as preassesedbyFDA_fname',  
+					'FDApreassesedby.mname as preassesedbyFDA_mname', 
+					'FDApreassesedby.lname as preassesedbyFDA_lname',  
+					'FDApreassesedby.suf as preassesedbyFDA_suf',  
 
-						'recbyfdaphar.fname as recbyfdaphar_fname',  
-						'recbyfdaphar.pre as recbyfdalphar_pre',  
-						'recbyfdaphar.suf as recbyfdaphar_suf',  
-						'recbyfdaphar.mname as recbyfdaphar_mname', 
-						'recbyfdaphar.lname as recbyfdaphar_lname',  
+					'FDAPharmapreassesedby.pre as preassesedbyFDAPharma_pre',  
+					'FDAPharmapreassesedby.fname as preassesedbyFDAPharma_fname', 
+					'FDAPharmapreassesedby.mname as preassesedbyFDAPharma_mname', 
+					'FDAPharmapreassesedby.lname as preassesedbyFDAPharma_lname',  
+					'FDAPharmapreassesedby.suf as preassesedbyFDAPharma_suf',  
 
-						'recbyfdaph.fname as recbyfdaph_fname',  
-						'recbyfdaph.pre as recbyfdaph_pre',  
-						'recbyfdaph.suf as recbyfdaph_suf',  
-						'recbyfdaph.mname as recbyfdaph_mname', 
-						'recbyfdaph.lname as recbyfdaph_lname',  
-							
-						'x07.grp_desc', 
-						'barangay.brgyname', 
-						'city_muni.cmname',
-						'province.provname',
-						'trans_status.trns_desc') //, 'type_facility.*'
-						->where('appform.appid', '=', $appid)
-						// , 'type_facility.*', 'orderofpayment.*'
-						// ->where('type_facility.facid', '=', 'appform.facid')
-						->first();
+					'recfdaval.fname as recfdaval_fname',  
+					'recfdaval.pre as recfdaval_pre',  
+					'recfdaval.suf as recfdaval_suf',  
+					'recfdaval.mname as recfdaval_mname', 
+					'recfdaval.lname as recfdaval_lname',   
 						
-						if($data0 != null)
-						{
-							
+					'evalby.fname as evalby_fname',  
+					'evalby.pre as evalby_pre',  
+					'evalby.suf as evalby_suf',  
+					'evalby.mname as evalby_mname', 
+					'evalby.lname as evalby_lname', 
+
+					'recbyfda.fname as recbyfda_fname',  
+					'recbyfda.pre as recbyfdal_pre',  
+					'recbyfda.suf as recbyfda_suf',  
+					'recbyfda.mname as recbyfda_mname', 
+					'recbyfda.lname as recbyfda_lname',  
+
+					'recbyfdaphar.fname as recbyfdaphar_fname',  
+					'recbyfdaphar.pre as recbyfdalphar_pre',  
+					'recbyfdaphar.suf as recbyfdaphar_suf',  
+					'recbyfdaphar.mname as recbyfdaphar_mname', 
+					'recbyfdaphar.lname as recbyfdaphar_lname',  
+
+					'recbyfdaph.fname as recbyfdaph_fname',  
+					'recbyfdaph.pre as recbyfdaph_pre',  
+					'recbyfdaph.suf as recbyfdaph_suf',  
+					'recbyfdaph.mname as recbyfdaph_mname', 
+					'recbyfdaph.lname as recbyfdaph_lname',  
+						
+					'x07.grp_desc', 
+					'barangay.brgyname', 
+					'city_muni.cmname',
+					'province.provname',
+					'trans_status.trns_desc') //, 'type_facility.*'
+					->where('appform.appid', '=', $appid)
+					// , 'type_facility.*', 'orderofpayment.*'
+					// ->where('type_facility.facid', '=', 'appform.facid')
+					->first();
+					
+					if($data0 != null)
+					{							
 						/////  Evaluation
 						if ($data0->isrecommended != null) {
 							$time1 = $data0->recommendedtime;
@@ -6843,19 +6859,18 @@ public static function checkConmem($appid)
 									$data0->Evaluator = 'System Administrator';
 								} else {
 										if ($getEval->mname != "") {
-								    	$mid = strtoupper($getEval->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getEval->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->Evaluator = $getEval->pre . ' ' .$getEval->fname.' '.$mid.''.$getEval->lname . ' ' . $getEval->suf;
 								}
 							} else {
 								$data0->Evaluator = 'Not Available';
 							}
 						}
-						/////  Evaluation
-						/////  Assessment
+						/////  Evaluation	/////  Assessment
 						if ($data0->isInspected != null) {
 							$time1 = $data0->inspectedtime;
 							$newT1 = Carbon::parse($time1);
@@ -6869,19 +6884,18 @@ public static function checkConmem($appid)
 									$data0->Assessor = 'System Administrator';
 								} else {
 										if ($getAssessor->mname != "") {
-								    	$mid = strtoupper($getAssessor->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getAssessor->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->Assessor = $getAssessor->pre . ' ' .$getAssessor->fname.' '.$mid.''.$getAssessor->lname . ' ' .$getAssessor->suf;
 								}
 							} else {
 								$data0->Assessor = 'Not Available';
 							}
 						}
-						/////  Assessment
-						/////  Payment Evaluation
+						/////  Assessment /////  Payment Evaluation
 						if ($data0->isPayEval != null) {
 							$time1 = $data0->payEvaltime;
 							$newT1 = Carbon::parse($time1);
@@ -6895,19 +6909,18 @@ public static function checkConmem($appid)
 									$data0->PayEvaluator = 'System Administrator';
 								} else {
 										if ($getPayEvaluator->mname != "") {
-								    	$mid = strtoupper($getPayEvaluator->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getPayEvaluator->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->PayEvaluator = $getPayEvaluator->pre . ' ' .$getPayEvaluator->fname.' '.$mid.''.$getPayEvaluator->lname . ' ' .$getPayEvaluator->suf;
 								}
 							} else {
 								$data0->PayEvaluator = 'Not Available';
 							}
 						}
-						/////  Payment Evaluation
-						/////  Cashier Evaluation
+						/////  Payment Evaluation /////  Cashier Evaluation
 						if ($data0->isCashierApprove != null) {
 							$time1 = $data0->CashierApproveTime;
 							$newT1 = Carbon::parse($time1);
@@ -6921,11 +6934,11 @@ public static function checkConmem($appid)
 									$data0->CashierEvaluator = 'System Administrator';
 								} else {
 									if (!empty($getCashierEvaluator->mname)) {
-								    	$mid = strtoupper($getCashierEvaluator->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getCashierEvaluator->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->CashierEvaluator = $getCashierEvaluator->pre . ' ' .$getCashierEvaluator->fname.' '.$mid.''.$getCashierEvaluator->lname .  ' ' .$getCashierEvaluator->suf;
 									
 								}
@@ -6933,8 +6946,7 @@ public static function checkConmem($appid)
 								$data0->CashierEvaluator = 'Not Available';
 							}
 						}
-						/////  Cashier Evaluation
-						///// 	RECOMMENDATION
+						/////  Cashier Evaluation	///// 	RECOMMENDATION
 						if ($data0->isRecoForApproval !== null) {
 							$time1 = $data0->RecoForApprovalTime;
 							$newT1 = Carbon::parse($time1);
@@ -6943,24 +6955,24 @@ public static function checkConmem($appid)
 							$newD1 = Carbon::parse($date1);
 							$data0->fRecoForApprovalDate = $newD1->toFormattedDateString();
 							$getRecommender = DB::table('x08')->where('uid', '=', $data0->RecoForApprovalby)->first();
+							
 							if ($getRecommender) {
 								if ($getRecommender->grpid == 'NA') {
 									$data0->RecommedationEvaluator = 'System Administrator';
 								} else {
 									if ($getRecommender->mname != "") {
-								    	$mid = strtoupper($getRecommender->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getRecommender->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->RecommedationEvaluator = $getRecommender->pre . ' ' .$getRecommender->fname.' '.$mid.''.$getRecommender->lname. ' ' . $getRecommender->suf;
 								}
 							} else {
 								$data0->RecommedationEvaluator = 'Not Available' ;
 							}
 						}
-						/////   RECOMMENDATION
-						/////   APPROVAL
+						/////   RECOMMENDATION	/////   APPROVAL
 						if (isset($data0->isApprove)) {
 							$time1 = $data0->approvedTime;
 							$newT1 = Carbon::parse($time1);
@@ -6969,16 +6981,17 @@ public static function checkConmem($appid)
 							$newD1 = Carbon::parse($date1);
 							$data0->FapprovedDate = $newD1->toFormattedDateString();
 							$getApprover = DB::table('x08')->where('uid', '=', $data0->approvedBy)->first();
+
 							if ($getApprover) {
 								if ($getApprover->grpid == 'NA') {
 									$data0->AprovalApprover = 'System Administrator';
 								} else {
 									if ($getApprover->mname != "") {
-								    	$mid = strtoupper($getApprover->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getApprover->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->AprovalApprover = $getApprover->fname.' '.$mid.''.$getApprover->lname;
 								}
 							} else {
@@ -6994,16 +7007,17 @@ public static function checkConmem($appid)
 							$newD1 = Carbon::parse($date1);
 							$data0->FDAapprovedDate = $newD1->toFormattedDateString();
 							$getApprover = DB::table('x08')->where('uid', '=', $data0->approvedByFDA)->first();
+
 							if ($getApprover) {
 								if ($getApprover->grpid == 'NA') {
 									$data0->FDAAprovalApprover = 'System Administrator';
 								} else {
 									if ($getApprover->mname != "") {
-								    	$mid = strtoupper($getApprover->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getApprover->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+										}
 									$data0->FDAAprovalApprover = $getApprover->fname.' '.$mid.''.$getApprover->lname;
 								}
 							} else {
@@ -7019,23 +7033,23 @@ public static function checkConmem($appid)
 							$newD1 = Carbon::parse($date1);
 							$data0->FDAapprovedDatePharma = $newD1->toFormattedDateString();
 							$getApprover = DB::table('x08')->where('uid', '=', $data0->approvedByFDAPharma)->first();
+
 							if ($getApprover) {
 								if ($getApprover->grpid == 'NA') {
 									$data0->FDAAprovalApproverPharma = 'System Administrator';
 								} else {
 									if ($getApprover->mname != "") {
-								    	$mid = strtoupper($getApprover->mname);
-								    	$mid = $mid.'. ';
-						       		 } else {
-								    	$mid = ' ';
-								 		}
+										$mid = strtoupper($getApprover->mname);
+										$mid = $mid.'. ';
+									} else {
+										$mid = ' ';
+									}
 									$data0->FDAAprovalApproverPharma = $getApprover->fname.' '.$mid.''.$getApprover->lname;
 								}
 							} else {
 								$data0->FDAAprovalApproverPharma = 'Not Available' ;
 							}
-						}
-						
+						}						
 					}
 
 				return $data0;
@@ -7044,8 +7058,22 @@ public static function checkConmem($appid)
 			{
 				AjaxController::SystemLogs($e->getMessage);
 				return 'ERROR';
-			}*/
+			}
+		}*/
+
+		public static function getRecommendationData($appid)
+		{
+			try 
+			{
+				return DB::table('viewAppStaffRecommender')->where('appid', '=', $appid)->first();	
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
 		}
+
 		public static function getPreAssessment($uid)
 		{
 			try 

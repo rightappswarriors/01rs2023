@@ -16,10 +16,9 @@
             <tr>
               <td width="100%">
                 <!-- <h2>@isset($AppData) {{$AppData->facilityname}} @endisset</h2> -->
-                 @if(!is_null($apdat))
-                <h2>{{strtoupper($apdat->facilityname)}} </h2>
-                <h4>{{$apdat->hfser_id}}R{{$apdat->rgnid}}-{{$apdat->appid}} </h4>
-                  @endif
+                @if(!is_null($apdat))
+                  <h2>[<strong>{{$apdat->hfser_id}}R{{$apdat->rgnid}}-{{$apdat->appid}}</strong>] {{strtoupper($apdat->facilityname)}} </h2>
+                @endif
                   
                 <span>
                   <label>Process Type:&nbsp;</label>
@@ -690,15 +689,13 @@
         {{--  --}}
         @isset($AppData)
           @if($AppData->isApprove == NULL  )  
-          <hr>
-         
-          <div class="container">
-            <center>
-              <button class="btn btn-primarys" onclick="toggleModal(true)" style="background-color: #28a745" data-toggle="modal" data-target="#AccepttGodModal">Approve</button>&nbsp;
-              <button class="btn btn-primarys" onclick="toggleModal(false)" style="background-color: #FF2200" data-toggle="modal" data-target="#AccepttGodModal">Disapprove</button>
-            </center>
-          </div>
-
+              <hr>         
+              <div class="container">
+                <center>
+                  <button class="btn btn-primarys" onclick="toggleModal(true)" style="background-color: #28a745" data-toggle="modal" data-target="#AccepttGodModal">Approve</button>&nbsp;
+                  <button class="btn btn-primarys" onclick="toggleModal(false)" style="background-color: #FF2200" data-toggle="modal" data-target="#AccepttGodModal">Disapprove</button>
+                </center>
+              </div>
           @endif     
         @endisset
       </div>

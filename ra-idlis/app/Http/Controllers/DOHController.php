@@ -4787,8 +4787,11 @@ namespace App\Http\Controllers;
 			if(session()->has('employee_login'))
 			{
 				if(in_array(true, AjaxController::isSessionExist(['employee_login'])) && FunctionsClientController::hasRequirementsFor((AjaxController::isRequestForFDA($requestOfClient) == 'machines' ? 'cdrrhr' : 'cdrr'),$appid)){
+
 					$requestOfClient = AjaxController::isRequestForFDA($requestOfClient);
+
 					if($request->isMethod('get')){
+
 						try {
 							$arrRet = [
 								'choosen' => $requestOfClient,
@@ -4809,21 +4812,19 @@ namespace App\Http\Controllers;
 							dd($e);
 						}
 
-					}
-
-					if($request->isMethod('post')){
+					}elseif($request->isMethod('post')){
 
 						$capp = DB::table('appform')->where([['appid', $appid]])->first();
-
 						$uData = AjaxController::getCurrentUserAllData();
-						
 						$fstat = 'For Recommendation' ;
 						// $fstat = $requestOfClient == 'machines' ? 'For Recommendation' : 'For Final Decision';
-						$resub = $requestOfClient == 'machines' ? $corm : $corp;
 
 						if($requestOfClient == 'machines'){
+							$corm = 1;
+							$corp = $capp->corResubmitPhar;
+							$resub = $requestOfClient == 'machines' ? $corm : $corp;
 
-							$forAppform = array([
+							$forAppform = array(
 								'isrecommendedFDA' => 1,
 								'recommendedbyFDA' => $uData['cur_user'],
 								'recommendedtimeFDA' => $uData['time'],
@@ -4831,12 +4832,14 @@ namespace App\Http\Controllers;
 								'recommendedippaddrFDA' => $uData['ip'],
 								'FDAStatMach' => $fstat,
 								'corResubmit' => $resub
-							]);
-							$corm = 1;
-							$corp = $capp->corResubmitPhar;
+							);
 
 						} else {
-							$forAppform = array([
+							$corm =  $capp->corResubmit;
+							$corp = 1;
+							$resub = $requestOfClient == 'machines' ? $corm : $corp;
+
+							$forAppform = array(
 								'isrecommendedFDAPharma' => 1,
 								'recommendedbyFDAPharma' => $uData['cur_user'],
 								'recommendedtimeFDAPharma'  => $uData['time'],
@@ -4844,15 +4847,13 @@ namespace App\Http\Controllers;
 								'recommendedippaddrFDAPharma' => $uData['ip'],
 								'FDAStatPhar' => $fstat,
 								'corResubmitPhar' => $resub
-							]);
-							$corm =  $capp->corResubmit;
-							$corp = 1;
-						}
+							);
+						}												
 
 						if($request->hasFile('fileUp')){
 
 							$uploadName = FunctionsClientController::uploadFile($request->fileUp)['fileNameToStore'];
-							$toInsertFieldsAndValue = array([
+							$toInsertFieldsAndValue = array(
 								'requestFrom' => $requestOfClient,
 								'uploadfilename' => $uploadName,
 								'decision' => $request->recommendation,
@@ -4860,7 +4861,7 @@ namespace App\Http\Controllers;
 								't_ip' => $request->ip(),
 								't_eval' => session()->get('employee_login')->uid,
 								'appid' => $appid
-							]);
+							);
 							
 							$isRedirect = DB::table('fdaevaluation')->insert($toInsertFieldsAndValue);
 
@@ -10520,24 +10521,26 @@ namespace App\Http\Controllers;
 		public function RecommendationOneProcessFlowFDA(Request $request, $appid, $reqType = 'machines')
 		{
 			$reqType = strtolower($reqType);
+			
 			if ($request->isMethod('get')) 
 			{
 				try 
 				{
 					$data = AjaxController::getRecommendationData($appid);
+					
 					// $data1 = AjaxController::getPreAssessment($data->uid);
 					$data2 = AjaxController::getAssignedMembersInTeam4Recommendation($appid);
 					$canView = AjaxController::canViewFDAOOP($appid);
 					$chk = DB::table('appform')->where([['appid', $appid]])->first();
+
 					if($reqType == 'machines'){
 						$typeOfRequest = 'cdrrhr';
+						
 						if(isset($canView[0])){
 							$canView[0] = false;
 						}
-
 						if($chk->isRecoDecision != "Return for Correction"){
-
-						DB::table('appform')->where('appid', '=', $appid)->update(['FDAStatMach'=>'For Final Decision']);
+							DB::table('appform')->where('appid', '=', $appid)->update(['FDAStatMach'=>'For Final Decision']);
 						}
 
 					} else{
@@ -10546,16 +10549,13 @@ namespace App\Http\Controllers;
 						if(isset($canView[1])){
 							$canView[1] = false;
 						}
-
 						if($chk->isRecoDecisionPhar != "Return for Correction"){
-
 							DB::table('appform')->where('appid', '=', $appid)->update(['FDAStatPhar'=>'For Final Decision']);
-							}
+						}
 					}
-					$approveForCurrentRequest = ($reqType == 'machines' ? $data->isRecoFDA : $data->isRecoFDAPhar);
-					// $approveForCurrentRequest = ($reqType == 'machines' ? $data->isRecoFDA : 1);
-				
+					$approveForCurrentRequest = ($reqType == 'machines' ? $data->isRecoFDA : $data->isRecoFDAPhar);				
 					$hasJudge = DB::table('fdacert')->where([['appid',$appid],['department',$typeOfRequest]])->exists();
+
 					return view('employee.FDA.pfreco', ['AppData'=>$data,/*'PreAss'=>$data1, */'APPID' => $appid, 'Teams4theApplication' => $data2, 'canView' => $canView, 'canjudge' => $hasJudge, 'currentRequest' => $approveForCurrentRequest, 'request' => $reqType]);
 				} 
 				catch (Exception $e) 
@@ -10583,7 +10583,6 @@ namespace App\Http\Controllers;
 							$isok = null;
 						}
 						if($reqType == 'machines'){
-
 							
 							$data = array(
 					 			'isRecoFDA' => $isok,
@@ -10615,7 +10614,7 @@ namespace App\Http\Controllers;
 
 							$data = array(
 								'isRecoFDAPhar' => $isok,
-								// 'isRecoFDAPhar' => $request->isOk,
+								// 'isApproveFDAPharma' => $request->isOk,
 					 			'isRecoDecisionPhar' => $request->recommendation,
 					 			'RecobyFDAPhar' => $Cur_useData['cur_user'],
 					 			'RecodateFDAPhar' => $Cur_useData['date'],
@@ -10625,12 +10624,10 @@ namespace App\Http\Controllers;
 					 			'FDAstatus' => $status,
  					 		);
 
-							  if($request->recommendation == "Return for Correction"){
+							if($request->recommendation == "Return for Correction"){
 								$data["FDAStatPhar"] = "For Inspection";
-								$data["corResubmitPhar"] = 0;
-								
-							}
-							
+								$data["corResubmitPhar"] = 0;								
+							}							
 						}
 					 	
 						$test = DB::table('appform')->where('appid', '=', $request->id)->update($data);
@@ -10652,8 +10649,7 @@ namespace App\Http\Controllers;
 					return $e;
 					AjaxController::SystemLogs($e);
 					return 'ERROR';
-				}
-				
+				}				
 			}
 		}
 
@@ -10731,20 +10727,13 @@ namespace App\Http\Controllers;
 					// $data1 = AjaxController::getPreAssessment($data->uid);
 					$data2 = AjaxController::getAssignedMembersInTeam4Recommendation($appid);
 					$canView = AjaxController::canViewFDAOOP($appid);
+
 					if($reqType == 'machines'){
 						$typeOfRequest = 'cdrrhr';
-						if(isset($canView[0])){
-							$canView[0] = false;
-						}
-
-						// DB::table('appform')->where('appid', '=', $appid)->update(['FDAStatMach'=>'For Monitoring']);
+						if(isset($canView[0])){	$canView[0] = false;	}
 					} else{
 						$typeOfRequest = 'cdrr';
-						if(isset($canView[1])){
-							$canView[1] = false;
-						}
-
-						// DB::table('appform')->where('appid', '=', $appid)->update(['FDAStatPhar'=>'For Monitoring']);
+						if(isset($canView[1])){	$canView[1] = false;	}
 					}
 					$approveForCurrentRequest = ($reqType == 'machines' ? $data->isApproveFDA : $data->isApproveFDAPharma);
 					$hasJudge = DB::table('fdacert')->where([['appid',$appid],['department',$typeOfRequest]])->exists();
@@ -10820,9 +10809,6 @@ namespace App\Http\Controllers;
 							if($request->isOk == '1'){
 								$fds = "For Approval";
 							}
-
-
-
 
 							if($reqType == 'machines'){
 								$data = array(

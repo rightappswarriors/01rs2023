@@ -2097,9 +2097,7 @@ class NewClientController extends Controller {
 						->where('type', 'Initial')
 						->where('status', '1')
 						->get();
-					}
-
-				
+					}				
 
 					return view('client1.payment.defaultpayment', $arrRet);
 				}
