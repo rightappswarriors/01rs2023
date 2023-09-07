@@ -68,10 +68,10 @@
       
     <select name="fo_date_sel" id="fo_date_sel" class="form-control" style="width: 100%;"  tabindex="-1" aria-hidden="true">
         <option value="APP" @if (!isset($fo_date_sel))  selected @elseif (isset($fo_date_sel)) @if ($fo_date_sel ==  'APP' )  selected @endif @endif>Applied Dates Within</option>
-        <option value="PAY" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'PAY' )  selected @endif @endif>Payment Confirmed Dates Within</option>
+        {{-- <option value="PAY" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'PAY' )  selected @endif @endif>Payment Confirmed Dates Within</option>
         <option value="INS" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'INS' )  selected @endif @endif>Inspection/Evaluation Dates Within</option>
         <option value="REC" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'REC' )  selected @endif @endif>Recommended Dates Within</option>
-        <option value="APR" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'APR' )  selected @endif @endif>Issuance/Non Issuance Dates Within</option>
+        <option value="APR" @if (isset($fo_date_sel)) @if ($fo_date_sel ==  'APR' )  selected @endif @endif>Issuance/Non Issuance Dates Within</option>--}}
     </select> 
 
   </div>
