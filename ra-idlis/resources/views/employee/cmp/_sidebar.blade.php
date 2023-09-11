@@ -636,7 +636,6 @@
 
                         <ul id="ProFlowMenu" class="list-unstyled collapse">
 
-                            {{-- @if($employeeData->grpid != 'CS' || $employeeData->grpid != "C") --}}
 
                             <span class="PF001_allow">
 
@@ -644,7 +643,6 @@
 
                             </span>
                             
-                            {{-- @endif --}}
 
                             {{-- @if ($employeeData->grpid == 'NA' || $employeeData->grpid == "PO" || $employeeData->grpid == "FDA") --}}
 
@@ -831,11 +829,12 @@
                         <ul class="list-unstyled">
                             <ul id="FDA" class="list-unstyled collapse">
                                 {{-- machines --}}
+
                                 <li class="FDAM_allow"><a href="#machines" data-toggle="collapse">&nbsp;&nbsp;<i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Radiation facility</a>
                                 <!-- <li class="FDAM_allow"><a href="#machines" data-toggle="collapse">&nbsp;&nbsp;<i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Machines</a> -->
                                     <ul id="machines" class="list-unstyled collapse">
                                         
-                                    {{--<li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>--}}
+                                    <li><a href="{{asset('/employee/dashboard/processflow/view/FDA/machines')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Radiation Status</a></li>
 
                                         <span class="FDAMPA_allow">
 
@@ -875,7 +874,7 @@
                                 <li class="FDAP_allow"><a href="#pharma" data-toggle="collapse">&nbsp;&nbsp;<i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;Pharmacy</a>
                                     <ul id="pharma" class="list-unstyled collapse">
 
-                                    {{-- <li><a href="{{asset('/employee/dashboard/processflow/view')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>--}}
+                                    <li><a href="{{asset('/employee/dashboard/processflow/view/FDA/pharma')}}">&nbsp;&nbsp;&nbsp;&nbsp;View Application Status</a></li>
 
                                         <span class="FDAPPA_allow">
 

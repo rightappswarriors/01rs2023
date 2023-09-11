@@ -1,9 +1,18 @@
 <script src="//cdn.datatables.net/plug-ins/1.10.24/filtering/row-based/range_dates.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.0.3/js/dataTables.dateTime.min.js"></script>
+@php 
+  
+    $typeOfFDA = '';
 
+    if(isset($FDAtype))
+    {
+      $typeOfFDA = ucfirst($FDAtype);
+    }
+
+@endphp
 @if (session()->exists('employee_login'))   
   @extends('mainEmployee')
-  @section('title', 'View Process Flow')
+  @section('title', 'View '. $typeOfFDA .' Flow')
   @section('content')
  {{-- <input type="text" id="CurrentPage" hidden="" value="PF001">  --}}
 
@@ -11,10 +20,10 @@
   	<div class="card" >
    
   		<div class="card-header bg-white font-weight-bold">
-             <h3>Application Status</h3> 
+             <h3>{{$typeOfFDA}} Application Status</h3> 
       </div>
       <form class="filter-options-form">
-        @include('employee.tableDataFilter') 
+            @include('employee.FDA.FDAtableDataFilter') 
       </form>
       <div class="card-body table-responsive  backoffice-list">
         <div>   
@@ -24,24 +33,51 @@
                   <td style="text-align: center;" rowspan="2">Options</td>
                   <td style="text-align: center;" rowspan="2">Process Types &<br/> Application Code</td>
                   <td style="text-align: center;"  rowspan="2">Name, Type and Region of the Facility <br/>Applied Date and Payment Confirmation Date</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Inspection/ Evaluation</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Client Compliance</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Issuance/ Nonissuance</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">DOH Status</td>
-                  {{-- <td style="text-align:center">Evaluated</td>
-                  <td style="text-align: center;">Inspected</td>
-                  <td style="text-align: center;">Approved</td> --}}
-                  <td style="color:black;text-align:center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">FDA Pharmacy Status</td>   
-                  <td style="text-align: center;" rowspan="2">FDA Radiation Status</td>   
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" @if($FDAtype == 'all') colspan="2" @endif> Cashier Details of</td>
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" @if($FDAtype == 'all') colspan="2" @endif> Pre-Assessment Details of</td>
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Inspection Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Recommendation Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Final Decision Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Application Status of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">DOH Status</td>  
                   
               </tr>
               <tr style="font-weight:bold;">
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td  style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Pharmacy</td>
+                  @endif 
               </tr>
             </thead>
             <tbody id="FilterdBody">
@@ -50,8 +86,7 @@
                     @foreach ($LotsOfDatas as $data)
                         <tr>
                           <td>
-                            <center>
-                              
+                            <center>                              
                               <button type="button" title="View detailed information for {{$data->facilityname}}" class="btn btn-info form-control" onclick="showData({{$data->appid}},'{{$data->aptdesc}}', '{{$data->authorizedsignature}}','{{$data->brgyname}}', '{{$data->classname}}' ,'{{$data->cmname}}', '{{$data->email}}', '{{$data->facilityname}}','{{$data->hgpdesc}}', '{{$data->formattedDate}}', '{{$data->formattedTime}}', '{{$data->hfser_desc}}','{{$data->ocdesc}} - {{$data->classname}} - {{$data->subclassname}}', '{{$data->provname}}','{{$data->rgn_desc}}', '{{$data->street_name}}', '{{$data->zipcode}}', '{{$data->isrecommended}}', '{{$data->hfser_id}}', '{{$data->status}}', '{{$data->uid}}', '{{$data->trns_desc}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-eye"></i></button>
                             </center>
                           </td>
@@ -67,14 +102,116 @@
                               <br/>Region: {{( $data->rgn_desc ?? 'NO REGION')}}   
 
                               @if(isset($data->t_date))<br/><br/><I>Applied on</I> {{date("F j, Y", strtotime($data->t_date)) }} @else <br/><br/><span style="color:red;">{{ 'Not Officially Applied Yet.' }}</span> @endif 
-                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation Yet.' }}</span> @endif                    
+                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation on Pharmacy Yet.' }}</span> @endif  
+                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation on Radiation Yet.' }}</span> @endif                    
                           </td>
-                          <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
-                          <td style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
-                          <td style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 44 days')) }} @endif </td>
-                          <td style="text-align:left">@if(isset($data->formattedInspectedDate)) {{$data->formattedInspectedDate }} @endif </td>
-                          <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 56 days')) }} @endif </td>
-                          <td style="text-align:left">@if(isset($data->formattedApprovedDate)) {{$data->formattedApprovedDate }} @endif </td>
+
+                          {{-- Cashier --}}
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedCashierApproveDateFDA)) {{$data->formattedCashierApproveDateFDA}} @endif 
+                                @if(isset($data->formattedCashierApproveTimeFDA)) {{$data->formattedCashierApproveTimeFDA}}  @endif 
+                                
+                                @if(isset($data->CashierApproveByFDA)) <br/><br/> By: {{$data->CashierApproveByFDA}} @endif 
+                                @if(isset($data->CashierApproveIpFDA)) <br/> IP Addr: {{$data->CashierApproveIpFDA}} @endif
+                              </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedCashierApproveDatePharma)) {{$data->formattedCashierApproveDatePharma}} @endif 
+                                @if(isset($data->formattedCashierApproveTimePharma)) {{$data->formattedCashierApproveTimePharma}} @endif 
+                                
+                                @if(isset($data->CashierApproveByPharma)) <br/><br/> By: {{$data->CashierApproveByPharma}} @endif 
+                                @if(isset($data->CashierApproveIpPharma)) <br/> IP Addr: {{$data->CashierApproveIpPharma}} @endif
+                              </td>
+                          @endif 
+                          
+                          {{-- Pre-Assessment --}}
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedIsPreassessedDate)) {{$data->formattedIsPreassessedDate}} @endif 
+                                @if(isset($data->formattedIsPreassessedTime)) {{$data->formattedIsPreassessedTime}}  @endif 
+                                
+                                @if(isset($data->ispreassessedby)) <br/><br/> By: {{$data->ispreassessedby}} @endif 
+                                @if(isset($data->ispreassessedip)) <br/> IP Addr: {{$data->ispreassessedip}} @endif
+                              </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedIsPreassessedDatePharma)) {{$data->formattedIsPreassessedDatePharma}} @endif 
+                                @if(isset($data->formattedIsPreassessedTimePharma)) {{$data->formattedIsPreassessedTimePharma}} @endif 
+                                
+                                @if(isset($data->ispreassessedbypharma)) <br/><br/> By: {{$data->ispreassessedbypharma}} @endif 
+                                @if(isset($data->ispreassessedippharma)) <br/> IP Addr: {{$data->ispreassessedippharma}} @endif
+                              </td>
+                          @endif 
+                          
+                          {{-- Inspection  --}}
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedRecommendedDateFDA)) {{$data->formattedRecommendedDateFDA}} @endif 
+                                @if(isset($data->formattedRecommendedTimeFDA)) {{$data->formattedRecommendedTimeFDA}}  @endif 
+                                
+                                @if(isset($data->recommendedbyFDA)) <br/><br/> By: {{$data->recommendedbyFDA}} @endif 
+                                @if(isset($data->recommendedippaddrFDA)) <br/> IP Addr: {{$data->recommendedippaddrFDA}} @endif
+                              </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedRecommendedDateFDAPharma)) {{$data->formattedRecommendedDateFDAPharma}} @endif 
+                                @if(isset($data->formattedRecommendedTimeFDAPharma)) {{$data->formattedRecommendedTimeFDAPharma}} @endif 
+                                
+                                @if(isset($data->recommendedbyFDAPharma)) <br/><br/> By: {{$data->recommendedbyFDAPharma}} @endif 
+                                @if(isset($data->recommendedippaddrFDAPharma)) <br/> IP Addr: {{$data->recommendedippaddrFDAPharma}} @endif
+                              </td>
+                          @endif 
+
+                          {{-- Recommendation  --}}
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedRecoDateFDA)) {{$data->formattedRecoDateFDA}} @endif 
+                                @if(isset($data->formattedRecoTimeFDA)) {{$data->formattedRecoTimeFDA}}  @endif 
+                                
+                                @if(isset($data->RecobyFDA)) <br/><br/> By: {{$data->RecobyFDA}} @endif 
+                                @if(isset($data->RecoippaddrFDA)) <br/> IP Addr: {{$data->RecoippaddrFDA}} @endif
+                              </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedRecoDateFDAPhar)) {{$data->formattedRecoDateFDAPhar}} @endif 
+                                @if(isset($data->formattedRecoTimeFDAPhar)) {{$data->formattedRecoTimeFDAPhar}} @endif 
+                                
+                                @if(isset($data->RecobyFDAPhar)) <br/><br/> By: {{$data->RecobyFDAPhar}} @endif 
+                                @if(isset($data->RecoippaddrFDAPhar)) <br/> IP Addr: {{$data->RecoippaddrFDAPhar}} @endif
+                              </td>
+                          @endif 
+
+                          {{-- Final Decision --}}
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedApprovedDateFDA)) {{$data->formattedApprovedDateFDA}} @endif 
+                                @if(isset($data->formattedApprovedTimeFDA)) {{$data->formattedApprovedTimeFDA}}  @endif 
+                                
+                                @if(isset($data->approvedByFDA)) <br/><br/> By: {{$data->approvedByFDA}} @endif 
+                                @if(isset($data->approvedIpAddFDA)) <br/> IP Addr: {{$data->approvedIpAddFDA}} @endif
+                              </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                              <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"> 
+                                @if(isset($data->formattedApprovedDateFDAPharma)) {{$data->formattedApprovedDateFDAPharma}} @endif 
+                                @if(isset($data->formattedApprovedTimeFDAPharma)) {{$data->formattedApprovedTimeFDAPharma}} @endif 
+                                
+                                @if(isset($data->approvedByFDAPharma)) <br/><br/> By: {{$data->approvedByFDAPharma}} @endif 
+                                @if(isset($data->approvedIpAddFDAPharma)) <br/> IP Addr: {{$data->approvedIpAddFDAPharma}} @endif
+                              </td>
+                          @endif 
+
+
+                          @if($FDAtype != 'all' && $FDAtype == 'machines')
+                            <td style="color:black;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">
+                              {{$data->FDAStatMach}}
+                            </td>
+                          @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                            <td style="text-align:center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">
+                              {{$data->FDAStatPhar}}
+                            </td>
+                          @endif 
+
                           <td style="color:black;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">
                               @if(isset($data->trns_desc))
                                   <span style="font-weight:bolder;">{{$data->trns_desc}} </span><br/>                             
@@ -94,46 +231,10 @@
                               @if(isset($data->asrgn_desc)) 
                                 Assigned to <span style="color:blue">{{$data->asrgn_desc}}</span><br/>
                               @endif
+
+                              @if(isset($data->formattedInspectedDate)) Inspected On {{$data->formattedInspectedDate}} <br/>@endif 
+                              @if(isset($data->formattedApprovedDate)) Approved/Disapproved On {{$data->formattedApprovedDate }} <br/> @endif 
                           </td>
-                          {{-- <td>
-                            <center> 
-                              <h5>
-                                @if($data->isrecommended == 1) 
-                                <span class="badge  badge-success" title="Click for more info" style="cursor:pointer;" data-toggle="modal" data-target="#ShowEvalInfo" onclick="showEvalInfo('{{$data->formattedTimeEval}}', '{{$data->formattedDateEval}}', '{{$data->formattedTimePropEval}}', '{{$data->formattedDatePropEval}}', '{{$data->recommendedbyName}}', '{{$data->hfser_id}}R{{$data->rgnid}}-{{$data->appid}}', {{$data->appid}})">Yes</span> 
-                                @elseif($data->isrecommended == null) 
-                                  <span class="badge badge-warning">Pending</span> 
-                                @else 
-                                  <span class="badge badge-danger">No</span> 
-                                @endif
-                              </h5>
-                            </center>
-                          </td>
-                          <td>
-                            <center>
-                              <h5>
-                                @if ($data->isInspected != null)
-                                  <span class="badge badge-success">Yes</span>
-                                @else 
-                                  <span class="badge badge-warning">{{$data->hfser_id == 'CON' ? 'N/A' : 'Pending'}}</span>
-                                @endif
-                              </h5>
-                            </center>
-                          </td>
-                          <td>
-                            <center> 
-                              <h5>
-                                @if ($data->isApprove == '1')
-                                  <span class="badge badge-success">Yes</span>
-                                @elseif($data->isApprove == '0')
-                                  <span class="badge badge-danger">No</span>
-                                @else
-                                  <span class="badge badge-warning">Pending</span>
-                                @endif
-                              </h5>
-                            </center>
-                          </td>  --}}
-                          <td style="color:black;text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">{{$data->FDAStatMach}}</td>
-                          <td style="text-align:left">{{$data->FDAStatPhar}}</td>
                         </tr>
 
                     @endforeach
@@ -146,28 +247,55 @@
             </tbody>
 
             <tfoot>
-              <tr style="font-weight:bold;">
+            <tr style="font-weight:bold;">
                   <td style="text-align: center;" rowspan="2">Options</td>
                   <td style="text-align: center;" rowspan="2">Process Types &<br/> Application Code</td>
                   <td style="text-align: center;"  rowspan="2">Name, Type and Region of the Facility <br/>Applied Date and Payment Confirmation Date</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Inspection/ Evaluation</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Client Compliance</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" colspan="2"> Issuance/ Nonissuance</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">DOH Status</td>
-                  {{-- <td style="text-align:center">Evaluated</td>
-                  <td style="text-align: center;">Inspected</td>
-                  <td style="text-align: center;">Approved</td> --}}
-                  <td style="color:black;text-align:center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">FDA Pharmacy Status</td>   
-                  <td style="text-align: center;" rowspan="2">FDA Radiation Status</td>                
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" @if($FDAtype == 'all') colspan="2" @endif> Cashier Details of</td>
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;" @if($FDAtype == 'all') colspan="2" @endif> Pre-Assessment Details of</td>
+                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Inspection Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Recommendation Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Final Decision Details of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;"  @if($FDAtype == 'all') colspan="2" @endif> Application Status of</td>
+                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;" rowspan="2">DOH Status</td>  
                   
               </tr>
               <tr style="font-weight:bold;">
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
-                  <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
-                  <td style="text-align: center;border-left: darkgray;border-left-width: thin;border-left-style: solid;">Target Last Day</td>
-                  <td style="text-align: center;">Actual Date</td>
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif 
+
+                  @if($FDAtype != 'all' && $FDAtype == 'machines')
+                      <td style="text-align: center; border-left: darkgray;border-left-width: thin;border-left-style: solid;">Radiation</td>
+                  @endif @if($FDAtype != 'all' && $FDAtype == 'pharma')
+                      <td style="text-align: center;">Pharmacy</td>
+                  @endif 
               </tr>
             </tfoot>
           </table>

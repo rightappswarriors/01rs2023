@@ -39,32 +39,36 @@
 				<div class="row">
 					
 					<div class="_forIntro col-lg-6">
-			          {{-- <div class="card flex-lg-row mb-4 box-shadow h-lg-250" style="border-radius: 1rem; box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);">
-			            <div class="card-body d-flex flex-column align-items-start">
-			              <h3 class="mb-0">
-			                <a class="text-primary" href="{{asset('/client1/apply')}}"><u>Application</u></a>
-			              </h3>
-			              <div class="mb-1 text-muted">Last applied: N/A </div>
-			              <p class="card-text mb-auto">Fill-in application form and submit requirements online.</p>
-			            </div>
-			            <img class="card-img-left flex-auto d-none d-lg-block" data-src="Payment" alt="Payment" style="width: 200px; height: 250px; object-fit: cover;border-radius: 0px 1rem 1rem 0px;" src="{{asset('ra-idlis/public/img/apply.jpg')}}" data-holder-rendered="true">
-			          </div> --}}
 			          <div class="media blog-thumb">
                               <div class="media-object media-left">
-                                   <a href="{{asset('/client1/apply')}}"><img src="{{asset('ra-idlis/public/img/laptop-typer.gif')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 300px;" class="img-responsive" alt=""></a>
+                                   <a href="{{asset('/client1/apply')}}"><img src="{{asset('ra-idlis/public/img/laptop-typer.gif')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 250px;" class="img-responsive" alt=""></a>
                               </div>
                               <div class="media-body blog-info">
                                    <small><i class="fa fa-clock-o"></i>Last applied: N/A</small>
                                    <h3><a style="color: #252525;font-weight: normal;transition: 0.5s; text-decoration: none !important;" href="{{asset('/client1/apply')}}">Application</a></h3>
                                    <p>Fill-in application form and submit requirements online.</p>
                                    <div class="text-center">                                   	
-                                   <a href="{{asset('/client1/apply')}}" class="btn section-btn">Apply Now!</a>
+                                   		<a href="{{asset('/client1/apply')}}" class="btn section-btn">Apply Now!</a>
                                    </div>
                               </div>
                          </div>
 			        </div>
-					{{-- <div class="_forIntro col-lg-6">
-			        </div> --}}
+
+					<div class="_forIntro col-lg-6">
+			          <div class="media blog-thumb">
+                              <div class="media-object media-left">
+                                   <a href="{{asset('/client1/messages')}}"><img src="{{asset('ra-idlis/public/img/message.gif')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 250px;" class="img-responsive" alt=""></a>
+                              </div>
+                              <div class="media-body blog-info">
+                                   <small><i class="fa fa-clock-o"></i> History</small>
+                                   <h3><a style="color: #252525;font-weight: normal;transition: 0.5s; text-decoration: none !important;" href="{{asset('/client1/messages')}}">Messages</a></h3>
+                                   <p>Notifications Messages</p>
+                                   <div class="text-center">                                   	
+                                   		<a href="{{asset('/client1/messages')}}" class="btn section-btn">Check Here.</a>
+                                   </div>
+                              </div>
+                         </div>
+			        </div>
 
 					{{-- Display past applications  --}}
 			        <div class="_forIntro col-lg-6" style="display:none;">
@@ -97,6 +101,8 @@
 					
 			    </div>
 			</div>
+
+			
 		</div>
 	</div>
 			<div class="row" style="background: #fff; border-radius: 10px;padding: 25px;">

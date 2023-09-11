@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Cache;
 use FunctionsClientController;
 use DOHController;
 use AjaxController;
+use App\Http\Controllers\AjaxController as ControllersAjaxController;
 use App\Models\FACLGroup;
 use App\Models\HFACIGroup;
 use App\Models\Regions;
@@ -222,6 +223,29 @@ class NewClientController extends Controller {
 		} catch(Exception $e) {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
 		}
+	}
+
+	public function __msg_inbox(Request $request) {
+		//try {
+			$cSes = FunctionsClientController::checkSession(true);
+			$user = FunctionsClientController::getUser();
+			$request->request->add(['uid' => $user->uid]); 
+
+			if(count($cSes) > 0) {
+				return redirect($cSes[0])->with($cSes[1], $cSes[2]);
+			}
+
+			$msg_arr = AjaxController::getNotificationMessage($request);
+			//dd($msg_arr );
+			$arrRet = [
+				'msg_arr'=> $msg_arr ,
+				'userInf'=>FunctionsClientController::getUserDetails()
+			];
+
+			return view('client1.messages.inbox', $arrRet);
+		/*} catch(Exception $e) {
+			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
+		}*/
 	}
 
 	public function __complianceDetails(Request $request, $appid) {
