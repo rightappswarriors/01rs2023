@@ -3,7 +3,7 @@
 
 @if (session()->exists('employee_login'))   
   @extends('mainEmployee')
-  @section('title', 'Archiving')
+  @section('title', 'Archive Facility')
   @section('content')
   <input type="text" id="CurrentPage" hidden="" value="PF001">
 
@@ -42,7 +42,7 @@
                     <tr>
                       <td>
                         <center>
-                          <a href="{{asset('employee/dashboard/processflow/archive/')}}/{{$data->regfac_id}}" title="View detailed information for {{$data->facilityname}}" class="btn btn-outline-info form-control"><i class="fa fa-fw fa-folder"></i></a>
+                          <a href="{{asset('employee/processflow/archive/')}}/{{$data->regfac_id}}" title="View detailed information for {{$data->facilityname}}" class="btn btn-outline-info form-control"><i class="fa fa-fw fa-folder"></i></a>
                         </center>
                       </td>
                       <td style="text-align:center">{{$data->nhfcode}}</td>

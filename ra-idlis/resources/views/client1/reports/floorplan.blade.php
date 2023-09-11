@@ -192,7 +192,7 @@
       <div class="container w-auto" style="margin-top: 30px; font-size: 20px;">
       	<span >Comments:</span><br><br>
       	<div class="container w-auto border border-secondary rounded" style="height: 300px; overflow-y: hidden; ">
-      		{{$evaluation->HFERC_comments}}
+      		@php echo nl2br($evaluation->HFERC_comments); @endphp
 		</div>
       </div>
       <div class="container text-center" style="margin-top: 50px; font-size: 20px;">

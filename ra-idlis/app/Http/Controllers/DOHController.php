@@ -4025,8 +4025,54 @@ namespace App\Http\Controllers;
 			else 
 			{
 				return redirect()->route('employee');
+			}			
+		}
+
+		////// VIEW ALL
+		public function ViewProcessFlowFDA(Request $request,$filter = 'machines')
+		{
+			if(session()->has('employee_login'))
+			{
+				try 
+				{
+					$arrType = array();
+					$filter = AjaxController::isRequestForFDA($filter);
+	
+					if($filter == 'machines')
+					{
+						$data = SELF::application_filter($request, 'view_fda_status_summary');
+					}
+					elseif($filter == 'pharma')
+					{
+						$data = SELF::application_filter($request, 'view_fda_status_summary_pharma');
+					}
+					else{
+						$data = SELF::application_filter($request, 'view_fda_status_summary');
+					}					
+					
+					if(!$filter){
+						$allType = DB::table('hfaci_serv_type')->select('hfser_id')->get();
+
+						foreach ($allType as $key) {
+							array_push($arrType, $key->hfser_id);
+						}
+					} else {
+						array_push($arrType, strtoupper($filter));
+					}
+
+					return view('employee.FDA.viewprocessflowFDA', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo'], 'serv' => $arrType, 'FDAtype' => $filter]);
+				} 
+				catch (Exception $e) 
+				{
+					AjaxController::SystemLogs($e);
+					session()->flash('system_error','ERROR');
+					return view('employee.processflow.viewprocessflow');
+				}
 			}
-			
+			else 
+			{
+				return redirect()->route('employee');
+			}			
 		}
 
 		public function Applist(Request $request, $filter = false)
@@ -4105,7 +4151,7 @@ namespace App\Http\Controllers;
 			}		
 		}
 
-		public function ArchiveOne(Request $request)
+		public function ArchiveOne(Request $request, $regfac_id=null)
 		{
 			if(session()->has('employee_login'))
 			{
@@ -4116,7 +4162,7 @@ namespace App\Http\Controllers;
 						$arrType = array();
 						$data = SELF::application_filter($request, 'view_registered_facility');
 						
-						return view('employee.archive.archive', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
+						return view('employee.archive.archiveone', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
 					} 
 					catch (Exception $e) 
 					{
@@ -4124,6 +4170,9 @@ namespace App\Http\Controllers;
 						session()->flash('system_error','ERROR');
 						return view('employee.archive.archive');
 					}
+				} else 
+				{
+
 				}
 			}
 			else 
@@ -4301,7 +4350,6 @@ namespace App\Http\Controllers;
 					$data10 = $data10->addDays(30);
 					$data8 = $data8->addDays(1);
 					// $temp = $data8->toDateString();	
-
 					do {
 						if ($data8->isWeekday()) { // true
 							$temp = $data8->toDateString();
@@ -4427,7 +4475,8 @@ namespace App\Http\Controllers;
 							return redirect('employee/dashboard/processflow/evaluate/'.$appid);
 						}
 
-						if(empty($request->checkFiles)){
+						if(empty($request->checkFiles))
+						{
 							$addedby = session()->get('employee_login');
 							$dt = Carbon::now();
 							$dateNow = $dt->toDateString();
@@ -4445,17 +4494,17 @@ namespace App\Http\Controllers;
 									$test = DB::table('app_upload')->where('apup_id', '=', $request->ids[$i])->update($updateData);
 								}
 							}
-
 							AjaxController::setAppForm_UpdatedDate($appid);
 							
 							return ($test ? 'DONE' : 'ERROR');
-						} else {
+						} else 
+						{
 							$test = DB::table('appform')->where('appid',$appid)->update(['documentSent' => Carbon::now()->toDateString()]);
+
 							if($test){
 								$uid = AjaxController::getUidFrom($appid);
 								AjaxController::notifyClient($appid,$uid,23);
-							}
-							
+							}							
 							AjaxController::setAppForm_UpdatedDate($appid);
 							return $test;
 						}
@@ -10011,8 +10060,7 @@ namespace App\Http\Controllers;
 				$otherDetails = [];
 				
 				try 
-				{
-					
+				{					
 					switch ($data->hfser_id) {
 						case 'PTC':
 							$otherDetails = DB::table('hferc_evaluation')->leftJoin('x08','x08.uid','hferc_evaluation.HFERC_evalBy')->where([['appid',$appid]])->orderBy('hferc_evaluation.revision', 'desc')->first();
@@ -10074,7 +10122,7 @@ namespace App\Http\Controllers;
 							{
 								if(is_null($hfserCheck->requestReeval))
 								{
-									$update['status'] = 'RDA';
+									$update['status'] = 'FRDD'; //  RDA
 								}
 								else
 								{
@@ -10083,7 +10131,7 @@ namespace App\Http\Controllers;
 							}
 							else
 							{
-								$update['status'] = 'RDA';
+								$update['status'] = 'FRDD'; //  RDA
 							}							
 						}
 

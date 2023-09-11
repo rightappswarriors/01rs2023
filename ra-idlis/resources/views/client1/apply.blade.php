@@ -272,7 +272,7 @@
 													
 													@if($each[0]->isRecoForApproval === 0 && $each[0]->requestReeval === null)									
 														<div style="margin-left: 10px;margin-right: 10px;">
-															<a class="dropdown-item ddi bg-warning" style="border-radius: 3px;" onclick="requestReEval('{!! $each[0]->appid !!}')"  href="#">Request for re-evaluation</a>
+															<a class="dropdown-item ddi bg-warning" style="border-radius: 3px;" onclick="requestReEval('{!! $each[0]->appid !!}')" href="#">Request for re-evaluation</a>
 														</div>
 														<div class="dropdown-divider"></div>
 													@endif
@@ -299,6 +299,17 @@
 														<div style="margin-left: 10px;margin-right: 10px;">
 															<a  href="{{asset('client1/printPayment')}}/{{FunctionsClientController::getToken()}}/{{$each[0]->appid}}" class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')" href="#">View Order of Payment on DOH </a>
 														</div>
+													@endif
+
+													@php $evaluationResult = AjaxController::maxRevisionFor($each[0]->appid,['revision',1], 1);  @endphp
+
+													@if(isset($evaluationResult))
+														@if(isset($evaluationResult->HFERC_eval))
+															<div class="dropdown-divider"></div>							
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app/showResult/floorplan')}}/{{$each[0]->appid}}" >View Floor Plan Evaluation Result</a>
+															</div>
+														@endif
 													@endif
 
 												@break

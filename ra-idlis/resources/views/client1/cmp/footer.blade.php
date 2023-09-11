@@ -155,7 +155,6 @@
         data['data'].forEach( function(element, index) {
           stringToAppend += '<a style="border-top: 1px solid rgba(0, 0, 0, 0.1);font-size: 75%;padding: 1.125rem 4rem 0.75rem 2rem;white-space:normal;" href="'+element['adjustedlink']+'" class="dropdown-item">'+element['msg_desc'] +' | '+ element['adjustedmonth']+'</a>';
         });
-
       }
     })
     stringToAppend += '</div>';

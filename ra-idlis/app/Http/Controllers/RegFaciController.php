@@ -1,10 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Mail;
+use Session;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use AjaxController;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\EvaluationController;
+use Illuminate\Support\Facades\Cache;
+use FunctionsClientController;
+use DOHController;
+use App\Models\FACLGroup;
+use App\Models\HFACIGroup;
+use App\Models\Regions;
+
+use QrCode;
+use stdClass;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
@@ -284,13 +303,16 @@ class RegFaciController extends AjaxController
 					array_push($faclArr, $f->hgpid);
 				}
 				// return view('employee.masterfile.registeredfacility',['data'=>$data]);	
-				return view('employee.masterfile.registeredfacility',['data'=>$data,
+				return view('employee.masterfile.registeredfacility',
+				['data'=>$data,
 					'regions'   => Regions::orderBy('sort')->get(),
 					'factype' =>$factype,   
 					'hfaci_service_type'    => HFACIGroup::whereIn('hgpid', $faclArr)->get(), 
 					'function' => DB::table('funcapf')->get(),
 					'_aptid' => ' ',
 					'serv_cap' => json_encode(DB::table('facilitytyp')->where('servtype_id', 1)->get()),
+					'pg_title' => 'Facility Profile',
+					'fo_action' => '0',
 				]);	
 			} 
 			catch (Exception $e) 

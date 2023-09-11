@@ -524,8 +524,7 @@
 					}
 				}
 
-				return json_encode(array('unread' => $unread,'data' =>$notif, 'totalNotif' => count($notif)));
-				
+				return json_encode(array('unread' => $unread,'data' =>$notif, 'totalNotif' => count($notif)));				
 			} 
 			catch (Exception $e) 
 			{
@@ -533,6 +532,56 @@
 				return 'ERROR';
 			}
 		}
+
+		public static function getNotificationMessage(Request $request)
+		{
+			try 
+			{
+				$qwe = [];
+				$alteredLink = null; $msg_desc = null;
+				$SelectedUser = AjaxController::getCurrentUserAllData();
+				$totalNotif = $unread = 0;
+				$notif = DB::table('notificiationlog')->leftJoin('notification_msg','notification_msg.msg_code','notificiationlog.msg_code')->where('uid',$request->uid)->orderBy('notifdatetime','DESC');
+				$notif = (isset($request->notIncluded) ? $notif->whereNotIn('notfid',$request->notIncluded) : $notif->get());
+				
+				if(count($notif) > 0){
+					$totalNotif = count($notif);
+					foreach ($notif as $key => $value) {
+
+						$notif[$key]->adjustedmonth = Carbon::parse($value->notifdatetime)->diffForHumans();
+						$msg_desc = str_replace('{appid}', $value->appid, $value->msg_desc);						
+						$notif[$key]->msg_desc = $msg_desc;
+
+						if($value->needappid > 0){
+
+							$alteredLink = str_replace('{appid}', $value->appid, $value->msg_loc);
+
+							if(strpos($alteredLink, '{token}') !== false){
+								$alteredLink = str_replace('{token}', FunctionsClientController::getToken(), $alteredLink);
+							}
+							if(strpos($alteredLink, '{uid}') !== false){
+								$alteredLink = str_replace('{uid}', $value->uid , $alteredLink);
+							}
+							$notif[$key]->adjustedlink = asset($alteredLink);
+						} else {
+							$notif[$key]->adjustedlink = asset($value->msg_loc);
+						}						
+
+						if($value->status == 0){
+							$unread +=1;
+						}
+					}
+				}
+
+				return array('unread' => $unread,'data' =>$notif, 'totalNotif' => count($notif));				
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());				
+				return 'ERROR';
+			}
+		}
+
 		public static function updateNotification(Request $request){
 			$returnToSender = DB::table('notificiationlog')->where('uid',$request->uid)->update(['status' => 1]);
 			return ($returnToSender ? 'done' : 'error');
@@ -638,7 +687,8 @@
 			try 
 			{
 				$SelectedUser = AjaxController::getCurrentUserAllData();
-				$data = DB::table('notificiationlog')->where('uid', '=', $SelectedUser['cur_user'])->orderBy('notfdate', 'desc')->orderBy('notftime', 'desc')->get();
+				$data = DB::table('notificiationlog')->where('uid', '=', $SelectedUser['cur_user'])->orderBy('notifdatetime', 'desc')->toSQL();
+				dd($data);
 				if (count($data) > 0) 
 				{
 					for ($i=0; $i < count($data); $i++) 

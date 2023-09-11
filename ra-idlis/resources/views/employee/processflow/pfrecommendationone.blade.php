@@ -841,13 +841,15 @@
           </div>
         </div>
 
+        <?php  ?>
+
 
         <?php $forrecommendation=false; ?>        
         <hr>
         <div class="container">
         @isset($AppData) 
             @if( $apdat->hfser_id == 'PTC' )
-                @if($otherDetails->HFERC_eval == null) 
+                 @if(!isset($AppData->isRecoForApproval))
 
                   <?php $forrecommendation=true; ?>
 

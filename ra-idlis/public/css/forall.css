@@ -110,7 +110,7 @@ body {/*
     border-radius: 1rem;
     text-align: left;
     margin-bottom: 30px;
-    height: 300px;
+    height: 250px;
   }
 
   .media.blog-thumb .media-left {
@@ -137,7 +137,7 @@ body {/*
   }
 
   .blog-info {
-    padding: 57px 25px;
+    padding: 35px 25px;
   }
 
   .blog-info h3 {
@@ -149,12 +149,11 @@ body {/*
   .blog-info .section-btn {
     background: #f0f0f0;
     color: #393939;
-    margin-top: 20px;
+    margin-top: 5px;
   }
 
    .blog-info .section-btn:hover {
     background: #28a745;  /* fallback for old browsers */
-    
     color: #ffffff;
   }
 
