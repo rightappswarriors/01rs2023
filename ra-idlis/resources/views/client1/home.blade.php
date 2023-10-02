@@ -6,6 +6,9 @@
 	@include('client1.cmp.breadcrumb')
 	@include('client1.cmp.msg')
 
+
+	@include('client1.cmp.announcement')
+
 	<style type="text/css">
 		#style-15::-webkit-scrollbar-track
 		{

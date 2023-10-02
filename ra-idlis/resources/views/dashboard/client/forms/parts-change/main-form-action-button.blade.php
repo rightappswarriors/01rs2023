@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group col-md-3">
-        <a class="btn btn-block btn-primary btn-flat" type="button"  href="{{asset('/client1/regfacility/reg_annexb/')}}/" >
+        <a class="btn btn-block btn-primary btn-flat" type="button"  href="{{asset('/client1/regfacility/reg_annexb/')}}/{{$registered_facility->regfac_id}}" >
             <i class="fa fa-edit" aria-hidden="true"></i> Equipment
         </a>
     </div>

@@ -112,7 +112,7 @@ Route::prefix('client1')->group(function() {
 		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__apply')->name('client1.apply');
 		Route::match(['get', 'post'], '/change_request/{hfser}/{appid}', 'NewClientController@__editAppCoR');  //not use
-		Route::match(['get', 'post'], '/change_request_new/{reg_fac_id}/{functype}', 'NewClientController@q');  //functype default value is main
+		Route::match(['get', 'post'], '/change_request_new/{reg_fac_id}/{functype}', 'NewClientController@__editAppCoRNew');  //functype default value is main
 		Route::match(['get', 'post'], '/change_request_submit', 'NewClientController@__editAppCoRSubmit');   //submitted bed capacity
 		Route::match(['get', 'post'], '/new', 'NewClientController@__applyNew')->name('client1.applynew');
 		Route::match(['get', 'post'], '/assessmentSend/{appid}/{apptype}', 'NewClientController@AssessmentSend');
@@ -318,12 +318,21 @@ Route::post('employee/mf/getEmployeeWithoutTeam', 'AjaxController@getEmployeeWit
 Route::post('employee/mf/getMembersInTeam', 'AjaxController@getMembersInTeam'); // Get members using x08
 Route::post('employee/mf/getMembersInTeam/neww', 'AjaxController@getMembersInTeamNew'); // Get members using x08
 Route::match(['get', 'post'], 'employee/dashboard/mf/manage/teams', 'DOHController@MfManageTeam'); // Main, Add
+
+// Client Announcement
+Route::match(['get', 'post'], 'employee/dashboard/mf/clientannouncement', 'DOHController@ClientAnnouncement'); // Main, Add
+Route::post('employee/mf/save_clientannouncement', 'AjaxController@saveClientAnnouncement'); // Update
+Route::post('employee/mf/del_clientannouncement', 'AjaxController@delClientAnnouncement'); // Delete
+
 // Application Type
 Route::match(['get', 'post'], 'employee/dashboard/mf/apptype', 'DOHController@AppType'); // Main, Add
-Route::match(['get', 'post'], 'employee/dashboard/mf/registered/facility', 'RegFaciController@mfRegFacilities'); // Main, Add
-Route::match(['get', 'post'], 'employee/dashboard/mf/licenseValidity', 'DOHController@licenseValidity'); // application license validity
 Route::post('employee/mf/save_apptype', 'AjaxController@saveAppType'); // Update
 Route::post('employee/mf/del_apptype', 'AjaxController@delAppType'); // Delete
+
+// Registered Facilities
+Route::match(['get', 'post'], 'employee/dashboard/mf/registered/facility', 'RegFaciController@mfRegFacilities'); // Main, Add
+//License Validity
+Route::match(['get', 'post'], 'employee/dashboard/mf/licenseValidity', 'DOHController@licenseValidity'); // application license validity
 // other ancillary
 Route::match(['get', 'post'], 'employee/dashboard/mf/servicetype', 'DOHController@ancilliary'); // Main, Add
 Route::match(['get', 'post'], 'employee/dashboard/mf/applylocation', 'DOHController@apploc'); // apply location
@@ -560,8 +569,6 @@ Route::match(['get', 'post'], 'employee/dashboard/processflow/view/FDA/{request?
 Route::match(['get', 'post'],  'employee/dashboard/mf/FDA/pharma_charges', 'DOHController@fdapharma'); // Main, Add
 Route::match(['get', 'post'],  'employee/dashboard/processflow/evaluate', 'DOHController@EvaluateProcessFlow'); // View All
 Route::match(['get', 'post'],  'employee/dashboard/processflow/evaluate/technical', 'DOHController@EvaluateProcessFlowTechnical'); // View All
-Route::match(['get', 'post'],  'employee/dashboard/processflow/archive', 'DOHController@Archive'); // View All
-Route::match(['get', 'post'],  'employee/dashboard/processflow/archive/{regfac_id}', 'DOHController@ArchiveOne'); // View All
 
 // View All // FDA 
 Route::match(['get', 'post'],  'employee/dashboard/processflow/pre-assessment/FDA/{request?}', 'DOHController@pre_assessmentFDA'); 
@@ -1050,6 +1057,21 @@ Route::prefix('employee/reports')->group(function() {
 		Route::match(['get', 'post'], 'byregisteredfacilities', 'ReportsController@ndhrhis_byregisteredfacilities');
 	});
 });
+
+// View All
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archive', 'DOHController@Archive'); 
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archive/{regfac_id}', 'DOHController@ArchiveOne'); 
+
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/annexa', 'DOHController@Archive'); 
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/annexa/{regfac_id}', 'ReportsController@annexa_list'); 
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/notification/{clientuserid?}/{regfac_id?}', 'DOHController@__clientnotification_msg'); 
+
+Route::prefix('employee/dashboard/facilityrecords')->group(function() {
+
+	Route::match(['get', 'post'], '/', 'DOHController@listOf_Registeredfacilities');
+	Route::match(['get', 'post'], '/{regfac_id}', 'DOHController@Registeredfacilities_Form');
+});
+
 
 Route::prefix('employee/regfacility')->group(function() {
 

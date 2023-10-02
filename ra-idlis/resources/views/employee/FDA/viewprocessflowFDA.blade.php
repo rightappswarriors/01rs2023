@@ -101,9 +101,7 @@
                               <br/>Ownership: {{( $data->ocdesc ?? 'NOT FOUND')}}      
                               <br/>Region: {{( $data->rgn_desc ?? 'NO REGION')}}   
 
-                              @if(isset($data->t_date))<br/><br/><I>Applied on</I> {{date("F j, Y", strtotime($data->t_date)) }} @else <br/><br/><span style="color:red;">{{ 'Not Officially Applied Yet.' }}</span> @endif 
-                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation on Pharmacy Yet.' }}</span> @endif  
-                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation on Radiation Yet.' }}</span> @endif                    
+                              @if(isset($data->t_date))<br/><br/><I>Applied on</I> {{date("F j, Y", strtotime($data->t_date)) }} @else <br/><br/><span style="color:red;">{{ 'Not Officially Applied Yet.' }}</span> @endif                    
                           </td>
 
                           {{-- Cashier --}}

@@ -113,8 +113,6 @@
             @endisset
           </tbody>
         </table>
-        @isset($AppData)
-        @if(isset($proofpaystat))
           @if($proofpaystat != "posted")
         <br>
         <hr>
@@ -129,8 +127,6 @@
           </center>
         </div>
         @endif
-        @endif
-        @endisset
       </div>
       </div>
     </div>

@@ -194,12 +194,15 @@
 <body onload="chkbrowser()">
 
 
+
 <div id="msgbrowser"  class="text-center text-justify alert alert-info alert-dismissible">
 	<h4><i class="icon fa fa-info"></i>&nbsp;&nbsp;&nbsp;Important Notice! </h4> <br/>
 	You are required to use the <strong><a href="https://www.google.com/chrome/">GOOGLE CHROME</a></strong> Browser to <strong>access</strong> this system.
 	<br/><br/>
 	<p>If you have no chrome browser, please click this <a href="https://www.google.com/chrome/">link</a> to download.</p>
 </div>
+
+
 
   {{csrf_field()}}
   @include('client1.cmp.msg')
@@ -219,6 +222,9 @@
         {{-- <img src="{{asset('ra-idlis/public/img/doh2.png')}}" style="width: 100%; max-height: 120px; object-fit: contain;"> --}}
       </div>
     </div>
+    
+  @include('client1.cmp.announcement')
+
     <div class="row">
       <div id="now_Append" class="col-sm-12 col-md-9 col-lg-7 mx-auto">
           <!--first section-->
