@@ -38,6 +38,7 @@
 	@include('client1.cmp.nav')
 	@include('client1.cmp.breadcrumb')
 	@include('client1.cmp.msg')
+	@include('client1.cmp.announcement')
 	<div class="container mb-2">
 			<div class="row">
 				<div class="col-sm-4">
@@ -60,13 +61,13 @@
 						Create New Application
 					</button>
 					@endif
-					@if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)
+					{{--@if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)--}}
 						
 						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
 							Create Renewal Application
 						</button>
 									
-					@endif
+						{{--@endif--}}
 					@if($late_renewal_period_1 <= $todays_date &&  $late_renewal_period_2 >= $todays_date)
 						
 						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >

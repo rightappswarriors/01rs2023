@@ -12,9 +12,6 @@
 	@include('client1.cmp.msg')
 	@include('client1.cmp.__wizard')
 	
-	
-	
-	
 	<div class="container mt-5 mb-5">
 	
 		<table class="table table-striped">
@@ -26,59 +23,49 @@
 				</tr>
 			</thead>
 			<tbody>
-				@php
-					$total = 0;
-				 @endphp
+				@php	$total = 0;	@endphp
 			
 		     	@if(count($npayment) > 0)			 
 
-				  @for($i = 0; $i < count($npayment); $i++)
-				
-				 @if($npayment[$i]->reference  != 'Payment')
-				 @php
-					$total += $npayment[$i]->amount;
-				 @endphp
-		     	<tr>
-					<td>{{$i+1}}</td>
-		     		<td>{{$npayment[$i]->reference}}</td>
-		     		<td>&#8369;&nbsp;{{number_format($npayment[$i]->amount, 2)}}</td>
-		     	</tr>
-				 @endif
-				
-
-		        @endfor 
-
-				@if(count($discounts) > 0)
-
-					@for($i = 0; $i < count($discounts); $i++)
-								
-						@php
-							$discountdecimal = floatval(floatval($discounts[$i]->percentage) / 100);
-							$discountprice = $discountdecimal * floatval($total);
-							$discountedtotal = floatval($total) - floatval($discountprice);
-							$total = $discountedtotal;
-						@endphp
-						<tr>
-							<td>Disc#{{$i+1}}</td>
-							<td>{{$discounts[$i]->description}} {{$discounts[$i]->percentage}}%</td>
-							<td>&#8369;&nbsp;{{number_format($discountprice, 2)}}</td>
-						</tr>
-
+					@for($i = 0; $i < count($npayment); $i++)
+						@if($npayment[$i]->reference  != 'Payment')
+							@php
+								$total += $npayment[$i]->amount;
+							@endphp
+							<tr>
+								<td>{{$i+1}}</td>
+								<td>{{$npayment[$i]->reference}}</td>
+								<td>&#8369;&nbsp;{{number_format($npayment[$i]->amount, 2)}}</td>
+							</tr>
+						@endif			
 					@endfor 
 
-				@endif
-				
-				<tr><td> </td><td> </td><td> </td></tr>
+					@if(count($discounts) > 0)
+						@for($i = 0; $i < count($discounts); $i++)
+									
+							@php
+								$discountdecimal = floatval(floatval($discounts[$i]->percentage) / 100);
+								$discountprice = $discountdecimal * floatval($total);
+								$discountedtotal = floatval($total) - floatval($discountprice);
+								$total = $discountedtotal;
+							@endphp
+							<tr>
+								<td>Disc#{{$i+1}}</td>
+								<td>{{$discounts[$i]->description}} {{$discounts[$i]->percentage}}%</td>
+								<td>&#8369;&nbsp;{{number_format($discountprice, 2)}}</td>
+							</tr>
 
-				<tr style="border-top: dashed gray;border-bottom: dashed gray;">
-		     		<td> </td>
-		     		<td class="lead"><b>Total Amount Due</b></td>
-		     		<td><b>&#8369;&nbsp;{{number_format($total, 2)}}</b></td>
-		     	</tr>
+						@endfor
+					@endif
+				
+					<tr><td> </td><td> </td><td> </td></tr>
+					<tr style="border-top: dashed gray;border-bottom: dashed gray;">
+						<td> </td>
+						<td class="lead"><b>Total Amount Due</b></td>
+						<td><b>&#8369;&nbsp;{{number_format($total, 2)}}</b></td>
+					</tr>
 				@else
-		     	<tr>
-		     		<td colspan="2">No charge(s).</td>
-		     	</tr>
+					<tr><td colspan="2">No charge(s).</td></tr>
 		        @endif
 			</tbody>
 		</table>
@@ -105,40 +92,37 @@
 			  <li>
 				<a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-bank "></i> Landbank LinkBiz Portal </a>
 			  </li>
-            </ul>
-			
-            <div class="tab-content mt-5">
-			
-              <div class="tab-pane active" id="v-pills-settings">
-                <div class="row">
-					<div class="col-md-3">
-						<img src="https://www.freeiconspng.com/uploads/walking-icon-32.png" style="width: 100px; height: 100px; object-fit: contain;">
-					</div>
-					<div class="col-md-9">
-						<div class="row">
-							<div class="col-sm-1 text-right">
-								{{-- <input id="s_wlk" type="checkbox" name="chance" onchange=""> --}}
-							</div>
-							<div class="col-sm-10">
-								<p for="s_wlk" style="line-height: 1;" class="text-justify"><b>CONTINUE PAYMENT AS Cash</b> (Over the Counter Payment)</p>
-							</div>
-							<form id="_fWlk" method="POST">
-								{{csrf_field()}}
-								<input type="hidden" name="mPay" value="MOP-001">
-							</form>
+            </ul>			
+            <div class="tab-content mt-5">			
+				<div class="tab-pane active" id="v-pills-settings">
+					<div class="row">
+						<div class="col-md-3">
+							<img src="https://www.freeiconspng.com/uploads/walking-icon-32.png" style="width: 100px; height: 100px; object-fit: contain;">
 						</div>
-						<br>
-						
-						@if(($hfser_id == 'LTO' || $hfser_id == 'COA') && $hasAssessment == 0 && $aptid != 'R')
-							<a class="btn btn-primary" style="float: right; border-radius: 3px;" href="{{asset('client1/apply/assessmentReady/')}}/{{$appid}}/">Go to Self Assessment</a>
-							<button class="btn btn-warning" disabled  style="float: right;">No assessment yet</button>
-						@else								
-							<button form="_fWlk" class="btn btn-primary"  style="float: right;">Continue with Cash Payment</button>
-						@endif
-					</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-sm-1 text-right">
+									{{-- <input id="s_wlk" type="checkbox" name="chance" onchange=""> --}}
+								</div>
+								<div class="col-sm-10">
+									<p for="s_wlk" style="line-height: 1;" class="text-justify"><b>CONTINUE PAYMENT AS Cash</b> (Over the Counter Payment)</p>
+								</div>
+								<form id="_fWlk" method="POST">
+									{{csrf_field()}}
+									<input type="hidden" name="mPay" value="MOP-001">
+								</form>
+							</div>
+							<br>
+							
+							@if(($hfser_id == 'LTO' || $hfser_id == 'COA') && $hasAssessment == 0 && $aptid != 'R')
+								<a class="btn btn-primary" style="float: right; border-radius: 3px;" href="{{asset('client1/apply/assessmentReady/')}}/{{$appid}}/">Go to Self Assessment</a>
+								<button class="btn btn-warning" disabled  style="float: right;">No assessment yet</button>
+							@else								
+								<button form="_fWlk" class="btn btn-primary"  style="float: right;">Continue with Cash Payment</button>
+							@endif
+						</div>
+					</div>				
 				</div>
-				
-              </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="v-pills-pmo">
                 <div class="row">
@@ -165,7 +149,7 @@
 							</form>
 						</div>
 						<br>
-						@if(($hfser_id == 'LTO' || $hfser_id == 'COA') && $hasAssessment == 0 && $aptid != 'R')
+						@if(($hfser_id == 'LTO' || $hfser_id == 'COA' || $hfser_id == 'COR' || $hfser_id == 'ATO') && $hasAssessment == 0 && $aptid != 'R')
 							<a class="btn btn-primary" style="float: right; border-radius: 3px;" href="{{asset('client1/apply/assessmentReady/')}}/{{$appid}}/">Go to Self Assessment</a>
 							<button class="btn btn-warning" disabled  style="float: right;">No assessment yet</button>
 						@else

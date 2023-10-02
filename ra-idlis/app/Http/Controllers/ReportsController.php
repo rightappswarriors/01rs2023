@@ -1730,6 +1730,115 @@ class ReportsController extends Controller
 		{
 			return redirect()->route('employee');
 		}		
+	}  
+
+	public function annexa_list(Request $request)
+	{
+		if(session()->has('employee_login'))
+		{			
+			try 
+			{
+				$arrType = array();
+				$viewpage = 'employee.regfacilities.annexa_personnellist';
+				$title ='List of Personnel Report by Registered Facility Report';
+				$nolimit = false; 
+				$regfac_id = $request->regfac_id;
+				$facilityname = NULL;
+
+				if(isset($regfac_id))
+				{
+					$facilityname = RegFaciController::get_facilityname_byregfac_id($regfac_id);
+				}
+				
+				if(empty($request->fo_submit) == false)
+				{
+					if($request->fo_submit == 'csv') 
+					{ 
+						$nolimit = true; //true if for export
+					}
+				}
+
+				$data = SELF::registered_personnel_filter($request, 'view_reg_annexa_personnel', $nolimit);
+				
+				if(empty($request->fo_submit) == false)
+				{
+					if($request->fo_submit == 'csv') 
+					{ 
+						$tbl = $data['data'];
+
+						$data_array[] = array("Prefix","First Name","Middle Name","Surname","Suffix","Profession","PRC No.","Validity Period To","Specialty","Date Of Birth","Sex","Employment Status","Position","Designation","Area","Qual","Email","Tin","Main Rad.","Main Pharma","Main Rad and Pharma","Chief Rad.Tech","X-ray Tech","Status","Remarks");
+
+						foreach($data['data']  as $data_item)
+						{
+							$data_array[] = array(
+								
+								'Prefix'=>$data_item->prefix,
+								'First Name'=>$data_item->firstname,
+								'Middle Name'=>$data_item->middlename,
+								'Surname'=>$data_item->surname,
+								'Suffix'=>$data_item->suffix,
+								'Profession'=>$data_item->profession_official,
+								'PRC No.'=>$data_item->prcno,
+								'Validity Period To'=>$data_item->validityPeriodTo,
+								'Specialty'=>$data_item->speciality,
+								'Date Of Birth'=>$data_item->dob,
+								'Sex'=>$data_item->sex,
+								'Employment Status'=>$data_item->employement,
+								'Position'=>$data_item->pos,
+								'Designation'=>$data_item->designation,
+								'Area'=>$data_item->area,
+								'Qual'=>$data_item->qual,
+								'Email'=>$data_item->email,
+								'Tin'=>$data_item->tin,
+								'Main Rad. Officer'=>$data_item->isMainRadio,
+								'Main Pharma Officer'=>$data_item->ismainpo,
+								'Main Rad and Pharma'=>$data_item->isMainRadioPharma,
+								'Chief Rad.Tech'=>$data_item->isChiefRadTech,
+								'Head of X-ray Tech'=>$data_item->isXrayTech,
+								'Status'=>$data_item->status,
+								'Remarks'=>$data_item->remarks
+							);
+						}
+
+						$this->ExportExcel($data_array, $title);
+						$data['data'] = array();
+						$data['arr_fo']= array();
+					} 	
+				}
+
+				$user = AjaxController::getAllRegisteredFacilityDetailsByRegFacID('view_registered_facility', $regfac_id);				
+				$data_rfa = DB::table('reg_facility_archive')
+							->select('recordtype.rectype_desc', 'reg_facility_archive.*')
+							->leftJoin('recordtype','reg_facility_archive.rectype_id','=','recordtype.rectype_id')
+							->where('reg_facility_archive.regfac_id','=',$regfac_id)
+							->get();
+				$user = $user[0];
+				
+				$fo_action = 'employee/regfacility/annexa/' . $regfac_id;
+
+				return view($viewpage, [
+					'pg_title'=>$title, 
+					'actiontab' => 'personnel',
+					'user' => $user,
+					'data' => $data_rfa,
+					'LotsOfDatas' => $data['data'], 
+					'arr_fo'=>$data['arr_fo'], 
+					'fo_action'=>$fo_action, 
+					'pg_regfac_id'=>$regfac_id, 
+					'pg_facilityname'=>$facilityname
+				]);
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e);
+				session()->flash('system_error','ERROR');
+				return view('employee.processflow.viewprocessflow');
+			}
+		}
+		else 
+		{
+			return redirect()->route('employee');
+		}		
 	}
 
 	public function ndhrhis_byregisteredfacilities_annexa(Request $request)

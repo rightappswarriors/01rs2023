@@ -32,29 +32,33 @@
 			        $ip =  request()->ip();
 			        $employeeData = session('employee_login');
 					$uname  = $employeeData->uid;
-					$data['time'] = $timeNow;
-					$data['lastname'] = $employeeData->lname;
 					$data['date'] = $dateNow;
+					$data['time'] = $timeNow;
 					$data['ip'] = $ip;
 					$data['cur_user'] = $uname;
 					$data['grpid'] = $employeeData->grpid;
 					$data['rgnid'] = $employeeData->rgnid;
 					$data['password'] = $employeeData->pwd;
 					$data['fullname'] = $employeeData->fname.' '.$employeeData->mname.' '.$employeeData->lname;
+					$data['lastname'] = $employeeData->lname;
 					$data['position'] = $employeeData->position;
 					$data['is_fda'] = $employeeData->is_fda;
 
 					return $data;
-				}
-				else 
-				{
-					$data['time'] = 'ERROR';
+				} else {
+
 					$data['date'] = 'ERROR';
+					$data['time'] = 'ERROR';
 					$data['ip'] = 'ERROR';
 					$data['cur_user'] = 'ERROR';
 					$data['grpid'] = 'ERROR';
 					$data['rgnid'] = 'ERROR';
+					$data['password'] = 'ERROR';
+					$data['fullname'] = 'ERROR';
+					$data['lastname'] = 'ERROR';
+					$data['position'] = 'ERROR';
 					$data['is_fda'] = 'ERROR';
+
 					return $data;
 				}
 			} 
@@ -71,7 +75,6 @@
 			{
 				$dateup = new DateTime("now", new DateTimeZone('Asia/Manila'));
 				$created_at = $dateup->format('Y-m-d H:i:s');
-
 				DB::table('appform')->where([['appid',  $appid]])->insert(['created_at' => $updated_at]);
 
 				return true;
@@ -113,11 +116,11 @@
 		      	{
 			    	$mid = strtoupper($mname[0]);
 			    	$mid = $mid.'. ';
-	       		 } 
-	       		 else 
-	       		 {
+	       		} 
+	       		else 
+	       		{
 			    	$mid = ' ';
-			 		}
+			 	}
 				$name = $fname.' '.$mid.''.$lname;
 				return $name;
 		}
@@ -125,6 +128,7 @@
 		public static function uploadFileNew($dFile) {
 
 			$retArr = [];
+
 			if(isset($dFile)) {
 				$_file = $dFile;
 				$filename = $_file->getClientOriginalName(); 
@@ -1704,6 +1708,51 @@ public static function checkConmem($appid)
 				}
 		}
 		/////// Teams
+		/////// Client Announcement
+		public static function getAllClientAnnouncement() // Get All Application Type (With Ascending)
+		{
+			try 
+			{
+				$data = DB::table('announcement')->orderBy('id', 'asc')->get();
+				return $data;
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
+		public static function saveClientAnnouncement(Request $request) // Update Client Annoucement Type
+		{
+			try 
+			{
+			
+				 return 'DONE';
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
+		public static function delClientAnnouncement(Request $request) // Delete Client Annoucement Type
+		{
+			try 
+			{
+				$test = null;
+				if ($test) {
+					return 'DONE';
+				} else {
+					AjaxController::SystemLogs('No data has been deleted on table. ');
+					return 'ERROR';
+				}
+			} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}
+		}
 		/////// Application Type
 		public static function getAllApplicationType() // Get All Application Type (With Ascending)
 		{
@@ -1723,9 +1772,11 @@ public static function checkConmem($appid)
 			try 
 			{
 				$updateData = array('hfser_desc'=>$request->name, 'terms_condi' => $request->terms);
+
 				if ($request->seq != '') { $updateData['seq_num'] = $request->seq;}
+
 				$test = DB::table('hfaci_serv_type')->where('hfser_id', $request->id)->update($updateData);
-				 return 'DONE';
+				return 'DONE';
 			} 
 			catch (Exception $e) 
 			{
@@ -1751,7 +1802,6 @@ public static function checkConmem($appid)
 				return 'ERROR';
 			}
 		}
-		/////// Application Type
 		/////// Application Status
 		public static function getAllApplicationStatus() // Get All Application Status
 		{
@@ -2169,7 +2219,8 @@ public static function checkConmem($appid)
 									'ftr_msg_lto' => $request->edit_lto,
 									'ftr_msg_coa' => $request->edit_coa,
 									'ftr_msg_ato' => $request->edit_ato,
-									'ftr_msg_cor' => $request->edit_cor
+									'ftr_msg_cor' => $request->edit_cor,
+									'status' => $request->edit_status
 							);
 
 				$test = DB::table('hfaci_grp')->where('hgpid',$request->id)->update($updateData);
@@ -2211,27 +2262,10 @@ public static function checkConmem($appid)
 		{
 			try 
 			{
-				// $data = DB::table('facilitytyp')->get();
-				// if ($data) {
-				// 	for ($i=0; $i < count($data) ; $i++) { 
-				// 		if ($data[$i]->hgpid != null) 
-				// 		{
-				// 			$test = DB::table('hfaci_grp')->where('hgpid', '=', $data[$i]->hgpid)->first();
-				// 			if ($test) {
-				// 				$data[$i]->hgpdesc = $test->hgpdesc;
-				// 			} else {
-				// 				$data[$i]->hgpdesc = ' ';
-				// 			}
-				// 		}
-				// 		else {
-				// 			$data[$i]->hgpdesc = ' ';
-				// 		}
-				// 	}
-				// }
 				$data = DB::table('facilitytyp')
 						->leftJoin('hfaci_grp','hfaci_grp.hgpid','facilitytyp.hgpid')
 						->leftJoin('serv_type','serv_type.servtype_id','facilitytyp.servtype_id')
-						->select('facilitytyp.*','hfaci_grp.*','serv_type.servtype_id','serv_type.facid as servid','serv_type.grp_name','serv_type.seq','serv_type.anc_name','assignrgn')
+						->select('facilitytyp.*','hfaci_grp.hgpid','hfaci_grp.hgpdesc','serv_type.servtype_id','serv_type.facid as servid','serv_type.grp_name','serv_type.seq','serv_type.anc_name','assignrgn')
 						->get();
 				return $data;
 			} 
@@ -2241,19 +2275,14 @@ public static function checkConmem($appid)
 				return 'ERROR';
 			}
 		}
-		public static function saveService(Request $request) // Update facility
+		public static function saveService(Request $request) // Update service
 		{
 			try 
 			{
-				$updateData = array('facname' => $request->name, 'hgpid'=>$request->faci, 'assignrgn' => $request->office);
-				/*if ($request->faci != null AND $request->faci != '12315e4dfgser234534') {
-					$updateData['hgpid'] = $request->faci; 
-				} 
-				else if($request->faci == '12315e4dfgser234534')
-				{
-					$updateData['hgpid'] = null;
-				} */
+				$updateData = array('facname' => $request->name, 'hgpid'=>$request->faci, 'assignrgn' => $request->office, 'status' => $request->status);
+				
 				$test = DB::table('facilitytyp')->where('facid',$request->id)->update($updateData);
+
 				if ($test) {return 'DONE';} 
 				else 
 				{
@@ -5218,6 +5247,127 @@ public static function checkConmem($appid)
 			}
 		}
 
+		public static function getAllRegisteredFacilityDetailsByRegFacID($viewtype="", $regfac_id="", $facilityname="")
+		{
+			$rowcount = 0;
+			$Cur_useData = AjaxController::getCurrentUserAllData();
+			$uid = $Cur_useData['cur_user'];
+			
+			//try 
+			//{
+				switch ($viewtype) 
+				{
+					default:							
+						$anotherData = DB::table($viewtype);
+						break;
+				}
+
+				$t_date_1 = NULL;
+				$t_date_2 = NULL;
+
+				if(isset($regfac_id) )
+				{  
+					$anotherData = $anotherData->where('regfac_id', '=', $regfac_id);
+				}
+				else if( isset($facilityname) )
+				{  
+					$anotherData = $anotherData->where('facilityname', '=', $facilityname);
+				}				
+				
+				$data = $anotherData->get();
+
+				return $data;
+			/*} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}*/
+		}
+
+		public static function getAllRegisteredFacilityListWithFilter($viewtype="", $filter=array(), $limit=10, $fo_pgno = 1, $nolimit=false)
+		{
+			$rowcount = 0;
+			$Cur_useData = AjaxController::getCurrentUserAllData();
+			$uid = $Cur_useData['cur_user'];
+			
+			//try 
+			//{
+				switch ($viewtype) 
+				{
+					case 'view_registered_facility_for_change':			
+						$anotherData = DB::table('view_registered_facility_for_change');
+						break;
+
+					default:							
+						$anotherData = DB::table($viewtype);
+						break;
+				}
+
+				
+				//conditions area
+				if($Cur_useData['is_fda'] == 1){
+					if($Cur_useData['rgnid'] && $Cur_useData['rgnid'] != 'FDA'){
+						$anotherData->where('rgnid', '=', $Cur_useData['rgnid']); //bring back after
+					}
+				} else {
+					if($Cur_useData['grpid'] != "NA")
+					{
+						$anotherData->where('assignedRgn', '=', $Cur_useData['rgnid']);
+					}
+				}
+				$t_date_1 = NULL;
+				$t_date_2 = NULL;
+				
+				//Filter Area
+				foreach($filter  as $fo => $foval)
+				{
+					if($fo == 'regfac_id' && isset($foval) )
+					{  
+						$anotherData->where($fo, 'LIKE', '%' .$foval. '%');
+					}
+					else if($fo == 'appid' && isset($foval) )
+					{  
+						$anotherData->where($fo, 'LIKE', '%' .$foval. '%');
+					}
+					else if( $fo == 'facilityname' && isset($foval) )
+					{  
+						$anotherData->where(''.$fo.'', 'LIKE', '%' .strtolower($foval). '%');
+					}
+					else if( $fo == 't_date_1' && isset($foval) )
+					{  
+						$t_date_1 = $foval;
+					}
+					else if( $fo == 't_date_2' && isset($foval) && isset($t_date_1))
+					{  
+						$t_date_2 = $foval;
+						$anotherData->whereBetween('t_date', [$t_date_1, $t_date_2]);
+					}
+					else if($fo != 'fo_rows' && $fo != 'fo_pgno' && $fo != 'fo_submit' && $fo != 'fo_rowscnt' && $fo != 'fo_session_grpid' && isset($foval)) 
+					{ 						
+						$anotherData->where($fo, '=', $foval);
+					}
+				}				
+				//Limit and Offset
+				$rowcount = $anotherData->count();
+
+				if($nolimit == false)
+				{
+					$anotherData->OFFSET($fo_pgno*$limit);
+					$anotherData->LIMIT($limit);
+				}		
+				
+				$data = $anotherData->get();
+
+				return array('data'=>$data, 'rowcount'=>$rowcount);
+			/*} 
+			catch (Exception $e) 
+			{
+				AjaxController::SystemLogs($e->getMessage());
+				return 'ERROR';
+			}*/
+		}
+
 		public static function getAllApplicantionWithFilter($viewtype="", $filter=array(), $limit=10, $fo_pgno = 1, $nolimit=false)
 		{
 			$rowcount = 0;
@@ -5309,8 +5459,7 @@ public static function checkConmem($appid)
 					{ 						
 						$anotherData->where($fo, '=', $foval);
 					}
-				}
-				
+				}				
 				//Limit and Offset
 				$rowcount = $anotherData->count();
 
@@ -5318,7 +5467,7 @@ public static function checkConmem($appid)
 				{
 					$anotherData->OFFSET($fo_pgno*$limit);
 					$anotherData->LIMIT($limit);
-				}				
+				}		
 				
 				$data = $anotherData->get();
 

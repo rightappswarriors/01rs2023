@@ -258,13 +258,17 @@
                     <i class="fa fa-eye" aria-hidden="true"></i> Preview Order of Payment</a>
                     <span style="float: right;">&nbsp;&nbsp;</span>
 									@endif		
-                  {{-- 
-                  @if($office == 'xray'  || $office == 'pharma')			
-                      <a style="float: right;" href="{{asset('employee/dashboard/processflow/FDA/pharma/orderofpayment/')}}/{{$AppData->appid}}" target="_blank" class="btn btn-primary ">
+                  @if($office == 'xray')			
+                      <a style="float: right;" href="{{asset('employee/dashboard/processflow/FDA/machines/orderofpayment/')}}/{{$AppData->appid}}" target="_blank" class="btn btn-primary ">
                       <i class="fa fa-edit" aria-hidden="true"></i> Override Order of Payment</a>
                       <span style="float: right;">&nbsp;&nbsp;</span>
                   @endif
-                  --}}
+
+                  {{-- @if($office == 'pharma')			
+                      <a style="float: right;" href="{{asset('employee/dashboard/processflow/FDA/pharma/orderofpayment/')}}/{{$AppData->appid}}" target="_blank" class="btn btn-primary ">
+                      <i class="fa fa-edit" aria-hidden="true"></i> Override Order of Payment</a>
+                      <span style="float: right;">&nbsp;&nbsp;</span>
+                  @endif  --}}
 
                   </td>
                 </tr>

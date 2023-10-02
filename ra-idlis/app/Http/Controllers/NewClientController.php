@@ -4106,16 +4106,14 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							}
 						}
 					}
-					$returnToSender = DB::table('hfsrbannexa')
-					->where('id',$request->id)->update($toInsert);
-					
+					$returnToSender = DB::table('hfsrbannexa')->where('id',$request->id)->update($toInsert);					
 
 					if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
 
 						$pharma['hfsrbannexaID'] = $request->id;
 						$mach['hfsrbannexaID'] = $request->id;
-						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````
 
+						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````
 						if($hgpid=='12'){
 							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 						}
@@ -4133,7 +4131,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
 							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
 						}
-
 					}
 				} else if($request->action == 'delete') {
 					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->select('status')->first()->status;
@@ -4147,6 +4144,40 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		/*} else {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
 		}*/
+	}
+
+	public function reg_annexb(Request $request, $appid){
+		if(FunctionsClientController::isUserApplication($appid)){
+			if($request->isMethod('get')){
+				$arrRet = [
+					'hfsrbannexb' => DB::table('hfsrbannexb')->where('appid',$appid)->get(),
+					// 'canAdd' => DB::table('appform')->where([['appid',$appid],['isReadyForInspec',0]])->exists()
+					'canAdd' => true,
+					'appid' =>$appid
+				];
+				return view('client1.apply.LTO1.hfsrb.annexb',$arrRet);
+			} else if($request->isMethod('post')) {
+				if($request->action == 'add'){
+					$returnToSender = DB::table('hfsrbannexb')->insert(['equipment' => $request->equipment, 'brandname' => $request->brandname, 'model' => $request->model, 'serial' => $request->serial, 'quantity' => $request->quantity, 'dop' => $request->dop, 'manDate' => $request->manDate, 'appid' => $appid]);
+				} else if($request->action == 'edit'){
+					$returnToSender = DB::table('hfsrbannexb')
+					->where('id',$request->id)->update([
+						'equipment' => $request->equipment, 
+						'brandname' => $request->brandname, 
+						'model' => $request->model, 
+						'serial' => $request->serial, 
+						'quantity' => $request->quantity, 
+						'manDate' => $request->manDate,
+						'dop' => $request->dop
+					]);
+				} else if($request->action == 'delete') {
+					$returnToSender = DB::table('hfsrbannexb')->where('id',$request->id)->delete();
+				}
+				return ($returnToSender > 0 ? "DONE" : "ERROR");
+			}
+		} else {
+			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
+		}
 	}
 
 	public function annexa(Request $request, $appid){

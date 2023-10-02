@@ -1021,6 +1021,40 @@ namespace App\Http\Controllers;
 			}
 		}
 		////// MANAGE TEAM
+
+		////// ANNOUNCEMENT
+		public function ClientAnnouncement(Request $request) // Master File - Application Type
+		{
+			if ($request->isMethod('get')) 
+			{
+				try 
+				{	
+					$data =AjaxController::getAllClientAnnouncement();
+
+					return view('employee.masterfile.mfClientAnnouncement', ['hfstypes'=>$data]);	
+				} 
+				catch (Exception $e) 
+				{
+					AjaxController::SystemLogs($e);
+					session()->flash('system_error','ERROR');
+					return view('employee.masterfile.mfClientAnnouncement');
+				}
+			}
+			if ($request->isMethod('post')) 
+			{
+				try 
+				{
+					DB::table('announcement')->insert(['message' => $request->message, 'date_effective' => $request->date_effective, 'date_end'=>$request->date_end]);
+					return 'DONE';
+				} 
+				catch (Exception $e) 
+				{
+					AjaxController::SystemLogs($e);
+					return 'ERROR';
+				}
+			}
+		}
+
 		////// APPLICATION TYPE
 		public function AppType(Request $request) // Master File - Application Type
 		{
@@ -4123,7 +4157,92 @@ namespace App\Http\Controllers;
 		}
 		////// VIEW ALL
 
-		////// EVALUATE
+		////// Registered Facilities Menus
+		public function listOf_Registeredfacilities(Request $request)
+		{
+			if(session()->has('employee_login'))
+			{
+				if ($request->isMethod('get')) 
+				{
+					try 
+					{
+						$arrType = array();
+						$data = SELF::application_filter($request, 'view_registered_facility');
+						
+						return view('employee.regfacilities.registeredfacility', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo'],
+						'factype' => null,
+						'regions' => null,
+						'hfaci_service_type' => null,
+						'serv_cap' => null,
+						'_aptid' => null,]);
+					} 
+					catch (Exception $e) 
+					{
+						AjaxController::SystemLogs($e);
+						session()->flash('system_error','ERROR');
+						return view('employee.regfacilities	.archive');
+					}
+				}
+			}
+			else 
+			{
+				return redirect()->route('employee');
+			}		
+		}
+
+		public function Registeredfacilities_Form(Request $request, $regfac_id=null)
+		{
+			if(session()->has('employee_login'))
+			{
+					try 
+					{
+						$arrType = array();
+						$request->request->set("regfac_id", $regfac_id);
+						$request->request->set("fo_submit", "submit");
+						$user = AjaxController::getAllRegisteredFacilityDetailsByRegFacID('view_registered_facility', $regfac_id);
+						$user = $user[0];						
+						$data = DB::select("select view_registered_facility_for_change.*, 0 AS appid, facilityname AS facilityname_old, noofbed AS noofbed_old, noofdialysis AS noofdialysis_old, '2023-01-01' AS validity   from `view_registered_facility_for_change` where `regfac_id` = '".$user->regfac_id."';");
+			
+						
+						return view('employee.regfacilities.registeredfacility_form', 
+							[
+								'pg_title' => 'Registered Facilities',
+								'actiontab' => 'facility',
+								'user' => $user,
+								'registered_facility' => $data[0],
+								'factype' => null,
+								'regions' => null,
+								'hfaci_service_type' => null,
+								'serv_cap' => null,
+								'_aptid' => null,
+								'recordtype' => AjaxController::getAllFrom('recordtype')
+							]);
+					} 
+					catch (Exception $e) 
+					{
+						AjaxController::SystemLogs($e);
+						session()->flash('system_error','ERROR');
+						return view('employee.regfacilities.registeredfacility_form', [
+							'pg_title' => 'Registered Facilities',
+							'actiontab' => 'facility',
+							'user' => null,
+							'registered_facility' => null,
+							'factype' => null,
+							'regions' => null,
+							'hfaci_service_type' => null,
+							'serv_cap' => null,
+							'_aptid' => null,
+							'recordtype' => AjaxController::getAllFrom('recordtype')
+						]);
+					}
+				
+			}
+			else 
+			{
+				return redirect()->route('employee');
+			}		
+		}
+
 		public function Archive(Request $request)
 		{
 			if(session()->has('employee_login'))
@@ -4135,13 +4254,21 @@ namespace App\Http\Controllers;
 						$arrType = array();
 						$data = SELF::application_filter($request, 'view_registered_facility');
 						
-						return view('employee.archive.archive', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
+						return view('employee.regfacilities.archive', [
+										'LotsOfDatas' => $data['data'],
+										'arr_fo'=>$data['arr_fo'], 
+										'factype' => null,
+										'regions' => null,
+										'hfaci_service_type' => null,
+										'serv_cap' => null,
+										'_aptid' => null
+						]);
 					} 
 					catch (Exception $e) 
 					{
 						AjaxController::SystemLogs($e);
 						session()->flash('system_error','ERROR');
-						return view('employee.archive.archive');
+						return view('employee.regfacilities	.archive');
 					}
 				}
 			}
@@ -4160,19 +4287,113 @@ namespace App\Http\Controllers;
 					try 
 					{
 						$arrType = array();
-						$data = SELF::application_filter($request, 'view_registered_facility');
+						$request->request->set("regfac_id", $regfac_id);
+						$request->request->set("fo_submit", "submit");
+						$user = AjaxController::getAllRegisteredFacilityDetailsByRegFacID('view_registered_facility', $regfac_id);
+						//$data = AjaxController::getAllFromWhere('reg_facility_archive', ['regfac_id'=>$regfac_id]);
+						$data = DB::table('reg_facility_archive')
+									->select('recordtype.rectype_desc', 'reg_facility_archive.*')
+									->leftJoin('recordtype','reg_facility_archive.rectype_id','=','recordtype.rectype_id')
+									->where('reg_facility_archive.regfac_id','=',$regfac_id)
+									->get();
+						$user = $user[0];
 						
-						return view('employee.archive.archiveone', ['LotsOfDatas' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
+						return view('employee.regfacilities.archiveone', 
+							[
+								'pg_title' => 'Archive of Files',
+								'actiontab' => 'archive',
+								'user' => $user,
+								'data' => $data,
+								'recordtype' => AjaxController::getAllFrom('recordtype'),
+								'factype' => null,
+								'regions' => null,
+								'hfaci_service_type' => null,
+								'serv_cap' => null,
+								'_aptid' => null
+							]);
 					} 
 					catch (Exception $e) 
 					{
 						AjaxController::SystemLogs($e);
 						session()->flash('system_error','ERROR');
-						return view('employee.archive.archive');
+						return view('employee.regfacilities.archive');
 					}
-				} else 
-				{
+				} else 	{
+					try 
+					{
+						$table = 'reg_facility_archive';
+						$archive_loc = 'public/archive/';
+						$employeeData = AjaxController::getCurrentUserAllData();
+						$updated_at = $employeeData['date'].' '.$employeeData['time'];
+						$updated_by = $employeeData['cur_user'];
+						$ipaddress = $employeeData['ip'];
+						$localip =  $employeeData['ip'];
+						$computername = "...";
+						
+						switch ($request->action) {
+							case 'add':
+								if($request->hasFile('upload')){
 
+									$uploadFILE = FunctionsClientController::uploadFileArchive($request->upload, $archive_loc.$request->regfac_id);
+
+									$uploadName = $uploadFILE['fileNameToStore'];
+									$savelocation = $uploadFILE['path'];
+									$created_at = $employeeData['date'].' '.$employeeData['time'];
+									$created_by = $employeeData['cur_user'];
+
+									$returnToUser = DB::table($table)->insert([
+										'regfac_id' => $request->regfac_id, 
+										'rectype_id' => $request->rec, 
+										'description' => $request->dname, 
+										'filename' => $uploadName, 
+										'savelocation' => $savelocation, 
+										'computername' => $computername, 
+										'localip' => $localip, 
+										'ipaddress' => $ipaddress, 
+										'created_at' => $created_at, 
+										'created_by' => $created_by, 
+										'updated_at' => $updated_at, 
+										'updated_by' => $updated_by
+									]);
+								}
+								break;
+							case 'edit':
+								if($request->hasFile('upload')){
+									// AjaxController::deleteUploadedOnPublic($request->oldFilename);
+									$uploadFILE = FunctionsClientController::uploadFileArchive($request->upload, $archive_loc.$request->editregfac_id);
+									$uploadName = $uploadFILE['fileNameToStore'];
+									$savelocation = $uploadFILE['path'];									
+								} else {
+									$uploadName = $request->editoldfilename;
+									$savelocation =  $request->editoldfileloc;
+								}
+
+								$returnToUser = DB::table($table)->where('rfa_id',$request->id)->update([
+										'rectype_id' => $request->editrec, 
+										'description' => $request->editdname, 
+										'filename' => $uploadName, 
+										'savelocation' => $savelocation, 
+										'computername' => $computername, 
+										'localip' => $localip,  
+										'ipaddress' => $ipaddress, 
+										'updated_at' => $updated_at, 
+										'updated_by' => $updated_by
+									]);
+								break;
+							case 'delete':
+								// AjaxController::deleteUploadedOnPublic($request->oldFilename);
+								$returnToUser = DB::table($table)->where('rfa_id', $request->id)->delete();
+								break;
+						}
+						
+						return ($returnToUser >=1 ? 'DONE' : 'ERROR');
+					} 
+					catch (Exception $e) 
+					{
+						return $e;
+						AjaxController::SystemLogs($e);
+						return 'ERROR';
+					}
 				}
 			}
 			else 
@@ -4180,6 +4401,41 @@ namespace App\Http\Controllers;
 				return redirect()->route('employee');
 			}		
 		}
+
+		
+
+	public function __clientnotification_msg(Request $request, $clientuserid="", $regfac_id = "") {
+		//try {
+			$user = null;
+			$data = null;
+
+			if(!empty($regfac_id))
+			{
+				$user = AjaxController::getAllRegisteredFacilityDetailsByRegFacID('view_registered_facility', $regfac_id);
+				$user = $user[0];
+				$request->request->add(['uid' => $user->uid]); 
+				$msg_arr = AjaxController::getNotificationMessage($request);
+										
+				$data = DB::select("select view_registered_facility_for_change.*, 0 AS appid, facilityname AS facilityname_old, noofbed AS noofbed_old, noofdialysis AS noofdialysis_old, '2023-01-01' AS validity   from `view_registered_facility_for_change` where `regfac_id` = '".$user->regfac_id."';");
+			}
+			else{
+
+			}			
+
+			$arrRet = [
+				'pg_title' => 'Archive of Files',
+				'actiontab' => 'notification',
+				'user' => $user,
+				'data' => $data,
+				'msg_arr'=> $msg_arr ,
+				'userInf'=>FunctionsClientController::getUserDetails()
+			];
+
+			return view('employee.regfacilities.notification', $arrRet);
+		/*} catch(Exception $e) {
+			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
+		}*/
+	}
 
 		////// EVALUATE
 		public function EvaluateProcessFlow(Request $request)
@@ -5156,7 +5412,7 @@ namespace App\Http\Controllers;
 						$sum = DB::table('fda_chgfil')->where([['appid',$appid],['amount', '>', 0],['uid', '<>', 'SYSTEM']])->whereNull('MAvalue')->sum('amount');
 						// $lrf = ($sum / 100 > 10 ? $sum / 100 : 10);
 						// $sum += $lrf;
-						dd($getOrderOfPayment);
+						//dd($getOrderOfPayment);
 						$canView = AjaxController::canViewFDAOOP($appid);
 						$code = $data->hfser_id.'R'.$data->rgnid.'-'.$data->appid;
 						return view('employee.FDA.pforderofpaymentoneFDA',['AppData' => $data, 'payables' => $getOrderOfPayment, 'code' => $code, 'Sum' => $sum, 'appid' => $appid, 'charges' => $charges, 'canView' => $canView, 'request' => 'Pharma']);
@@ -13630,6 +13886,70 @@ namespace App\Http\Controllers;
 				return response()->json($e);
 			}
 
+		}
+
+		public static function reg_facility_filter (Request $request, $table)
+		{
+			if(empty($request->fo_submit) == false)
+			{
+				$fo_rows = $request->fo_rows;
+				$fo_pgno = 	$request->fo_pgno;
+				$fo_submit = $request->fo_submit;
+				
+				if($request->fo_submit == "prev")
+				{
+					if($fo_pgno > 1){  	$fo_pgno--;  }
+				}
+				else if($request->fo_submit == "next")
+				{
+					$fo_pgno++;
+				}
+
+				$arr_fo = array(
+					'regfac_id' => $request->regfac_id,
+					'appid' => $request->fo_appid,
+					'facilityname' => $request->fo_facilityname,
+					'hfser_id' => $request->fo_hfser_id,
+					'ocid' => $request->fo_ocid,
+					'hgpid' => $request->fo_hgpid,
+					'uid' => $request->fo_uid,
+					'rgnid' => $request->fo_rgnid,
+					'assignedRgn' => $request->fo_assignedRgn,
+					'fo_rows' => $request->fo_rows,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $request->fo_submit,
+					'fo_rowscnt' => '0'
+				);
+			}
+			else
+			{
+				$fo_rows = "10";
+				$fo_pgno = "1";
+				$fo_submit = "submit";
+
+				$arr_fo = array(					
+					'regfac_id' => NULL, 
+					'appid' => NULL,
+					'facilityname' => NULL,
+					'hfser_id' =>  NULL,
+					'ocid' => NULL,
+					'hgpid' =>  NULL,
+					'uid' => NULL,
+					'rgnid' => NULL,
+					'assignedRgn' =>  NULL,
+					'fo_rows' => $fo_rows ,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $fo_submit,
+					'fo_rowscnt' => '0'
+				);						
+			}	
+
+			
+			$data = AjaxController::getAllRegisteredFacilityWithFilter($table, $arr_fo, $fo_rows, $fo_pgno-1); 
+
+			$arr_fo['fo_rowscnt']=$data['rowcount'];
+
+			return array('data'=>$data['data'], 'arr_fo'=>$arr_fo);
 		}
 
 		public static function application_filter (Request $request, $table)
