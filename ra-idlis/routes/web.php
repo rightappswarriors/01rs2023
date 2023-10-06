@@ -104,8 +104,6 @@ Route::prefix('client1')->group(function() {
 	Route::prefix('messages')->group(function() {
 		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__msg_inbox')->name('client1.__msg_inbox');
-		Route::match(['get', 'post'], '/create', 'NewClientController@__apply')->name('client1.apply');
-		Route::match(['get', 'post'], '/sent', 'NewClientController@__apply')->name('client1.apply');
 		
 	});
 	Route::prefix('apply')->group(function() {

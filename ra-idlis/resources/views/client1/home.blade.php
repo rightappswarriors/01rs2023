@@ -58,7 +58,7 @@
 			        </div>
 
 					<div class="_forIntro col-lg-6">
-			          <div class="media blog-thumb">
+			          	<div class="media blog-thumb">
                               <div class="media-object media-left">
                                    <a href="{{asset('/client1/messages')}}"><img src="{{asset('ra-idlis/public/img/message.gif')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 250px;" class="img-responsive" alt=""></a>
                               </div>

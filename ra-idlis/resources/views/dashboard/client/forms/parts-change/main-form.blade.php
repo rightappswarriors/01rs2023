@@ -1,9 +1,7 @@
 <!-- Application Details -->  
 <div class="col-md-3">
-    @isset($ischange)
     <label>Type: </label>
     <label><strong class="text-xl">Initial Change </strong></label>
-    @endisset
 </div>
 <div class="col-md-3">
     <label>Registered ID: <strong class="text-xl">{{$registered_facility->regfac_id}}</strong></label>
@@ -12,15 +10,13 @@
     <label>NHFR Code: <strong class="text-xl">{{$registered_facility->nhfcode}}</strong></label>
 </div>
 <div class="col-md-3">
-    @isset($ischange)
     <h4>Application ID: <strong class="text-xl">{{$registered_facility->appid}}</strong></h4>
-    @endisset
 </div>
 
 <!-- HF Name -->  
 <div class="col-md-12">
     <label for="facility_name">Registered Facility Name: </label>
-    <h2 class="text-center text-uppercase text-bold" style="font-size: 30px;">{{$registered_facility->facilityname_old}}</h2>
+    <h3 class="text-center text-uppercase"><strong>{{$registered_facility->facilityname_old}}</strong></h3>
 </div>
 
 @if($registered_facility->facilityname != $registered_facility->facilityname_old)
@@ -116,7 +112,7 @@
 
 <div class="col-md-6">
     <label>Validity Period: </label>
-    <label><strong>@isset($validity){{$validity}}@endisset</strong></label>
+    <label><strong>{{$validity}}</strong></label>
 </div>
 
 <div class="col-md-6">
@@ -126,7 +122,7 @@
 
 <div class="col-md-6">
     <label>Date Issued: </label>
-    <label><strong>@isset($validity){{$validity}}@endisset</strong></label>
+    <label><strong>{{$validity}}</strong></label>
 </div>
 
 <div class="col-md-12"><hr/></div>                                    
