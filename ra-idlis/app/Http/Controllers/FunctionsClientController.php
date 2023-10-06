@@ -310,7 +310,8 @@ class FunctionsClientController extends Controller {
 				LEFT JOIN hfaci_serv_type ON appform.hfser_id = hfaci_serv_type.hfser_id 
 				LEFT JOIN trans_status ON appform.status = trans_status.trns_id 
 				LEFT JOIN trans_status as FDA ON appform.FDAstatus = FDA.trns_id 
-				WHERE appform.uid = '$curUser' AND (appform.appid $forLicensed (SELECT DISTINCT appid FROM `licensed`) OR appform.aptid = 'IC' ) $_where 
+				WHERE appform.uid = '$curUser' AND iscancel='0' AND (appform.appid $forLicensed (SELECT DISTINCT appid FROM `licensed`) OR appform.aptid = 'IC' ) $_where 
+				
 				ORDER BY t_date DESC"; 
 			
 			}  else { 
@@ -331,7 +332,7 @@ class FunctionsClientController extends Controller {
 				LEFT JOIN trans_status ON appform.status = trans_status.trns_id 
 				LEFT JOIN trans_status as FDA ON appform.FDAstatus = FDA.trns_id 
 				LEFT JOIN registered_facility ON (registered_facility.nhfcode=appform.nhfcode OR registered_facility.regfac_id=appform.regfac_id)
-				WHERE appform.uid = '$curUser' AND appform.status='A'
+				WHERE appform.uid = '$curUser' AND iscancel='0' AND appform.status='A'
 				ORDER BY t_date DESC;";
 
 			}
