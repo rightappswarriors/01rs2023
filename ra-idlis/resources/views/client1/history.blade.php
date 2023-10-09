@@ -36,45 +36,18 @@
 	<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <body>
 	@include('client1.cmp.nav')
-	@include('client1.cmp.breadcrumb')
+	@include('client1.cmp.breadcrumb_history')
 	@include('client1.cmp.msg')
-	@include('client1.cmp.announcement')
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h3>List of History Records (Previous Application Records)</h3>
+			</div>
+		</div>
+	</div>
 	<div class="container mb-2">
 			<div class="row">
-				<div class="col-sm-3">
-					<?php
-						date_default_timezone_set('Asia/Manila');
-						$todays_date = date("Y-m-d H:i:s");
-						$today = strtotime($todays_date);
-						$initial_period_1 =  date("Y")."-01-01 00:00:00";
-						$initial_period_2 =  date("Y")."-11-15 23:59:59";
-						$renewal_period_1 =  date("Y")."-10-01 00:00:00";
-						$renewal_period_2 =  date("Y")."-12-15 23:59:59";				
-						
-						$late_renewal_period_1 =  date("Y")."-01-01 00:00:00";
-						$late_renewal_period_2 =  date("Y")."-03-31 23:59:59";	
-					?>
-					<p>Application period for Initial / New health facility is from the 1st working day of the year to November 15 of the same year based on the <a href="https://hfsrb.doh.gov.ph/wp-content/uploads/2021/12/ao2019-0004.pdf">A.O. 2019-0004</a>.</p>
-					<p></p>
-					@if($initial_period_1 <= $todays_date &&  $initial_period_2 >= $todays_date)
-					<button class="btn btn-info btn-block" style="text-decoration: none;color:#fff;" data-toggle="modal" data-target="#applicationTypeModal" >
-						Create New Application
-					</button>
-					@endif
-					@if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)
-						
-						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
-							Create Renewal Application
-						</button>
-									
-					@endif
-					@if($late_renewal_period_1 <= $todays_date &&  $late_renewal_period_2 >= $todays_date)
-						
-						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >
-							Create Late Renewal Application
-						</button>
-									
-					@endif
+				<div class="col-sm-4">
 					
 				</div>
 				<div class="col-sm-4">
@@ -89,25 +62,10 @@
 					 </div>
 					@endisset
 				</div>
-				<div class="col-md-5">
-					<div class="media blog-thumb">
-						<div class="media-object media-left">
-							<a href="{{asset('/client1/historyapplication')}}"><img src="{{asset('ra-idlis/public/img/historical-report-256.png')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 250px;" class="img-responsive" alt=""></a>
-						</div>
-						<div class="media-body blog-info">
-							<small><i class="fa fa-clock-o"></i> Old Application Records</small>
-							<h3><a style="color: #252525;font-weight: normal;transition: 0.5s; text-decoration: none !important;" href="{{asset('/client1/historyapplication')}}"> History Records</a></h3>
-							<p>History Records of your Previous Applications</p>
-							<div class="text-center">                                   	
-								<a href="{{asset('/client1/historyapplication')}}" class="btn section-btn">View Records</a>
-							</div>
-						</div>
-					</div>
+				<div class="col-md-4">
+
 				</div>
-				<div class="col-md-8"></div>
 			</div>
-			@include('dashboard.client.modal.type-of-application')
-			@include('dashboard.client.modal.type-of-application-renew')
 	</div>
 	<div  style="background: #fff;padding-left: 25px;padding-right: 25px;padding-top: 0;padding-bottom: 0;">
 	<!-- <div  style="background: #fff;padding: 25px;"> -->
@@ -169,8 +127,7 @@
 											@if(isset($each[0]->submittedReq)) 
 												Submitted.
 											@else 
-												<span style="color: red">No attachment submitted yet.</span><br/>
-												<small class="text-center">To submit attachments, click the button <a href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a> or check the DOH Requirements or FDA Requirements if applicable.</small>
+												<span style="color: red">No attachment submitted yet.</span>
 											@endif
 										</td>
 										<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
