@@ -280,11 +280,16 @@ class FunctionsClientController extends Controller {
 		}
 	}
 
-	public static function getApplicationDetailsWithTransactions($curUid = "", $forLicensed = "NOT IN", $forRenewal = false, $applyPage = false) {
+	public static function getApplicationDetailsWithTransactions($curUid = "", $forLicensed = "NOT IN", $forRenewal = false, $applyPage = false, $cancelOnly=false) {
 		try 
 		{
 			$retArr = []; $_where = "";
 			$curUser = (!empty($curUid)) ? $curUid : self::getSessionParamObj("uData", "uid");
+
+			if($cancelOnly){
+				$_where = "AND appform.iscancel='1'";
+			}
+
 			if($forRenewal) {
 				// $_where = "AND appform.appid NOT IN (SELECT appid FROM appform_r WHERE isrenewed = 1)";
 			}
