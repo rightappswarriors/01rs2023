@@ -67,10 +67,18 @@
                               <br/>Region: {{( $data->rgn_desc ?? 'NO REGION')}}   
 
                               @if(isset($data->t_date))<br/><br/><I>Applied on</I> {{date("F j, Y", strtotime($data->t_date)) }} @else <br/><br/><span style="color:red;">{{ 'Not Officially Applied Yet.' }}</span> @endif 
-                              @if(isset($data->CashierApproveDateCashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation Yet.' }}</span> @endif                    
+                              @if(isset($data->CashierApproveDate))<br/><I>Payment confirmed on</I> {{$data->CashierApproveformattedDate}} @else <br/><span style="color:red;">{{ 'No Payment Confirmation Yet.' }}</span> @endif                    
                           </td>
-                          <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif </td>
-                          <td style="text-align:left">@if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif </td>
+                          <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">
+                              @if($data->aptid != 'R')
+                                @if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 14 days')) }} @endif 
+                              @endif
+                          </td>
+                          <td style="text-align:left">
+                              @if($data->aptid != 'R')
+                                @if(isset($data->formattedInspectedDate)){{$data->formattedInspectedDate}} @endif 
+                              @endif
+                          </td>
                           <td style="text-align:left;border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 44 days')) }} @endif </td>
                           <td style="text-align:left">@if(isset($data->formattedInspectedDate)) {{$data->formattedInspectedDate }} @endif </td>
                           <td style="text-align:left; border-left: darkgray;border-left-width: thin;border-left-style: solid;">@if(isset($data->CashierApproveformattedDate)){{date("F j, Y", strtotime($data->CashierApproveformattedDate. ' + 56 days')) }} @endif </td>

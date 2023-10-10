@@ -285,9 +285,10 @@ class FunctionsClientController extends Controller {
 		{
 			$retArr = []; $_where = "";
 			$curUser = (!empty($curUid)) ? $curUid : self::getSessionParamObj("uData", "uid");
+			$_where = " AND appform.iscancel='0' ";
 
 			if($cancelOnly){
-				$_where = "AND appform.iscancel='1'";
+				$_where = " AND appform.iscancel='1' ";
 			}
 
 			if($forRenewal) {
@@ -308,14 +309,14 @@ class FunctionsClientController extends Controller {
 				trans_status.allowedlegend, trans_status.canapply, trans_status.isapproved, 
 				rgnid, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(documentSent, '%b %d, %Y') AS documentSent, 
 				aptid, isNotified, noofsatellite, isPayEval, noofsatellite, pharCOC, xrayCOC, pharValidity, xrayVal, noofmain, 
-				hfaci_grp.hgpdesc,  appform.nhfcode, appform.isRecoForApproval
+				hfaci_grp.hgpdesc,  appform.nhfcode, appform.isRecoForApproval, appform.iscancel, appform.cancelledby, appform.cancelled_datetime, appform.cancelled_ip, appform.cancelled_reason   
 				
 				FROM appform 
 				LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid
 				LEFT JOIN hfaci_serv_type ON appform.hfser_id = hfaci_serv_type.hfser_id 
 				LEFT JOIN trans_status ON appform.status = trans_status.trns_id 
 				LEFT JOIN trans_status as FDA ON appform.FDAstatus = FDA.trns_id 
-				WHERE appform.uid = '$curUser' AND iscancel='0' AND (appform.appid $forLicensed (SELECT DISTINCT appid FROM `licensed`) OR appform.aptid = 'IC' ) $_where 
+				WHERE appform.uid = '$curUser' AND (appform.appid $forLicensed (SELECT DISTINCT appid FROM `licensed`) OR appform.aptid = 'IC' ) $_where 
 				
 				ORDER BY t_date DESC"; 
 			
@@ -337,11 +338,11 @@ class FunctionsClientController extends Controller {
 				LEFT JOIN trans_status ON appform.status = trans_status.trns_id 
 				LEFT JOIN trans_status as FDA ON appform.FDAstatus = FDA.trns_id 
 				LEFT JOIN registered_facility ON (registered_facility.nhfcode=appform.nhfcode OR registered_facility.regfac_id=appform.regfac_id)
-				WHERE appform.uid = '$curUser' AND iscancel='0' AND appform.status='A'
+				WHERE appform.uid = '$curUser' AND iscancel='0' AND appform.status='A' $_where
 				ORDER BY t_date DESC;";
 
 			}
-			
+
 			$appSql = DB::select($sql);
 
 			foreach($appSql AS $each) 
