@@ -78,12 +78,11 @@
 						<th style="white-space: nowrap;" class="text-center">Name, Type, Owner of Facility <br/>& Date of Application</th>
 						<th style="white-space: nowrap;" class="text-center">Attachments</th>
 						<th style="white-space: nowrap;" class="text-center">DOH Status</th>
-						<th style="white-space: nowrap;" class="text-center">FDA<br/>Radiation</br>Facility Status</th>
+						{{-- <th style="white-space: nowrap;" class="text-center">FDA<br/>Radiation</br>Facility Status</th>
 						<th style="white-space: nowrap;" class="text-center">FDA<br/>Pharmacy </br> Status</th>
-						{{-- <th>Self-Assement Complied (%)</th> --}}
 						<th style="white-space: nowrap;" class="text-center">Document<br/>Received<br/>On</th>
 						<th style="white-space: nowrap;" class="text-center">DOH &/ FDA <br/>Requirements</th>
-						<th style="white-space: nowrap;" class="text-center">Options</th>
+						<th style="white-space: nowrap;" class="text-center" style="height: auto; display:none;"></th>--}}
 					</tr>
 				</thead>
 				<tbody id="homeTbl">
@@ -130,8 +129,8 @@
 												<span style="color: red">No attachment submitted yet.</span>
 											@endif
 										</td>
-										<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
-											
+										<td style="color : red " class="text-center">
+											{{-- 
 											@switch($each[0]->allowedlegend)
 
 												@case(1)
@@ -156,8 +155,14 @@
 												@break
 
 											@endswitch
+											--}}
+
+											<p>Cancelled due to: </p>
+											
+											<p>{{$each[0]->cancelled_reason}}</p>
 										</td>		
-										<td class="text-center">
+										{{-- <td class="text-center">
+											
 											@if($each[0]->noofmain > 0 || $each[0]->hasRadio )
 												{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA'  || $each[0]->hfser_id == 'ATO'   || $each[0]->hfser_id == 'COR'  ? (isset($each[0]->FDAStatMach) ? $each[0]->FDAStatMach : 'Evaluation In Process') : 'Not Applicable'!!}
 											@else
@@ -208,8 +213,8 @@
 												@endif
 
 											@endif
-										</td>
-										<td class="text-center" style="height: auto;">
+										</td> --}}
+										<td class="text-center" style="height: auto; display:none;">
 											<div class="btn-group mb-1 dropup" >
 											<button class="btn btn-block btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												Operations

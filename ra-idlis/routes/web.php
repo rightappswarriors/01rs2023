@@ -107,7 +107,7 @@ Route::prefix('client1')->group(function() {
 	});
 	Route::prefix('historyapplication')->group(function() {
 		// qweqwe - initial change
-		Route::match(['get', 'post'], '/', 'NewClientController@__historyapplication')->name('client1.__msg_inbox');
+		Route::match(['get', 'post'], '/', 'NewClientController@__historyapplication')->name('client1.__historyapplication');
 	});
 
 	Route::prefix('changerequest')->group(function() {

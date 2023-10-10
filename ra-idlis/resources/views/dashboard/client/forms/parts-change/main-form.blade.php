@@ -1,7 +1,9 @@
 <!-- Application Details -->  
 <div class="col-md-3">
-    <label>Type: </label>
-    <label><strong class="text-xl">Initial Change </strong></label>
+    @isset($appid)
+        <label>Type: </label>
+        <label><strong class="text-xl">Initial Change </strong></label>
+    @endisset
 </div>
 <div class="col-md-3">
     <label>Registered ID: <strong class="text-xl">{{$registered_facility->regfac_id}}</strong></label>
@@ -10,13 +12,13 @@
     <label>NHFR Code: <strong class="text-xl">{{$registered_facility->nhfcode}}</strong></label>
 </div>
 <div class="col-md-3 ">
-    <label class="col-md-12 btn-secondary text-center p-1">
-        Application ID:&nbsp;&nbsp;&nbsp;<strong class="text-xl">
-            @isset($appid)
+    @isset($appid)
+        <label class="col-md-12 btn-secondary text-center p-1">
+            Application ID:&nbsp;&nbsp;&nbsp;<strong class="text-xl">
                 @if($appid > 0)  {{$appid}}  @endif
-            @endisset
-        </strong>
-    </label>
+            </strong>
+        </label>
+    @endisset
 </div>
 
 <!-- HF Name -->  
@@ -113,7 +115,7 @@
 
 <div class="col-md-6">
     <label>Validity Period: </label>
-    <label><strong>{{$validity}}</strong></label>
+    <label><strong>@isset($validity){{$validity}}@endisset</strong></label>
 </div>
 
 <div class="col-md-6">
@@ -123,7 +125,7 @@
 
 <div class="col-md-6">
     <label>Date Issued: </label>
-    <label><strong>{{$validity}}</strong></label>
+    <label><strong>@isset($validity){{$validity}}@endisset</strong></label>
 </div>
 
 <div class="col-md-12"><hr/></div>                                    
@@ -131,10 +133,10 @@
 
 <div class="col-md-6">
     <label>Type of Health Facility / Service: </label>
-    <style type="text/css">
+    <!-- style type="text/css">
         ul {    list-style: none;    }
         ul li:before {    content: '✓ ';    }
-    </style>
+    </style --->
     <ul style="list-style-type: none;"><li class="text-uppercase font-weight-bold">{{$registered_facility->facilitytype}}</li></ul>
 </div> 
 
