@@ -1,11 +1,4 @@
 
-    <div class="form-group col-md-12 text-center">
-        <button id="submit"  class="btn btn-info action-btn" type="button" value="submit" name="submit" data-toggle="modal" data-target="#confirmSubmitModalLto">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i>
-            Submit Form
-        </button>
-        <input id="saveasn"  name="saveasn" value="partial" type="hidden" />
-    </div> 
 
 <div class="modal fade" id="confirmSubmitModalLto" tabindex="-1" aria-labelledby="confirmSubmitModalLabel" aria-hidden="true">
     <div class="modal-dialog">

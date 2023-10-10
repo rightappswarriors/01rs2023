@@ -1,4 +1,4 @@
-<form id="form_bedcapacity" action="{{asset('/client1/apply/change_request_submit')}}" method="POST" class="row">
+<form id="form_bedcapacity" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST" class="row">
     {{ csrf_field() }}
     <input type="hidden" name="cat_id" id="cat_id" value="1">
     <input type="hidden" name="appid" id="appid" value="{{$registered_facility->appid}}">         
