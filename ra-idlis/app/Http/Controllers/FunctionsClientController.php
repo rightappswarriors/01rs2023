@@ -1502,7 +1502,6 @@ class FunctionsClientController extends Controller {
 			}
 		}
 		return false;
-
 	}
 
 	public static function notifyForChange($appid){

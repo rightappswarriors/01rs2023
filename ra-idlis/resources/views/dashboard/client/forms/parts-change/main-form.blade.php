@@ -9,14 +9,20 @@
 <div class="col-md-3">
     <label>NHFR Code: <strong class="text-xl">{{$registered_facility->nhfcode}}</strong></label>
 </div>
-<div class="col-md-3">
-    <h4>Application ID: <strong class="text-xl">{{$registered_facility->appid}}</strong></h4>
+<div class="col-md-3 ">
+    <label class="col-md-12 btn-secondary text-center p-1">
+        Application ID:&nbsp;&nbsp;&nbsp;<strong class="text-xl">
+            @isset($appid)
+                @if($appid > 0)  {{$appid}}  @endif
+            @endisset
+        </strong>
+    </label>
 </div>
 
 <!-- HF Name -->  
 <div class="col-md-12">
     <label for="facility_name">Registered Facility Name: </label>
-    <h3 class="text-center text-uppercase"><strong>{{$registered_facility->facilityname_old}}</strong></h3>
+    <h3 class="text-center text-uppercase mb-2"><strong>{{$registered_facility->facilityname_old}}</strong></h3>
 </div>
 
 @if($registered_facility->facilityname != $registered_facility->facilityname_old)
@@ -31,7 +37,7 @@
 <!-- Facility Address -->
 <div class="col-md-12">
     <label for="facility_name"><i class="fa fa-map"></i> Registered HF Complete Address: </label>
-    <label class="text-center text-uppercase"><strong>
+    <label class="text-center text-uppercase">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>
         {{$registered_facility->street_number}} {{$registered_facility->street_name}},
         {{$registered_facility->brgyname}}, {{$registered_facility->cmname}}, 
         {{$registered_facility->provname}}, {{$registered_facility->rgn_desc}} {{$registered_facility->zipcode}}
@@ -64,45 +70,40 @@
 </div>
 
 <!-- Owner -->
-<div class="col-md-12">
-    <label>Head of Facility/Medical Director: </label>
-    <label><strong>{{$registered_facility->approvingauthority}}, {{$registered_facility->approvingauthoritypos}}</strong></label>
-</div>
-
-<div class="col-md-12">
-    <label>Owner Name: </label>
-    <label><strong>{{$registered_facility->owner}}</strong></label>
+<div class="col-md-6">
+    <label>Head of Facility/Medical Director: 
+    <br/>&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{$registered_facility->approvingauthority}}, {{$registered_facility->approvingauthoritypos}}</strong></label>
+    <br/>
+    <label>Owner Name: <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{$registered_facility->owner}}</strong></label>
 </div>
 
 
 <!-- Classification -->
-<div class="col-md-12">
-    <label>Classification According to: </label>
 
-    <div class="col-md-12">
-        <ul>
-            <li>
-                Ownership: <strong>{{$registered_facility->ocdesc}} - {{$registered_facility->classname}} - {{$registered_facility->subclassname}}</strong>     
-                @if($registered_facility->facilitytype != $registered_facility->facilitytype)
-                    <br/><i>Change Ownership to <strong>{{$registered_facility->ocdesc}}</strong></i> 
-                @endif                                              
-            </li>
-            <li>
-                Institutional Character: <strong>{{$registered_facility->facmdesc}}</strong>     
-                @if($registered_facility->facilitytype != $registered_facility->facilitytype)
-                    <br/><i>Change Ownership to <strong>{{$registered_facility->ocdesc}}</strong></i> 
-                @endif                                              
-            </li>
-            <li>
-                Function: <strong>{{$registered_facility->funcdesc}}</strong>     
-                @if($registered_facility->facilitytype != $registered_facility->facilitytype)
-                    <br/><i>Change Function to <strong>{{$registered_facility->ocdesc}}</strong></i> 
-                @endif                                              
-            </li>
-        </ul>
-    </div>
-</div> 
-
+<div class="col-md-6">
+    <label style="margin-bottom:0; padding-bottom:0">Classification According to: </label>
+    
+    <ul style="list-style-type: none; margin-top:0; padding-top:0;">
+        <li>
+            Ownership: <strong>{{$registered_facility->ocdesc}} - {{$registered_facility->classname}}@isset($registered_facility->subclassname) - {{$registered_facility->subclassname}}@endisset</strong>     
+            @if($registered_facility->facilitytype != $registered_facility->facilitytype)
+                <br/><i>Change Ownership to <strong>{{$registered_facility->ocdesc}}</strong></i> 
+            @endif                                              
+        </li>
+        <li>
+            Institutional Character: <strong>{{$registered_facility->facmdesc}}</strong>     
+            @if($registered_facility->facilitytype != $registered_facility->facilitytype)
+                <br/><i>Change Ownership to <strong>{{$registered_facility->ocdesc}}</strong></i> 
+            @endif                                              
+        </li>
+        <li>
+            Function: <strong>{{$registered_facility->funcdesc}}</strong>     
+            @if($registered_facility->facilitytype != $registered_facility->facilitytype)
+                <br/><i>Change Function to <strong>{{$registered_facility->ocdesc}}</strong></i> 
+            @endif                                              
+        </li>
+    </ul>
+</div>
 
 <!-- Authorization Number -->
 <div class="col-md-6">
@@ -127,43 +128,65 @@
 
 <div class="col-md-12"><hr/></div>                                    
 <!-- Type of Health Facility / Service -->
-<div class="col-md-12">                                        
+
+<div class="col-md-6">
     <label>Type of Health Facility / Service: </label>
+    <style type="text/css">
+        ul {    list-style: none;    }
+        ul li:before {    content: '✓ ';    }
+    </style>
+    <ul style="list-style-type: none;"><li class="text-uppercase font-weight-bold">{{$registered_facility->facilitytype}}</li></ul>
+</div> 
+
+<div class="col-md-6">                                        
+    <label>Services:</label>
+    <ul style="list-style-type: none; "><li>Service 1, Service 2, Service 3, Service 4, Service </li></ul>
+</div>
+
+@if($registered_facility->facilitytype != $registered_facility->facilitytype)
     <div class="col-md-12">
-        <ul><li><h3 class="text-uppercase">{{$registered_facility->facilitytype}}</h3></li></ul>
-    </div>  
-    <div class="col-md-12">                                        
-        <label>Hospital and Services:</label>
-        <ul style="list-style-type: none; "><li>Service 1, Service 2, Service 3, Service 4, Service </li></ul>
+        <br/><label><i>Change Type of Facility:</label>
+        <h3 class="text-uppercase"><strong>{{$registered_facility->facilitytype}}</strong></h3>
     </div>
-    
-    @if($registered_facility->facilitytype != $registered_facility->facilitytype)
-        <div class="col-md-12">
-            <br/><label><i>Change Type of Facility:</label>
-            <h3 class="text-uppercase"><strong>{{$registered_facility->facilitytype}}</strong></h3>
-        </div>
-    @endif  
-</div>
-<div class="col-md-12"><hr/></div>                               
-
+@endif                            
 
 <div class="col-md-4">
-    <label>Approved Bed Capacity:  <strong>{{$registered_facility->noofbed_old}}</strong></label>
+    <label>Approved Bed Capacity:  
+        @if(isset($registered_facility->noofbed_old))
+            <strong>{{$registered_facility->noofbed_old}}</strong>
+        @else
+            <strong>0</strong>
+        @endif
+    </label>
     @if($registered_facility->noofbed_old != $registered_facility->noofbed)
-        <br/><label><i>Increase/Decrease in Bed Capacity to  <strong>{{$registered_facility->noofbed}}</strong></i>  </label>
+        <br/><label><i>Increase/Decrease in Bed Capacity to  <strong>{{$registered_facility->noofbed}}</strong></i></label>
     @endif
 </div>
 
 <div class="col-md-4">
-    <label>Number of Dialysis Station:  <strong>{{$registered_facility->noofdialysis_old}}</strong></label>
+    <label>Number of Dialysis Station:  
+        @if(isset($registered_facility->noofdialysis_old))
+            <strong>{{$registered_facility->noofdialysis_old}}</strong>
+        @else
+            <strong>0</strong>
+        @endif
+    </label>
     @if($registered_facility->noofdialysis_old != $registered_facility->noofdialysis)
-        <br/><label><i>Increase or Decrease in Dialysis Station to <strong>{{$registered_facility->noofdialysis}}</strong></i>  </label>
+        <br/><label><i>Increase or Decrease in Dialysis Station to <strong>{{$registered_facility->noofdialysis}}</strong></i></label>
     @endif
 </div>
 
 <div class="col-md-4">
-    <label>Number of Ambulances:  <strong>{{$registered_facility->noofamb}}</strong> </label>
+    <label>Number of Ambulances:  
+        <button id="submitAmbulanceVehicle"  class="btn btn-default btn-flat" type="button" value="ambulancevehicle" name="submit" data-toggle="modal" data-target="#changeAmbulanceVehicle">
+            @if(isset($registered_facility->noofamb))
+                <strong>{{$registered_facility->noofamb}}</strong> 
+            @else
+                <strong>0</strong>
+            @endif
+        </button>
+    </label>
     @if($registered_facility->noofamb != $registered_facility->noofamb)
-        <br/><label><i>Increase or Decrease in Ambulances to  <strong>{{$registered_facility->noofamb}}</strong></i>  </label>
+        <br/><label><i>Increase or Decrease in Ambulances to  <strong>{{$registered_facility->noofamb}}</strong></i></label>
     @endif
 </div>

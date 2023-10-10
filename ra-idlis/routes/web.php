@@ -109,12 +109,19 @@ Route::prefix('client1')->group(function() {
 		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__historyapplication')->name('client1.__msg_inbox');
 	});
+
+	Route::prefix('changerequest')->group(function() {
+		// qweqwe - initial change
+		Route::match(['get', 'post'], '/{reg_fac_id}/{functype}', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/actionsubmit', 'NewClientController@__editAppCoRSubmit');   //submitted bed capacity
+	});
+	
 	Route::prefix('apply')->group(function() {
 		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__apply')->name('client1.apply');
+
 		Route::match(['get', 'post'], '/change_request/{hfser}/{appid}', 'NewClientController@__editAppCoR');  //not use
-		Route::match(['get', 'post'], '/change_request_new/{reg_fac_id}/{functype}', 'NewClientController@__editAppCoRNew');  //functype default value is main
-		Route::match(['get', 'post'], '/change_request_submit', 'NewClientController@__editAppCoRSubmit');   //submitted bed capacity
+
 		Route::match(['get', 'post'], '/new', 'NewClientController@__applyNew')->name('client1.applynew');
 		Route::match(['get', 'post'], '/assessmentSend/{appid}/{apptype}', 'NewClientController@AssessmentSend');
 

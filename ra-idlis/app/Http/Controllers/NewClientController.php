@@ -2938,18 +2938,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			return redirect('client1/apply/attachment/LTO/'.$request->appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
 		}
 
-		return redirect('client1/apply/change_request_new/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
+		return redirect('client1/changerequest/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
 	}
 	// to be updated
 	public function checkAppForm($regfac_id){
 
-		$id = DB::table('appform')
-		->where('regfac_id','=',$regfac_id)
-		->where('aptid','=','IC')
-		->where('savingStat',NULL)
-		->orderby('appid', 'DESC')
-		->first();
-
+		$id = DB::table('appform')->select('appid')
+				->where('regfac_id','=',$regfac_id)
+				->where('aptid','=','IC')
+				->where('savingStat',NULL)
+				->orderby('appid', 'DESC')
+				->first();
+				
 		if (!is_null($id)) { 
 			return $id->appid;
 		}
@@ -3101,159 +3101,105 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	//Initial Change Function and Forms
 	public function __editAppCoRNew(Request $request, $reg_fac_id, string $functype = '') {
 
-		$data = DB::table('view_registered_facility_for_change')->where('regfac_id', $reg_fac_id)->get();
+		//$data = DB::table('view_registered_facility_for_change')->where('regfac_id', $reg_fac_id)->get();
+		$data = DB::select("SELECT view_registered_facility_for_change.*, 0 AS appid, facilityname AS facilityname_old, noofbed AS noofbed_old, noofdialysis AS noofdialysis_old  FROM `view_registered_facility_for_change` WHERE `regfac_id` = $reg_fac_id;");
 		$appform_changeaction = null;
+		$nameofcomp = null;
+		$validity = "";
+		$user_data = session()->get('uData');
 
-		//dd($data);
 		try {
+			if(count($data) > 0 && $user_data) 
+			{
+				$locRet = "dashboard.client.forms.request-for-change";
+				$hfser_id =  $data[0]->hfser_id;
+				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;				
+				$appid = $this->checkAppForm($reg_fac_id);	//CHECK APP id
 
-			if(count($data) > 0) {
-
-				if($functype == 'av'){
-					$locRet = "dashboard.client.forms.ambulance-vehicle-form";
-				} else if($functype == 'cs'){
-					$locRet = "dashboard.client.forms.change-service-form";
-				} else {
-					$locRet = "dashboard.client.forms.request-for-change";
-				}
+				try {
+					$validto = ($hfser_id == 'PTC') ? "" : strtolower($hfser_id).'_validityto';
+					$validfrom = ($hfser_id == 'PTC') ? "" : strtolower($hfser_id).'_validityfrom';
+					$validity = ($hfser_id == 'PTC') ? date_format(date_create($data[0]->ptc_approveddate),"F d, Y") : 
+								date_format(date_create($validfrom),"F d, Y").' to  '.date_format(date_create($validto),"F d, Y");
+				} catch (Exception $e) { }
 				
-				$validity = "";
-				$validto = "";
-				$validfrom ="";
-				$validity = "";
-	
-				try{
-					if($data[0]->hfser_id == 'PTC')
-					{
-						$validity = date_format(date_create($data[0]->$validfrom),"F d, Y");
-						$validto = "";
-						$validfrom ="";
-						$validity = "";
-					}
-					else
-					{
-						$validto = strtolower($data[0]->hfser_id).'_validityto';
-						$validfrom = strtolower($data[0]->hfser_id).'_validityfrom';
-						$validity =  date_format(date_create($data[0]->$validfrom),"F d, Y").' to  '.date_format(date_create($data[0]->$validto),"F d, Y");
-					}
-				}
-				catch (Exception $e){}
-				
-				//CHECK APP id
-				$appid = $this->checkAppForm($data[0]->regfac_id);
-	
-	
 				if($appid > 0) 
 				{
-					$data = DB::table('appform')
-								->select('view_registered_facility_for_change.*','appform.*')
-								->where('appform.regfac_id', $reg_fac_id)
+					/*$data = DB::table('appform')->select('view_registered_facility_for_change.*','appform.appid')->where('appform.regfac_id', $reg_fac_id)
 								->join('view_registered_facility_for_change', 'view_registered_facility_for_change.regfac_id', '=', 'appform.regfac_id')
-								->orderBy('appid','DESC')
-								->get();
-					$appform_changeaction = DB::select("SELECT aca.id, aca.appid, aca.cat_id, ctyp.description, aca.remarks FROM `appform_changeaction` aca LEFT JOIN change_action_type ctyp ON aca.cat_id=ctyp.cat_id WHERE appid='$appid';");
+								->orderBy('appid','DESC')->get();*/					
+					$appform_changeaction = ($functype == '' || $functype == 'main') ? DB::select("SELECT aca.id, aca.appid, aca.cat_id, ctyp.description, aca.remarks FROM `appform_changeaction` aca LEFT JOIN change_action_type ctyp ON aca.cat_id=ctyp.cat_id WHERE appid='$appid';") : null;
 				}
-				else
-				{
-					$data = DB::select("select view_registered_facility_for_change.*, 0 AS appid, facilityname AS facilityname_old, noofbed AS noofbed_old, noofdialysis AS noofdialysis_old  from `view_registered_facility_for_change` where `regfac_id` = $reg_fac_id;");
-				}
-				// /dd($data);
-				if($functype == 'cs')
-				{
-					$faclArr = [];
-					$facl_grp = FACLGroup::where('hfser_id', $data[0]->hfser_id)->select('hgpid')->get();
-	
-					foreach ($facl_grp as $f) {
-						array_push($faclArr, $f->hgpid);
-					}
-					$hfser_id =  $data[0]->hfser_id;
-					$appform = $data;
-				}
-				
+
 				$data = [
-					'registered_facility' => $data[0],
-					'validity' => $validity,
-					'uid' => '',
-					'appform_changeaction' => $appform_changeaction
-				];  
-	
+					'appid'					=> $appid, //old app id
+					'functype'				=> $functype,
+					'registered_facility'	=> (count($data) > 0) ? $data[0] : null,
+					'validity'				=> $validity,
+					'uid'					=> $user_data->uid,
+					'appform_changeaction'	=> $appform_changeaction
+				]; 
+
 				if($functype == 'cs')
 				{
 					$chk =  DB::table('x08_ft')->where([['appid', $appid]])->first();
 					$chkFacid = new stdClass();
-	
+					$proceesedAmb = []; 
+					$arrRet1 = []; 
+					$faclArr = []; 
+					$facl_grp = FACLGroup::where('hfser_id', $hfser_id)->select('hgpid')->get();
+					$appGet = FunctionsClientController::getUserDetailsByAppform($appid, NULL);	
+					$apptype = ($appid > 0 && count($appGet) > 0 ) ? $appGet[0]->hfser_id :	$hfser_id;													
+					$hfaci_sql = "SELECT * FROM hfaci_grp WHERE hgpid IN (SELECT hgpid FROM `facl_grp` WHERE hfser_id = '$apptype')"; 
+					
+					foreach ($facl_grp as $f) {	array_push($faclArr, $f->hgpid);	}
+
 					if($chk)
 					{
 						$chkFacid->facid = $chk->facid;
-						$arrRet1 = [];
 	
-						if(! empty($appid)) 
+						if(!empty($appid)) 
 						{
-							$sql2 =array($chk->facid);
-							
+							$sql2 =array($chk->facid);							
 							$sql1 = "SELECT DISTINCT hgpid FROM facilitytyp WHERE facid = '$chk->facid' ORDER BY hgpid DESC";
 							$sql3 = "SELECT facid, facname FROM facilitytyp WHERE facid = '$chk->facid'";
-							$sql4 = "SELECT hgpid, hgpdesc FROM hfaci_grp WHERE hgpid IN ($sql1)";
-	
-							$arrRet1 = [DB::select($sql1), [$chkFacid], DB::select($sql3), DB::select($sql4)];
-							// $arrRet = [DB::select($sql1), DB::select($sql2), DB::select($sql3), DB::select($sql4)];
+							$sql4 = "SELECT hgpid, hgpdesc FROM hfaci_grp WHERE hgpid IN ($sql1)";	
+							//$arrRet1 = [DB::select($sql1), [$chkFacid], DB::select($sql3), DB::select($sql4)];
 						}
-					} else 
-					{
-						$arrRet1 = [];
 					}
-	
-					$user_data = session()->get('uData');
-	
-					if($user_data){ $nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;   }
-					else{  $nameofcomp = null;  }
-	
-					$appGet = FunctionsClientController::getUserDetailsByAppform($appid, NULL);
-					$percentage = FunctionsClientController::getAssessmentTotalPercentage($appid, ''.$appGet[0]->uid.'_'.$appGet[0]->hfser_id.'_'.$appGet[0]->aptid.'');
-					
-					if(intval($percentage[0]) < 100) {
-						// return redirect('client1/apply/assessmentReady/'.$appid.'/'.$appGet[0]->hfser_id.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Proceed to assessment.']);
-					}
-					
-					$apptype = $appGet[0]->hfser_id;
-					$hfaci_sql = "SELECT * FROM hfaci_grp WHERE hgpid IN (SELECT hgpid FROM `facl_grp` WHERE hfser_id = '$hfser_id')"; 
-	
-					$proceesedAmb = [];
 					foreach (AjaxController::getForAmbulanceList(false,'forAmbulance.hgpid') as $key => $value) {
 						array_push($proceesedAmb, $value->hgpid);
 					}
-	
+					
 					$data2 = [
 						// 'grpid' =>  $grpid,
-						'appid' =>  $appid,
-						//old app id
-						'nameofcomp' =>  $nameofcomp,
-						'hfser' =>  $hfser_id,
-						'user'=> $user_data,
-						'regions' => Regions::orderBy('sort')->get(),
-						'hfaci_service_type'    => HFACIGroup::whereIn('hgpid', $faclArr)->get(),
-						'appFacName'            => FunctionsClientController::getDistinctByFacilityName(),
-						'userInf'=>FunctionsClientController::getUserDetails(),
-						'hfaci_serv_type'=>DB::select($hfaci_sql),
-						'serv_cap'=>json_encode(DB::table('facilitytyp')->where('servtype_id',1)->get()),
-						'apptype'=>DB::table('apptype')->get(),
-						'ownership'=>DB::table('ownership')->get(),
-						'class'=>json_encode(DB::select("SELECT * FROM class WHERE (isSub IS NULL OR isSub = '')")),
-						'subclass'=>json_encode(DB::select("SELECT * FROM class WHERE (isSub IS NOT NULL OR isSub != '')")),
-						'function'=>DB::table('funcapf')->get(),
-						'facmode'=>DB::table('facmode')->get(),
-						'fAddress'=>$appGet,
-						'servfac'=>json_encode(FunctionsClientController::getServFaclDetails($appid)),
-						'ptcdet'=>json_encode(FunctionsClientController::getPTCDetails($appid)),
-						'cToken'=>FunctionsClientController::getToken(),
-						'addresses'=> '',
-						'hfer' => $apptype,
-						'hideExtensions'=> null,
-						'ambcharges'=>DB::table('chg_app')->whereIn('chgapp_id', ['284', '472'])->get(),
-						'aptid'=> 'IC',
-						'group' => json_encode(DB::table('facilitytyp')->where('servtype_id','>',1)->whereNotNull('grphrz_name')->get()),
-						'forAmbulance' => json_encode($proceesedAmb),
-						'apptypenew'=> 'IC'
+						'aptid'				=> 'IC',
+						'apptypenew'		=> 'IC',						
+						'nameofcomp'		=> $nameofcomp,
+						'hfser'				=> $hfser_id,
+						'user'				=> $user_data,
+						'regions'			=> Regions::orderBy('sort')->get(),
+						'hfaci_service_type'=> HFACIGroup::whereIn('hgpid', $faclArr)->get(),
+						'appFacName'		=> FunctionsClientController::getDistinctByFacilityName(),
+						'userInf'			=> FunctionsClientController::getUserDetails(),
+						'hfaci_serv_type'	=> DB::select($hfaci_sql),
+						'serv_cap'			=> json_encode(DB::table('facilitytyp')->where('servtype_id',1)->get()),
+						'apptype'			=> DB::table('apptype')->get(),
+						'ownership'			=> DB::table('ownership')->get(),
+						'class'				=> json_encode(DB::select("SELECT * FROM class WHERE (isSub IS NULL OR isSub = '')")),
+						'subclass'			=> json_encode(DB::select("SELECT * FROM class WHERE (isSub IS NOT NULL OR isSub != '')")),
+						'function'			=> DB::table('funcapf')->get(),
+						'facmode'			=> DB::table('facmode')->get(),
+						'fAddress'			=> $appGet,
+						'servfac'			=> json_encode(FunctionsClientController::getServFaclDetails($appid)),
+						'ptcdet'			=> json_encode(FunctionsClientController::getPTCDetails($appid)),
+						'cToken'			=> FunctionsClientController::getToken(),
+						'addresses'			=> '',
+						'hfer'				=> $apptype,
+						'hideExtensions'	=> null,
+						'ambcharges'		=> DB::table('chg_app')->whereIn('chgapp_id', ['284', '472'])->get(),
+						'group'				=> json_encode(DB::table('facilitytyp')->where('servtype_id','>',1)->whereNotNull('grphrz_name')->get()),
+						'forAmbulance'		=> json_encode($proceesedAmb)
 					];
 	
 					$data = array_merge($data, $data2);
@@ -3261,11 +3207,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				
 				return view($locRet, $data);
 			}
-		}
-		catch (Exception $e) 
-		{
-			dd($e->getMessage());
-			return back()->with('errRet', ['system_error'=>'No registered facility on sight.']);	
+			else{
+				return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'No Registered Facility Record found. Contact the admin']);
+			}
+		} catch (Exception $e) {
+			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
 		}
 		return back()->with('errRet', ['system_error'=>'No registered facility on sight.']);		
 	}
@@ -4174,8 +4120,10 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}*/
 	}
 
-	public function reg_annexb(Request $request, $appid){
-		if(FunctionsClientController::isUserApplication($appid)){
+	public function reg_annexb(Request $request, $appid = "0"){
+
+		//if(FunctionsClientController::isUserApplication($appid)){
+
 			if($request->isMethod('get')){
 				$arrRet = [
 					'hfsrbannexb' => DB::table('hfsrbannexb')->where('appid',$appid)->get(),
@@ -4203,9 +4151,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				}
 				return ($returnToSender > 0 ? "DONE" : "ERROR");
 			}
-		} else {
-			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
-		}
+		//} else {
+		//	return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
+		//}
 	}
 
 	public function annexa(Request $request, $appid){

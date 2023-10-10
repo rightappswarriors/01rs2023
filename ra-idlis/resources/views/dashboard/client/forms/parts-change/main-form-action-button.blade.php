@@ -22,25 +22,25 @@
     </div>
 
     <div class="form-group col-md-3">
-        <a class="btn btn-block btn-primary btn-flat" type="button"  href="{{asset('/client1/regfacility/reg_annexb/')}}/" >
+        <a class="btn btn-block btn-primary btn-flat" type="button"  href="{{asset('/client1/regfacility/reg_annexb/')}}/{{$registered_facility->regfac_id}}" >
             <i class="fa fa-edit" aria-hidden="true"></i> Equipment
         </a>
     </div>
 
     <div class="form-group col-md-3">
-        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/apply/change_request_new/')}}/{{$registered_facility->regfac_id}}/cs">
+        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/cs">
             <i class="fa fa-edit" aria-hidden="true"></i> Change in Service
         </a>
     </div>
 
     <div class="form-group col-md-3">
-        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/apply/change_request_new/')}}/{{$registered_facility->regfac_id}}/cs">
+        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/cs">
             <i class="fa fa-plus" aria-hidden="true"></i> Add On Service
         </a>
     </div>                                   
 
     <div class="form-group col-md-3">
-        <button id="submitAmbulanceVehicle"  class="btn btn-block btn-primary btn-flat" type="button" value="ambulancevehicle" name="submit" data-toggle="modal" data-target="#changeAmbulanceVehicle">
+        <a class="btn btn-block btn-primary btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/av">
             <i class="fa fa-ambulance" aria-hidden="true"></i> Ambulance
         </a>
     </div>

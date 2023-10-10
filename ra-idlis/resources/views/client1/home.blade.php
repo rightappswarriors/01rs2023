@@ -174,7 +174,7 @@
 
 										<button style="margin-top: 10px;" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Print" onclick="window.location.href='{{asset('client1/certificates')}}/{{strtoupper($each[0]->hfser_id)}}/{{$each[0]->appid}}'"><i class="fa fa-print"></i></button>
 										@if($each[0]->hfser_id != "PTC")
-										<button style="margin-top: 10px;" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Change Request Form" @if(isset($each[0]->regfac_id)) onclick="window.location.href='{{asset('client1/apply/change_request_new')}}/{{$each[0]->regfac_id}}/main'" @endif><i class="fa fa-pencil-square-o"></i></button>
+										<button style="margin-top: 10px;" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Change Request Form" @if(isset($each[0]->regfac_id)) onclick="window.location.href='{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main'" @endif><i class="fa fa-pencil-square-o"></i></button>
 										@endif
 										<button style="margin-top: 10px;" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="View Payment Details" onclick="remAppHiddenId('chgfil{{$each[0]->appid}}')"><i class="fa fa-money"></i></button>
 										<form action="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}" method="get">
