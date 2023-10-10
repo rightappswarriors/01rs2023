@@ -20,6 +20,7 @@
         @include('dashboard.client.forms.parts.license-to-operate.for-hospital')
 
         {{-- LTO Ancillary/Clinical Services --}}
+        <div>
         @include('dashboard.client.forms.parts.license-to-operate.ancillary-clinical-services')
 
         {{-- LTO For Dialysis Clinic --}}
