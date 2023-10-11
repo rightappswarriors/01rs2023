@@ -118,11 +118,10 @@
 						<th style="white-space: wrap;" class="text-center">Process & Type of Application</th>
 						<th style="white-space: nowrap;" class="text-center">Application <br/> Code</th>
 						<th style="white-space: nowrap;" class="text-center">Name, Type, Owner of Facility <br/>& Date of Application</th>
-						<th style="white-space: nowrap;" class="text-center">Attachments</th>
 						<th style="white-space: nowrap;" class="text-center">DOH Status</th>
 						<th style="white-space: nowrap;" class="text-center">FDA<br/>Radiation</br>Facility Status</th>
 						<th style="white-space: nowrap;" class="text-center">FDA<br/>Pharmacy </br> Status</th>
-						{{-- <th>Self-Assement Complied (%)</th> --}}
+						<th style="white-space: nowrap;" class="text-center">Attachments</th>
 						<th style="white-space: nowrap;" class="text-center">Document<br/>Received<br/>On</th>
 						<th style="white-space: nowrap;" class="text-center">DOH &/ FDA <br/>Requirements</th>
 						<th style="white-space: nowrap;" class="text-center">Options</th>
@@ -156,22 +155,21 @@
 											@isset($each[0]->nhfcode)<br/><strong style="font-size:smaller">NHFR Code:<br/><strong>{{$each[0]->nhfcode}}</strong></span>
 											@endisset
 										</td>
-										<td style="width: 10%; height: auto;" class="text-center">
+										<td style="height: auto;" class="text-center">
 											<strong>{{$each[0]->facilityname}}</strong>
 											<br/><br/><span style="font-size:smaller">Facility Type: <strong>{{$each[0]->hgpdesc}}</strong></span>
 											<br/><span style="font-size:smaller">Owner: <span style="color:#228B22;">{{$each[0]->owner}}</span></span>
-											@isset($each[0]->t_date)<br/><span style="font-size:smaller">Applied on <strong>{{$each[0]->t_date}}</strong></span>
-											@else <br/><span style="font-size:smaller; color:red">Not officially applied yet.</span>
+
+											@isset($each[0]->created_at)
+												<br/><span style="font-size:smaller">Created on <strong>{{$each[0]->created_at}}</strong></span>
 											@endisset
 
-										</td>
-										<td class="text-center">
-											@if(isset($each[0]->submittedReq)) 
-												Submitted.
+											@isset($each[0]->t_date)
+												<br/><span style="font-size:smaller">Application Submitted on <strong>{{$each[0]->t_date}}</strong></span>
 											@else 
-												<span style="color: red">No attachment submitted yet.</span><br/>
-												<small class="text-center">To submit attachments, click the button <a href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a> or check the DOH Requirements or FDA Requirements if applicable.</small>
-											@endif
+												<br/><span style="font-size:smaller; color:red">Not officially applied yet.</span>
+											@endisset
+
 										</td>
 										<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
 											
@@ -212,6 +210,14 @@
 												{!! $each[0]->hfser_id == 'LTO' || $each[0]->hfser_id == 'COA'  || $each[0]->hfser_id == 'ATO'   || $each[0]->hfser_id == 'COR' ? (isset($each[0]->FDAStatPhar) ? $each[0]->FDAStatPhar : 'Evaluation In Process') : 'Not Applicable'!!}
 											@else
 												Not Applicable
+											@endif
+										</td>
+										<td class="text-center">
+											@if(isset($each[0]->submittedReq)) 
+												Submitted.
+											@else 
+												<span style="color: red">No attachment submitted yet.</span><br/>
+												<small class="text-center">To submit attachments, click the button <a href="{{asset('client1/apply/attachment')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}">Attachments</a> or check the DOH Requirements or FDA Requirements if applicable.</small>
 											@endif
 										</td>
 										<td class="text-center">{{$each[0]->documentSent}}</td>
