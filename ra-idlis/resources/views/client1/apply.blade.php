@@ -168,7 +168,13 @@
 												<br/><span style="font-size:smaller">Application Submitted on <strong>{{$each[0]->t_date}}</strong></span>
 											@else 
 												<br/><span style="font-size:smaller; color:red">Not officially applied yet.</span>
-											@endisset
+											@endisset  
+
+											@isset($each[0]->CashierApproveformattedDate)
+												<br/><span style="font-size:smaller">Payment Confirmed on <strong>{{$each[0]->CashierApproveformattedDate}}</strong></span>
+											@else 
+												<br/><span style="font-size:smaller; color:red">No Payment confirmation yet.</span>
+											@endisset  
 
 										</td>
 										<td style="background-color : {{$each[0]->dohcolor}}" class="text-center">
