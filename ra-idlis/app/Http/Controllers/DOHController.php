@@ -10612,8 +10612,22 @@ namespace App\Http\Controllers;
 									 'signatoryname' => $signatoryname,
 									 'signatorypos' => $signatorypos
 							);
-		
-							(!empty($request->validity) ? $data['validDate'] = Carbon::parse($request->validity)->toDateString() : "");
+							
+							$facility =DB::table('hfaci_grp')->where([['hgpid', $appform->hgpid]])->first();
+
+							$generatedvalidityyear = $facility->year_validity;
+
+							$approvedDate = $appform->approvedDate;
+
+							$carbonDate = Carbon::parse($approvedDate);
+
+							$nextYear = $carbonDate->addYear($generatedvalidityyear);
+
+							$lastDayOfYear = $nextYear->endOfYear();
+
+							$result = $lastDayOfYear->toDateString();
+
+							(!empty($request->validity) ? $data['validDate'] = Carbon::parse($request->validity)->toDateString() :  $data['validDate'] = $result);
 							(!empty($request->validityDateFrom) ? $data['validDateFrom'] = Carbon::parse($request->validityDateFrom)->toDateString() : "");
 							
 							$success = DB::table('appform')->where('appid', '=', $appform->appid)->update($data);

@@ -1719,15 +1719,18 @@ class NewClientController extends Controller {
 
 						break;
 					case 'COA':
+						$otherDetails = [DB::table('assessmentrecommendation')->where('appid',$appid)->first(), DB::table('x08_ft')->where('appid',$appid)->whereIn('facid',['H','H2','H3'])->exists()];
 						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_coa')->where('hgpid',$hgpid)->first())->ftr_msg_coa;
 
 						break;
 
 					case 'ATO':
+						$otherDetails = [DB::table('assessmentrecommendation')->where('appid',$appid)->first(), DB::table('x08_ft')->where('appid',$appid)->whereIn('facid',['H','H2','H3'])->exists()];
 						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_ato')->where('hgpid',$hgpid)->first())->ftr_msg_ato;
 						break;
 
 					case 'COR':
+						$otherDetails = [DB::table('assessmentrecommendation')->where('appid',$appid)->first(), DB::table('x08_ft')->where('appid',$appid)->whereIn('facid',['H','H2','H3'])->exists()];
 						$ftr_msg_facility = (DB::table('hfaci_grp')->select('ftr_msg_cor')->where('hgpid',$hgpid)->first())->ftr_msg_cor;
 						break;
 

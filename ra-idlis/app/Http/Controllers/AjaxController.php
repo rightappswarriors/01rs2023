@@ -6071,23 +6071,35 @@ public static function checkConmem($appid)
 						switch ($clienthfser_id) {
 							case 'LTO':
 								$curStat = DB::table('appform')->where('appid',$request->apid)->select('status')->first()->status;
-								$stat = 'FI';
+								if($appform->aptid == 'R'){
+									$stat = 'FR';
+								} else {
+									$stat = 'FI';
+								}
 								break;
 							case 'COA':
 								$curStat = DB::table('appform')->where('appid',$request->apid)->select('status')->first()->status;
-								$stat = 'FI';
+								if($appform->aptid == 'R'){
+									$stat = 'FR';
+								} else {
+									$stat = 'FI';
+								}
 								break;
 							case 'ATO':
 								$curStat = DB::table('appform')->where('appid',$request->apid)->select('status')->first()->status;
-								$stat = 'FI';
+								if($appform->aptid == 'R'){
+									$stat = 'FR';
+								} else {
+									$stat = 'FI';
+								}
 								break;
 							case 'COR':
 								$curStat = DB::table('appform')->where('appid',$request->apid)->select('status')->first()->status;
-								$stat = 'FI';
-								break;
-							case 'LTO':
-								$curStat = DB::table('appform')->where('appid',$request->apid)->select('status')->first()->status;
-								$stat = 'FI';
+								if($appform->aptid == 'R'){
+									$stat = 'FR';
+								} else {
+									$stat = 'FI';
+								}
 								break;
 							case 'PTC':
 								if(DB::table('appform')->where([['appid',$request->apid],['isAcceptedFP','<>',1]])->doesntExist()){
@@ -6103,21 +6115,32 @@ public static function checkConmem($appid)
 
 						}
 						$hfser = DB::table('appform')->where('appid',$request->apid)->select('hfser_id')->first()->hfser_id;
+
+						if(strtolower($hfser) == 'lto' || strtolower($hfser) == 'coa' || strtolower($hfser) == 'ato' || strtolower($hfser) == 'cor'){
+							if($appform->aptid == 'R'){
+								$newstat = 'FR';
+							} else {
+								$newstat = 'FI';
+							}
+						} else {
+							$newstat = 'P';
+						}
+
 						$updateData = array(
-											'isrecommended'=>1,
-											'recommendedby' => $Cur_useData['cur_user'],
-											'recommendedtime' => $Cur_useData['time'],
-											'recommendeddate' =>  $Cur_useData['date'],
-											'recommendedippaddr' =>$Cur_useData['ip'],
-											'isPayEval' => 1,
-											'payEvalby' => $Cur_useData['cur_user'],
-											'payEvaldate' => $Cur_useData['date'],
-											'payEvaltime' => $Cur_useData['time'],
-											'payEvalip'=> $Cur_useData['ip'],
-											'status' => (strtolower($hfser) == 'lto' || strtolower($hfser) == 'coa' ? 'FI' : 'P'),
-											'isReadyForInspec' => 1
-											// 'FDAStatMach' => 'For Evaluation'
-										);
+							'isrecommended'=>1,
+							'recommendedby' => $Cur_useData['cur_user'],
+							'recommendedtime' => $Cur_useData['time'],
+							'recommendeddate' =>  $Cur_useData['date'],
+							'recommendedippaddr' =>$Cur_useData['ip'],
+							'isPayEval' => 1,
+							'payEvalby' => $Cur_useData['cur_user'],
+							'payEvaldate' => $Cur_useData['date'],
+							'payEvaltime' => $Cur_useData['time'],
+							'payEvalip'=> $Cur_useData['ip'],
+							'status' => $newstat,
+							'isReadyForInspec' => 1
+							// 'FDAStatMach' => 'For Evaluation'
+						);
 					}
 					// Revised Documentary Evaluation
 					else if ($request->selected == 2)  
