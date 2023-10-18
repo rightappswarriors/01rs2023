@@ -116,7 +116,11 @@
 						Validity of Accreditation 
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family: Arial; font-size: 13pt">
-					:&nbsp;&nbsp;&nbsp;{{date('F j, Y', strtotime($retTable[0]->approvedDate))}} – {{'December 31, '. date('Y', strtotime('+1 years' ,  strtotime($retTable[0]->approvedDate)))}}
+					@if($retTable[0]->aptid != 'R' )
+						{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
+					@else
+						{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
+					@endif
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>

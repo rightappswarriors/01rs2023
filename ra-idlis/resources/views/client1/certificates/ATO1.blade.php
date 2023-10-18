@@ -114,7 +114,11 @@
 						Validity
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family: Century Gothic; font-size: 13pt">
-						:&nbsp;&nbsp;&nbsp;03 September 2019 – 31 December 2019
+						@if($retTable[0]->aptid != 'R' )
+							{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
+						@else
+							{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
+						@endif
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>

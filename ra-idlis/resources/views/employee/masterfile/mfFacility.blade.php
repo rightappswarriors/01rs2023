@@ -28,6 +28,7 @@
                     <th style="width: auto">COA Certificate Footer</th>
                     <th style="width: auto">ATO Certificate Footer</th>
                     <th style="width: auto">COR Certificate Footer</th>
+                    <th style="width: auto">Certificate Year Validity</th>
                     <th style="width: auto">Status</th>
                     <th style="width: auto"><center>Options</center></th>
                   </tr>
@@ -43,6 +44,7 @@
                             <td>@isset($fatype->ftr_msg_coa) {{$fatype->ftr_msg_coa}} @endisset</td>
                             <td>@isset($fatype->ftr_msg_ato) {{$fatype->ftr_msg_ato}} @endisset</td>
                             <td>@isset($fatype->ftr_msg_cor) {{$fatype->ftr_msg_cor}} @endisset</td>
+                            <td>@isset($fatype->year_validity) {{$fatype->year_validity}} @endisset</td>
                             <td>@if($fatype->status == "1") Active @else Inactive @endif</td>
                             <td><center>
                             <span class="AP008_update">
