@@ -65,14 +65,14 @@
             <i class="fa fa-file-word-o" aria-hidden="true"></i> Rename Facility
         </a>
     </div>
-
+{{-- 
     <div class="col-md-3">
         <a class="btn btn-block btn-primary btn-flat" type="button" href="#">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
             Other Updates
         </a>
     </div>
-    
+      --}}
     <!-- div class="col-md-3 ">
         <a class="btn btn-block btn-primary btn-flat" type="button" href="#">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>  View Facility Profile 
