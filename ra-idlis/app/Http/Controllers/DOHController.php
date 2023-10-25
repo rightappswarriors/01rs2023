@@ -5305,7 +5305,6 @@ namespace App\Http\Controllers;
 
 		public function OrderOfPaymentOneProcessFlowMachinesFDA(Request $request, $appid)
 		{
-
 			if(FunctionsClientController::hasRequirementsFor('cdrrhr',$appid)){
 				if ($request->isMethod('get')) 
 				{
@@ -5344,7 +5343,9 @@ namespace App\Http\Controllers;
 					try 
 					{
 						$Cur_useData = AjaxController::getCurrentUserAllData();
-						if(empty($request->getCharge)){
+
+						if(empty($request->getCharge))
+						{
 					  		$getData = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->select('chg_num')->first();
 					  		$test = DB::table('chgfil')->insert([
 					  						'chgapp_id' => $request->id,
@@ -5362,11 +5363,13 @@ namespace App\Http\Controllers;
 					  		$upd = array('chg_num'=>(intval($getData->chg_num) + 1));
 					  		$test2 = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->update($upd);
 					  		return 'DONE';
-				  		} elseif($request->getCharge == 'charges') {
+				  		} elseif($request->getCharge == 'charges')    {
 				  			$choosen = $request->selected;
 				  			return json_encode(DB::table('fdarange')->where('id',$request->id)->select($choosen)->first()->$choosen);
-				  		} elseif($request->getCharge == 'newpayment'){
+				  		} elseif($request->getCharge == 'newpayment')
+						{
 				  			$data = AjaxController::getAllDataEvaluateOne($appid);
+
 				  			switch (true) {
 								case ($data->aptid == 'IN'):
 									$findIn = 'initial_amnt';
@@ -5376,7 +5379,12 @@ namespace App\Http\Controllers;
 									break;
 							}
 				  			$fdarange = DB::table('fdarange')->where('id',$request->id)->select($findIn)->first()->$findIn;
-				  			$test = DB::table('fda_chgfil')->insert(['appid' => $appid, 'fchg_code' => $request->id, 'amount' => $fdarange, 't_date' => $Cur_useData['date'], 't_time' => $Cur_useData['time'], 'ipaddress' => $Cur_useData['ip'], 'uid' => $Cur_useData['cur_user']]);
+				  			$test = DB::table('fda_chgfil')->insert([
+									'appid' => $appid, 'fchg_code' => $request->id, 'amount' => $fdarange, 
+									't_date' => $Cur_useData['date'], 't_time' => $Cur_useData['time'], 'ipaddress' => $Cur_useData['ip'], 
+									'uid' => $Cur_useData['cur_user']
+									]);
+
 				  			if($test){
 				  				return 'done';
 				  			}
@@ -5906,7 +5914,7 @@ namespace App\Http\Controllers;
 			{
 				try 
 				{
-					$data = SELF::application_filter($request, 'app_assignmentofhferc');
+					$data = SELF::application_filter($request, 'app_assignmentofhferc_max_rev');
 
 					return view('employee.processflow.pfassignmentofhferc', ['BigData' => $data['data'], 'arr_fo'=>$data['arr_fo']]);
 				} 

@@ -122,15 +122,15 @@
             <span class="optnTD"><button style="background-color: #82d202" class="btn btn-primarys" onclick="ShowifApOrReg(1)" data-toggle="modal" data-target="#AccepttGodModal" >Approve</button> &nbsp;</span>
             {{-- <span  class="optnTD"><button style="background-color: #dc3545;" class="btn btn-primarys" onclick="ShowifApOrReg(0)"  data-toggle="modal" data-target="#AccepttGodModal" >Reject</button>&nbsp;</span> --}}
             <span style="display:none" class="optnTD"><button style="background-color: #82d202;" class="btn btn-primarys" onclick="AddPay()" data-toggle="modal" data-target="#AddGodModal">Add</button>&nbsp;</span>
-            <span class="optnTD"><button style="background-color: #3557d2" class="btn btn-primarys" id="OvrBtn" onclick="$('.optnTD').toggle();setData(1);">Overide</button></span>
-            <span style="display:none" class="optnTD">&nbsp;<button style="background-color: #ff8100;" class="btn btn-primarys" id="CnclBtn" onclick="$('.optnTD').toggle();setData(0);" id="">Cancel Overide</button></span>
+            <span class="optnTD"><button style="background-color: #3557d2" class="btn btn-primarys" id="OvrBtn" onclick="$('.optnTD').toggle();setData(1);">Override</button></span>
+            <span style="display:none" class="optnTD">&nbsp;<button style="background-color: #ff8100;" class="btn btn-primarys" id="CnclBtn" onclick="$('.optnTD').toggle();setData(0);" id="">Cancel Override</button></span>
           </center>
         </div>
         @endif
       </div>
       </div>
     </div>
-</div>
+</div>     
 
 <div class="modal fade" id="DelGodModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -298,7 +298,7 @@
                 '<input type="text" id="toBeDeletedID" class="form-control"  style="margin:0 0 .8em 0;" value="'+id+'" hidden>'+
                 '</div>'
               );
-        }
+        } //
     function AddPay(){
           $('#AddModSpan').empty();
           $('#AddModSpan').append(
@@ -313,7 +313,9 @@
                   '<div class="col-sm-8" style="margin:0 0 .8em 0;">' +
                     '<input type="text" id="selectAMOUNT" class="form-control" disabled value="">' +
                   '</div>' +
-                '</div>'
+                '</div>' + 
+                
+                '<input type="text" id="selectAptid" class="form-control" readonly="readonly" value="@php echo $AppData->aptid; @endphp">' 
             );
         }
     function getChrges(){
@@ -357,9 +359,10 @@
             if (form.parsley().isValid()) {
               let id = $("#selectOOP").val();
               let amount = $("#selectAMOUNT").val();
+              let _aptid = $("#selectAptid").val();
               $.ajax({
                 method: "POST",
-                data: {_token: $("input[name=_token]").val(),id: id, amount: amount, getCharge: 'newpayment'},
+                data: {_token: $("input[name=_token]").val(),id: id, amount: amount, getCharge: 'newpayment', aptid: _aptid},
                 success: function(a){
                   if(a == 'done'){
                   Swal.fire({
