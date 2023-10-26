@@ -99,7 +99,7 @@
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
 				</div>
-				<div class="row">
+				<!-- div class="row">
 					<div class="col-md-2" style="">&nbsp;</div>
 					<div class="col-md-3" style="font-family: Arial; font-size: 12pt">
 						Accreditation Number
@@ -109,7 +109,7 @@
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
-				</div>	
+				</div --->	
 				<div class="row">
 					<div class="col-md-2" style="">&nbsp;</div>
 					<div class="col-md-3" style="font-family: Arial; font-size: 12pt">
