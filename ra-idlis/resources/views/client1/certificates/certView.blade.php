@@ -204,7 +204,7 @@
 				@endif
 				@endif
 				@if(strtolower($retTable[0]->hfser_id) == 'lto')
-				<div class="row">	
+				<!--div class="row">	
 					<div class="col-md-2" style="">&nbsp;</div>
 					<div class="col-md-3" style="font-family: Century Gothic; font-size: 11pt">
 						License Number
@@ -237,7 +237,7 @@
 						@endphp
 						{{$retTable[0]->rgnid.'-'.$formatted_str.'-'.date('y', strtotime(str_replace('-','/', $retTable[0]->t_date))).'-'. $disercap.'-'.($retTable[0]->ocid == 'G'? '1':'2') }}
 					</div>	
-				</div>
+				</div --->
 
 					@if(isset($retTable[0]->plate_number) && isset($retTable[0]->ambtyp))
 						@php 
@@ -342,7 +342,6 @@
 						</div>
 						@endif
 					@endisset
-
 				@endif
 
 				@if(strtolower($retTable[0]->hfser_id) == 'con')

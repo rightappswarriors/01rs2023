@@ -249,7 +249,7 @@
 						@endif
 					@endif
 
-					<div class="row">
+					<!-- div class="row">
 						<div class="col-md-1"  >&nbsp;</div>
 						<div class="col-md-4 contl" >
 							License Number
@@ -259,7 +259,7 @@
 							{{$retTable[0]->rgnid.'-'.$formatted_str.'-'.date('y', strtotime(str_replace('-','/', $retTable[0]->t_date))).'-'. strtoupper($disercap).'-'.($retTable[0]->ocid == 'G'? '1':'2') }}
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
-					</div>
+					</div --->
 
 					<div class="row">
 						<div class="col-md-1"  >&nbsp;</div>
