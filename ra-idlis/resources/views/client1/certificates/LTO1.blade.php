@@ -271,7 +271,7 @@
 							@if($retTable[0]->aptid != 'R' )
 								{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
 							@else
-								01 January {{date('Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
+								01 January {{date('Y', strtotime('+1 year', strtotime($retTable[0]->approvedDate)))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
 							@endif
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
