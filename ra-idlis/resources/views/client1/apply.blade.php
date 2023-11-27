@@ -55,7 +55,7 @@
 						$late_renewal_period_2 =  date("Y")."-03-31 23:59:59";	
 					?>
 					<p>Application period for Initial / New health facility is from the 1st working day of the year to November 15 of the same year based on the <a href="https://hfsrb.doh.gov.ph/wp-content/uploads/2021/12/ao2019-0004.pdf">A.O. 2019-0004</a>.</p>
-					<p></p>
+					
 					@if($initial_period_1 <= $todays_date &&  $initial_period_2 >= $todays_date)
 					<button class="btn btn-info btn-block" style="text-decoration: none;color:#fff;" data-toggle="modal" data-target="#applicationTypeModal" >
 						Create New Application
@@ -75,11 +75,15 @@
 						</button>
 									
 					@endif
+
+					<button class="btn btn-secondary btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#" >
+							Change Request Application
+						</button>
 					
 				</div>
 				<div class="col-sm-4">
 					@isset($legends)
-					<div class="legend">
+					<div class="legend mt-5">
 					    <h4>Legend</h4>
 					    <ul>
 					    	@foreach($legends as $legend)
@@ -90,7 +94,7 @@
 					@endisset
 				</div>
 				<div class="col-md-5">
-					<div class="media blog-thumb">
+					<div class="media blog-thumb mt-5">
 						<div class="media-object media-left">
 							<a href="{{asset('/client1/historyapplication')}}"><img src="{{asset('ra-idlis/public/img/historical-report-256.png')}}" width="250" style=" border-radius: 1rem 0 0 1rem;height: 250px;" class="img-responsive" alt=""></a>
 						</div>

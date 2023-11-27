@@ -102,11 +102,9 @@ Route::prefix('client1')->group(function() {
 	Route::match(['get', 'post'], '/createfdacert/{appid}/{request?}', 'DOHController@createfdacert');
 	Route::match(['get', 'post'], '/printPaymentFDACDRR/{token}/{appid}', 'NewClientController@__fdaPaymentCDRR');
 	Route::prefix('messages')->group(function() {
-		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__msg_inbox')->name('client1.__msg_inbox');
 	});
 	Route::prefix('historyapplication')->group(function() {
-		// qweqwe - initial change
 		Route::match(['get', 'post'], '/', 'NewClientController@__historyapplication')->name('client1.__historyapplication');
 	});
 
