@@ -14,12 +14,10 @@ var mserv_cap = JSON.parse('{!!addslashes($serv_cap)!!}')
         }else{
             document.getElementById("nofpahr").removeAttribute('hidden')
         }
-        
     });
     setTimeout(function(){
         initialCheck()
     }, 1000);
-
 
     setTimeout(function(){
             var first = document.getElementById("clickable");
@@ -1451,7 +1449,6 @@ function getFacServCharge (val = null){
         if(selected != 'H3') { 
             $('#hgpid1').remove()
             document.getElementsByClassName('ambulSurgCli')[0].setAttribute("hidden", "hidden")
-
         }
 
         if(sp){
@@ -1464,10 +1461,8 @@ function getFacServCharge (val = null){
             } 
         }
         
-
         jQuery('#'+selected).prop('checked', true).attr('checked', true);
         
-
         if(selected == 'H3'){
             if(jQuery('#H3ADC').length){
                 if(jQuery('#H3ADC').is(':checked')){
@@ -1491,20 +1486,18 @@ function getFacServCharge (val = null){
         } else {
             jQuery('.showifH3ASC-class').attr('hidden', true);
             jQuery('.showifH3ASC-class').attr('hidden', true);
-        }
+        }       
         
-        
-
         let sArr = ['_token='+document.getElementsByName('_token')[0].value, 'facid[]=H', 'facid[]=H2', 'facid[]=H3'];
         let resp = []
         var nas;
         sendRequestRetArr(sArr, "{{asset('client1/request/customQuery/getGoAncillary')}}", "POST", true, {
-					functionProcess: function(arr) {
+					functionProcess: function(arr) {  
                         show_hosplevel_anx(selected, arr, hgpid)
                     }
-				});
-       
+		});
     }
+
     function saveas(val){
         var itm = document.getElementById(val);
         itm.value = "final";

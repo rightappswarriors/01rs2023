@@ -234,19 +234,15 @@
         width: 100%;
         display: block;
     }
-
     .custom-selectpicker {
         border: 1px solid #ced4da;
     }
-
     .region {
         display: none;
     }
-
     .province {
         display: none;
     }
-
     #asc-H1-REGIS {
         display: none;
     }
@@ -264,7 +260,6 @@
     if (window.location.href.indexOf("?cor=true") > -1 && 'final' == '{!!((count($fAddress) > 0) ? $fAddress[0]->savingStat: "")!!}') {
         savStat = "partial";
     }
-
     //  if(savStat == "final"){
     //     document.getElementById('submit').setAttribute("hidden", "hidden");
     //     document.getElementById('save').setAttribute("hidden", "hidden");
@@ -284,7 +279,6 @@
         @if($grpid == 'RLO' || $grpid == 'LO1' || $grpid == 'LO2' || $grpid == 'LO3' || $grpid == 'LO4' || $grpid == 'PO' || $grpid == 'PO1' || $grpid == 'PO2')
                 document.getElementById('divRem').removeAttribute("hidden");
         @endif
-
     }
 
     if(apptypenew == "renewal"){

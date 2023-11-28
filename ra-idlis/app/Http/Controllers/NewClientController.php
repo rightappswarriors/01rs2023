@@ -212,9 +212,11 @@ class NewClientController extends Controller {
 			}
 
 			$appform = FunctionsClientController::getApplicationDetailsWithTransactions(FunctionsClientController::getSessionParamObj("uData", "uid"), 'NOT IN', false, true);
-			
+			$appGet = FunctionsClientController::getApplicationDetailsWithTransactions(FunctionsClientController::getSessionParamObj("uData", "uid"), "IN", true);
+
 			$arrRet = [
 				'appDet'=> $appform ,
+				'appDet1'=> $appGet ,
 				'userInf'=>FunctionsClientController::getUserDetails(),
 				'legends' => DB::table('trans_status')->where([['allowedlegend',1],['color','<>',null]])->get()
 			];
