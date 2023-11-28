@@ -76,7 +76,7 @@
 									
 					@endif
 
-					<button class="btn btn-secondary btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#" >
+					<button class="btn btn-secondary btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#clientregisteredfacilities" >
 							Change Request Application
 						</button>
 					
@@ -112,6 +112,7 @@
 			</div>
 			@include('dashboard.client.modal.type-of-application')
 			@include('dashboard.client.modal.type-of-application-renew')
+			@include('dashboard.client.modal.client-registered-facliities')
 	</div>
 	<div  style="background: #fff;padding-left: 25px;padding-right: 25px;padding-top: 0;padding-bottom: 0;">
 	<!-- <div  style="background: #fff;padding: 25px;"> -->

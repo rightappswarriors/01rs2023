@@ -323,6 +323,7 @@ class FunctionsClientController extends Controller {
 			}  else { 
 				$sql = "SELECT appform.status, appform.isRecommended, appform.submittedReq, appform.savingStat, appform.isApprove, requestReeval, appform.appid, proofpaystat, FDAStatMach, FDAStatPhar , FDAstatus, appform.uid, appform.licenseNo, appform.approvedDate, 	appform.facilityname, hfser_desc, hfaci_serv_type.hfser_id, appform.owner, DATE_FORMAT(appform.t_date, '%b %d, %Y') AS t_date, DATE_FORMAT(appform.created_at, '%M %d, %Y') AS created_at, trans_status.trns_desc, trans_status.color as dohcolor, FDA.color as fdacolor, FDA.trns_desc as FDAstat, trans_status.allowedpayment, trans_status.canapply, trans_status.isapproved, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(appform.documentSent, '%b %d, %Y') AS documentSent, appform.aptid, isNotified, appform.noofsatellite, appform.isPayEval, appform.noofsatellite, appform.pharCOC, appform.xrayCOC, appform.pharValidity, appform.xrayVal, appform.noofmain, registered_facility.regfac_id, registered_facility.nhfcode,	appform.hgpid, hfaci_grp.hgpdesc, appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname,  region.rgn_desc, appform.zipcode, 
 				appform.rgnid, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
+				CONCAT( CASE WHEN appform.street_number !='N/A' THEN COALESCE( appform.street_number,'')  ELSE '' END , ', ', COALESCE(appform.street_name,' ') , ', ',   COALESCE(barangay.brgyname,''),  ', ' , COALESCE(city_muni.cmname,''), ', ' , COALESCE(province.provname,'') ,  COALESCE(region.rgn_desc,''), COALESCE( appform.zipcode, '') )    AS address,
 				appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, 
 				appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos
 				
@@ -340,9 +341,7 @@ class FunctionsClientController extends Controller {
 				LEFT JOIN registered_facility ON (registered_facility.nhfcode=appform.nhfcode OR registered_facility.regfac_id=appform.regfac_id)
 				WHERE appform.uid = '$curUser' AND iscancel='0' AND appform.status='A' $_where
 				ORDER BY t_date DESC;";
-
 			}
-
 			$appSql = DB::select($sql);
 
 			foreach($appSql AS $each) 
@@ -799,9 +798,13 @@ class FunctionsClientController extends Controller {
 		$retArr = [];
 		if(count($facid) > 0) {
 			for($i = 0; $i < count($facid); $i++) { $inFacid = $facid[$i]; $facid[$i] = "'$inFacid'"; } $impFacid = implode(', ', $facid);
+
 			$sql = "SELECT * FROM facilitytyp WHERE servtype_id IN (SELECT servtype_id FROM serv_type, (SELECT grp_name, seq FROM serv_type WHERE facid IN (SELECT facid FROM facilitytyp WHERE facid IN ($impFacid) AND servtype_id = 1)) grpseq WHERE serv_type.grp_name IN (grpseq.grp_name) AND serv_type.seq > (grpseq.seq - 1)) ORDER BY grphrz_name, facname ASC";
+
 			$sql1 = "SELECT * FROM serv_type, (SELECT grp_name, seq FROM serv_type WHERE facid IN (SELECT facid FROM facilitytyp WHERE facid IN ($impFacid) AND servtype_id = 1)) grpseq WHERE serv_type.grp_name IN (grpseq.grp_name) AND serv_type.seq > (grpseq.seq - 1)";
+			
 			$sql2 = "SELECT grphrz_name FROM `facilitytyp` WHERE servtype_id IN (SELECT servtype_id FROM serv_type, (SELECT grp_name, seq FROM serv_type WHERE facid IN (SELECT facid FROM facilitytyp WHERE facid IN ($impFacid) AND servtype_id = 1)) grpseq WHERE serv_type.grp_name IN (grpseq.grp_name) AND serv_type.seq > (grpseq.seq - 1)) GROUP BY grphrz_name";
+
 			$retArr = [DB::select(DB::raw($sql)), DB::select(DB::raw($sql1)), DB::select(DB::raw($sql2))];
 		}
 		return $retArr;
