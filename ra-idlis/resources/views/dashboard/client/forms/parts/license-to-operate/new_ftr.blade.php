@@ -290,6 +290,7 @@ var mserv_cap = JSON.parse('{!!addslashes($serv_cap)!!}')
                        })
                 
                 let not_serv_chg = document.getElementById('not_serv_chg');
+                
                 if (not_serv_chg != undefined || not_serv_chg != null) {
                     if (arr.length > 0) {
                         not_serv_chg.innerHTML = '';
@@ -478,12 +479,6 @@ function getFacServCharge (val = null){
         }
     }
 
-   
-
-    
-    
-    
-    
 
 
     var anxsel = getCheckedValue('anxsel') 
@@ -651,8 +646,7 @@ function getFacServCharge (val = null){
                                     if(  owns == "G" ){
                                         if(distinctArr[i]['facid'] == "H" ||distinctArr[i]['facid'] == "H2" || distinctArr[i]['facid'] == "H3" ){
                                             amt = 0
-                                        }
-                                        
+                                        }                                       
                                     }
                                     //Services Fee Display
                                     if(distinctArr[i]['chgapp_id']){
@@ -664,7 +658,6 @@ function getFacServCharge (val = null){
                                             serv_chg.innerHTML += '<tr><td>' + distinctArr[i]['facname'] + '</td><td>&#8369;&nbsp;<span>' + numberWithCommas(subclass == "ND" ? 0 : (parseInt(amt)).toFixed(2)) + '</span></td></tr>';
                                         }
                                     }
-
                                 }
                             }
                         } else {
