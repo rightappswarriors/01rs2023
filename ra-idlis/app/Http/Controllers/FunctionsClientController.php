@@ -734,8 +734,7 @@ class FunctionsClientController extends Controller {
 				// 	if(in_array($arr, $hospitalsFacid)){
 				// 		session()->forget('ambcharge');
 				// 	}
-				// }
-					
+				// }					
 
 				if(isset($facmode) && isset($extraHgpid)){
 					$retArr = DB::table('serv_chg')->leftJoin('facilitytyp', 'facilitytyp.facid', '=', 'serv_chg.facid')->leftJoin('chg_app', 'chg_app.chgapp_id', '=', 'serv_chg.chgapp_id')->whereIn('serv_chg.facid', $arrVal)->where([['serv_chg.hfser_id', $hfser],['serv_chg.facmid',$facmode], ['extrahgpid', $extraHgpid]])
@@ -743,10 +742,8 @@ class FunctionsClientController extends Controller {
 					->select('facilitytyp.facname', 'chg_app.amt', 'chg_app.chgapp_id', 'serv_chg.facid')
 					->get();
 					// $retArr = DB::table('serv_chg')->leftJoin('facilitytyp', 'facilitytyp.facid', '=', 'serv_chg.facid')->leftJoin('chg_app', 'chg_app.chgapp_id', '=', 'serv_chg.chgapp_id')->whereIn('serv_chg.facid', $arrVal)->where([['serv_chg.hfser_id', $hfser],['serv_chg.facmid',$facmode], ['extrahgpid', $extraHgpid]])->select('facilitytyp.facname', 'chg_app.amt', 'chg_app.chgapp_id')->get();
-				}
-
+				}				
 				
-
 				if(count($retArr) <= 0){
 					// $retArr = DB::table('serv_chg')->leftJoin('facilitytyp', 'facilitytyp.facid', '=', 'serv_chg.facid')->leftJoin('chg_app', 'chg_app.chgapp_id', '=', 'serv_chg.chgapp_id')->whereIn('serv_chg.facid', $arrVal)->where([['serv_chg.hfser_id', $hfser], ['serv_chg.facmid',null], ['extrahgpid', null]])->select('facilitytyp.facname', 'chg_app.amt', 'chg_app.chgapp_id')->get();
 					$retArr = DB::table('serv_chg')->leftJoin('facilitytyp', 'facilitytyp.facid', '=', 'serv_chg.facid')->leftJoin('chg_app', 'chg_app.chgapp_id', '=', 'serv_chg.chgapp_id')->whereIn('serv_chg.facid', $arrVal)->where([['serv_chg.hfser_id', $hfser], ['serv_chg.facmid',null], ['extrahgpid', null]])
@@ -754,9 +751,7 @@ class FunctionsClientController extends Controller {
 					->select('facilitytyp.facname', 'chg_app.amt', 'chg_app.chgapp_id', 'serv_chg.facid')
 					->get();
 				}
-
 				// dd($retArr);
-			
 			}
 
 			return $retArr;
@@ -879,10 +874,10 @@ class FunctionsClientController extends Controller {
 			
 			//$retArr = DB::select(DB::raw("SELECT chg_app.chgapp_id, charges.chg_desc, chg_app.amt FROM chg_app INNER JOIN charges ON chg_app.chg_code = charges.chg_code WHERE chg_app.chg_code IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND chg_app.aptid = '$aptid' AND chg_app.hfser_id = '$hfser_id'"));
 
-			if($aptid == "IN")
+			if($aptid == "IN" || $aptid == "IC")
 			{
 				//$retArr = DB::select(DB::raw("SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `initial_new_amount` AS amt, charges.hgpid FROM `sice_fees` LEFT ervJOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'"));
-				//updated by Paul
+				
 				$retArr = DB::select(DB::raw("SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `initial_new_amount` AS amt, charges.hgpid FROM `service_fees` LEFT JOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.service_id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'"));
 			}
 			else
@@ -895,6 +890,36 @@ class FunctionsClientController extends Controller {
 		// }
 		return $retArr;
 	}
+	
+	//TypeOfFees = Facility Registration Fee, Ambulance Fee, Service Fee
+	public static function getChargesByAppID($appid, $TypeOfFees = "" ){
+		$retArr = []; 
+
+		$WHERE = " AND t.appform_id='".$appid."' ";
+
+		if($TypeOfFees != "")
+		{
+			$WHERE = $WHERE . " AND t.typ='".$TypeOfFees."' ";
+		}
+
+		$retArr = DB::select("SELECT * FROM
+						(
+							SELECT appform.ocid, appform.classid, appform.subClassid, chgfil.appform_id, chgfil.amount, chg_app.chgapp_id, 
+							charges.chg_code, charges.chg_desc, serv_chg.facid, facilitytyp.facname, chgfil.reference, 
+							CASE WHEN charges.chg_code LIKE '%REGIS%' THEN 'Facility Registration Fee' 
+								WHEN chgfil.reference='Ambulance charge' THEN 'Ambulance Fee' 
+								ELSE 'Service Fee' END AS typ
+							FROM chgfil LEFT JOIN chg_app ON chgfil.chgapp_id=chg_app.chgapp_id  
+							LEFT JOIN serv_chg ON chg_app.chgapp_id=serv_chg.chgapp_id LEFT JOIN facilitytyp ON facilitytyp.facid=serv_chg.facid
+							LEFT JOIN charges on chg_app.chg_code=charges.chg_code  LEFT JOIN appform ON appform.appid=chgfil.appform_id 
+							WHERE  chgfil.amount IS NOT NULL AND  (charges.chg_code NOT LIKE 'MOP-%' OR charges.chg_code IS NULL) 
+						) t
+						WHERE 1=1 ".$WHERE." ORDER BY t.appform_id, t.typ ASC
+					");
+
+		return $retArr;
+	}
+
 	public static function checkExpiryDate($dateCheck = NULL, $dateFrom = NULL, $addDaysNow = 0) {
 		if(isset($dateCheck)) { 
 			$dateFrom = ((isset($dateFrom)) ? Carbon::parse($dateFrom)->addDays($addDaysNow) : Carbon::now());
