@@ -77,7 +77,7 @@
               <h5 class="modal-title text-center"><strong>Manage Archive Settings</strong></h5>
               <hr>
               <div class="container">
-                  <form id="addRgnSettings"  data-parsley-validate>
+                  <form id="ArchiveSettings"  data-parsley-validate>
                     <div class="row">
                         {{ csrf_field() }}
                         <input type="hidden" name="action" value="settings">
@@ -90,7 +90,7 @@
 
                         <div class="col-sm-3">Diretory Path:</div>
                         <div class="col-sm-9" style="margin:0 0 .8em 0;">
-                          <input name="settings_path" required class="form-control" data-parsley-required-message="*<strong>Display Name</strong> required">
+                          <input name="archive_loc" value="@isset($archive_loc){{$archive_loc}}@endisset" required class="form-control" data-parsley-required-message="*<strong>Display Name</strong> required">
                         </div>
 
                         <div class="col-sm-12">
@@ -243,6 +243,33 @@
 
   <script type="text/javascript">
       $(document).ready(function() { $('#example').DataTable();});
+
+      $('#ArchiveSettings').on('submit',function(event){
+          event.preventDefault();
+          var form = $(this);
+          form.parsley().validate();
+
+          if (form.parsley().isValid()) {
+            var data = new FormData(this);
+            $.ajax({
+              type: 'POST',
+              contentType: false,
+              processData: false,
+              data: data,
+              success: function(data) {
+                if (data == 'DONE') {
+                    alert('Successfully Added New Archive Upload');
+                    location.reload();
+                } else if (data == 'ERROR'){
+                    $('#AddErrorAlert').show(100);
+                }
+              }, error : function(XMLHttpRequest, textStatus, errorThrown){
+                  console.log(errorThrown);
+                  $('#AddErrorAlert').show(100);
+              }
+            });
+          }
+      });
 
       $('#addRgn').on('submit',function(event){
           event.preventDefault();

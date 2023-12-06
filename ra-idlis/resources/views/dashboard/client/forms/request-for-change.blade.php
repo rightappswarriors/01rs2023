@@ -98,7 +98,7 @@
                                                 <div class="col-md-12 text-center">
                                                     <div class="form-group">
                                                         <button type="button" class="btn btn-primary action-btn"  style="margin:auto; margin-top:10px;" value="submit" name="submit" id="submit" data-toggle="modal" data-target="#confirmSubmitModalLto">
-                                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Submit Application
+                                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Submit Application and Proceed to Requirements
                                                         </button>                                            
                                                     </div> 
                                                 </div>                                    
@@ -124,7 +124,13 @@
                 </div>
                 <!-- end of initial change form -->
                 <div class="col-md-4">
-                    @include('dashboard.client.forms.parts.payment.payment-form-change')
+                    @if($functype == 'av')
+                        @include('dashboard.client.forms.parts.payment.payment-form')
+                    @elseif($functype == 'cs')
+                        @include('dashboard.client.forms.parts.payment.payment-form')
+                    @else
+                        @include('dashboard.client.forms.parts.payment.payment-form-change')
+                    @endif
                 </div>
             </div>
         </div>

@@ -2853,7 +2853,14 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$regfac_id = $request->regfac_id;
 		$cat_id = $request->cat_id;		
 		$uid = FunctionsClientController::getSessionParamObj("uData", "uid");
-		$appid = $this->checkAppForm($regfac_id);		
+		$appform 	= $this->checkAppForm($regfac_id);	//CHECK APP id			
+		$appid = -1;
+		$savingStat = NULL;
+
+		if (!is_null($appform)) { 
+			$appid 		= $appform->appid;
+			$savingStat = $appform->savingStat;
+		}
 
 		if($appid < 1) {	$appid = $this->insertAppForm($regfac_id);	}
 		
@@ -2987,21 +2994,20 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 		return redirect('client1/changerequest/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
 	}
+	
 	// to be updated
 	public function checkAppForm($regfac_id){
 
-		$id = DB::table('appform')->select('appid')
+		$id = DB::table('appform')->select('*')
 				->where('regfac_id','=',$regfac_id)
 				->where('aptid','=','IC')
-				->where('savingStat',NULL)
+				->where('isApprove',NULL)
 				->orderby('appid', 'DESC')
 				->first();
 				
-		if (!is_null($id)) { 
-			return $id->appid;
-		}
+		if (!is_null($id)) { return $id;	}
 
-		return -1;	
+		return null;	
 	}
 
 	public function insertAppForm($regfac_id){
@@ -3161,8 +3167,15 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			{
 				$locRet 	= "dashboard.client.forms.request-for-change";
 				$hfser_id 	=  $data[0]->hfser_id;
-				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;				
-				$appid 		= $this->checkAppForm($reg_fac_id);	//CHECK APP id
+				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;	
+				$appform 	= $this->checkAppForm($reg_fac_id);	//CHECK APP id			
+				$appid = -1;
+				$savingStat = NULL;
+
+				if (!is_null($appform)) { 
+					$appid 		= $appform->appid;
+					$savingStat = $appform->savingStat;
+				}
 
 				try {
 					$validto 	= ($hfser_id == 'PTC') ? "" : strtolower($hfser_id).'_validityto';
