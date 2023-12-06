@@ -17,6 +17,8 @@
 	use Cache;
 	use Agent;
 	use OthersController;
+use ZipStream\Option\Archive;
+
 	class AjaxController extends Controller
 	{
 		/////////////// MISC
@@ -3756,6 +3758,7 @@ public static function checkConmem($appid)
 				$data = DB::table('chg_app')->where('chgapp_id', '=', $request->id)->first();
 				$test1 = DB::table('chg_app')->where('chgapp_id','=', $request->id)->delete();
 				$data2 = DB::table('chg_app')->where('oop_id', '=', $request->oop_id)->orderBy('chgopp_seq', 'asc')->get();
+
 				for ($i=0,$s=1; $i < count($data2); $i++,$s++) { 
 					DB::table('chg_app')->where('chgapp_id', '=', $data2[$i]->chgapp_id)->update(['chgopp_seq'=>$s]);
 				}
@@ -10842,5 +10845,16 @@ public static function forDoneHeadersNew($appid,$monid,$selfAssess,$isPtc = fals
     	}
     	return $toReturn;
     }
+
+	public static function get_archiveloc()
+	{
+		$archive_loc = null;	
+		$employeeData = session('employee_login');
+
+		$data = DB::table('branch')->select('archive_loc')->where('regionid',$employeeData->rgnid)->first();
+		$archive_loc = ($data->archive_loc ?? null);
+
+		return $archive_loc;
+	}
 
 } // end of class

@@ -4309,7 +4309,8 @@ namespace App\Http\Controllers;
 								'regions' => null,
 								'hfaci_service_type' => null,
 								'serv_cap' => null,
-								'_aptid' => null
+								'_aptid' => null,
+								'archive_loc' => AjaxController::get_archiveloc()
 							]);
 					} 
 					catch (Exception $e) 
@@ -4383,6 +4384,16 @@ namespace App\Http\Controllers;
 							case 'delete':
 								// AjaxController::deleteUploadedOnPublic($request->oldFilename);
 								$returnToUser = DB::table($table)->where('rfa_id', $request->id)->delete();
+								break;
+
+							case 'settings':
+								
+								$employeeData = session('employee_login');
+								//dd($request);
+								$returnToUser = DB::table('branch')->where('regionid',$employeeData->rgnid)->update([
+									'archive_loc' => $request->archive_loc
+								]);
+
 								break;
 						}
 						
