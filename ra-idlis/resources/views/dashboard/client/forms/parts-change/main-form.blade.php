@@ -137,7 +137,7 @@
         ul {    list-style: none;    }
         ul li:before {    content: '✓ ';    }
     </style --->
-    <ul style="list-style-type: none;"><li class="text-uppercase font-weight-bold">{{$registered_facility->facilitytype}}</li></ul>
+    <ul style="list-style-type: none;  font-size: 30px;"><li class="text-uppercase font-weight-bold">{{$registered_facility->facilitytype}}</li></ul>
 </div> 
 
 <div class="col-md-6">                                        

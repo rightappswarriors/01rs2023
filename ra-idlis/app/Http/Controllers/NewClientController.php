@@ -3199,13 +3199,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'validity'				=> $validity,
 					'uid'					=> $user_data->uid,
 					'appform_changeaction'	=> $appform_changeaction,
-					'chgfil_reg'				=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee"),
+					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee"),
 					'chgfil_sf'				=> FunctionsClientController::getChargesByAppID($appid, "Service Fee"),
 					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee")					
 					//DB::table('chgfil')->where([['appform_id', $appid]])->get()
 				];
-
-				if($functype == 'cs')
+				if($functype == 'annexa')
+				{
+					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
+					$data2 = $this->reg_annexa_COR($request, $reg_fac_id, $appid);
+					$data = array_merge($data, $data2);
+				}
+				else if($functype == 'cs')
 				{
 					$chk			=  DB::table('x08_ft')->where([['appid', $appid]])->first();
 					$chkFacid 		= new stdClass();
@@ -3266,7 +3271,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						'group'				=> json_encode(DB::table('facilitytyp')->where('servtype_id','>',1)->whereNotNull('grphrz_name')->get()),
 						'forAmbulance'		=> json_encode($proceesedAmb)
 					];
-	
 					$data = array_merge($data, $data2);
 				}
 				
@@ -3995,7 +3999,195 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 
-	//hfsrb requirements
+	//hfsrb requirements for initial change
+	public function reg_annexa_COR(Request $request, $regfac_id, $appid=null){
+		//if(FunctionsClientController::isUserApplication($appid)){
+			$hgpid = null;
+			$pos = DB::table('position')->get();
+			$professions = DB::table('profession')->get();
+
+			if(isset($appid))
+			{
+				$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
+			}
+			else
+			{
+				$hgpid = DB::table('registered_facility')->where('regfac_id',$regfac_id)->select('facid')->first()->facid;
+			}
+
+			// dd($professions);
+			if($request->isMethod('get')){
+				$arrRet = [
+					'workstat' => AjaxController::getAllWorkStatus(),
+					'pos' => $pos,
+					'professions' => $professions,
+					'hfsrbannexa' => [DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where('appid',$appid)->get(),
+					
+					DB::table('hfsrbannexa')->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['isMainRadio',1]])
+					->doesntExist(),DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['isMainRadioPharma',1]])
+					->doesntExist(),DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['ismainpo',1]])
+					->doesntExist()],
+					// 'canAdd' => DB::table('appform')->where([['appid',$appid],['isReadyForInspec',0]])->exists()
+					'canAdd' => true,
+					'appid' =>$appid
+				];
+				// dd($arrRet);
+				return $arrRet;
+			} else if($request->isMethod('post')) {
+				$customInsertMach = $customInsertPhar = false;
+				$filename = $returnToSender = null;
+				$arrName = $arrFiles = $arrPharma = $arrMach = array();
+				$toInsert = ['surname' => strtolower($request->sur_name), 
+				'firstname' => strtolower($request->fname), 
+				'middlename' => $request->mname, 
+				'prof' => $request->prof, 
+				'prcno' => $request->prcno,
+				 /*'validityPeriodFrom' => $request->vfrom,*/ 
+				 'validityPeriodTo' => $request->vto ,
+				 'speciality' => $request->speciality,
+				  'dob' => $request->dob,
+				   'sex' => $request->sex, 
+				   'employement' => $request->employement, 
+				   'prefix' => $request->prefix, 
+				   'suffix' => $request->suffix, 
+				   'pos' => $request->position, 
+				   'designation' => $request->designation, 
+				   'area' => $request->assignment, 
+				   'qual' => $request->qual, 
+				   'email' => $request->email,
+				   'tin' => $request->tin, 
+				   'isMainRadio' => $request->head1, 
+				   'isMainRadioPharma' => $request->pharmahead1 , 
+				   'ismainpo' => $request->po1,
+				   'isXrayTech' => $request->xtech,
+				   'isChiefRadTech' => $request->chiefrt,
+				   'profession' => json_encode($request->profession),
+				//    'isMainRadio' => ($request->head == 1 ? $request->head : null), 
+				//    'isMainRadioPharma' => ($request->pharmahead == 1 ? $request->pharmahead : null), 
+				//    'ismainpo' => ($request->po == 1 ? $request->po : ($request->po1 == 1 ? $request->po1 : null)), 
+				   'appid' => $appid];
+
+				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment];
+				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto];
+
+				// for custom addition to FDA
+				// if($request->po == 1 || $request->head == 1){
+				// 	$customInsertMach = true;
+				// }
+
+				if($request->po1 == 1 || $request->head1 == 1 || $request->xtech == 1 || $request->chiefrt == 1){
+					$customInsertMach = true;
+				}
+				if($request->pharmahead1 == 1 ){
+					$customInsertPhar = true;
+				}
+				if(count($pos) > 0){
+					foreach ($pos as $position) {
+						if($position->fda_type == 'cdrr'){
+							if(!in_array($position->posid, $arrPharma)){
+								array_push($arrPharma, $position->posid);
+							}
+						}
+						if($position->fda_type == 'cdrrhr'){
+							if(!in_array($position->posid, $arrMach)){
+								array_push($arrMach, $position->posid);
+							}
+						}
+					}
+				}				
+				if($request->has('req')){
+					foreach ($request->file('req') as $key => $value) {
+						$filename = FunctionsClientController::uploadFile($value);
+						if($key == 'prc1'){
+							array_push($arrName, 'prc');
+						} else {
+							array_push($arrName, $key);
+						}
+						array_push($arrFiles, $filename['fileNameToStore']);
+					}
+				}
+				$filename = array_combine($arrName, $arrFiles);
+				if(count($filename) > 0){
+					foreach($filename as $key => $value){
+						$toInsert[$key]  = $value;
+					}
+				}
+				if($request->action == 'add'){
+					$returnToSender = DB::table('hfsrbannexa')->insertGetId($toInsert);
+					if($returnToSender){
+						if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
+
+							$pharma['hfsrbannexaID'] = $returnToSender;
+							$mach['hfsrbannexaID'] = $returnToSender;
+
+							if($hgpid!='12' && (in_array($request->prof, $arrPharma)  || $customInsertPhar)){
+								$returnToSender = DB::table('cdrrpersonnel')->insert($pharma);
+							}
+							if(in_array($request->prof, $arrMach) || $customInsertMach){
+								$returnToSender = DB::table('cdrrhrpersonnel')->insert($mach);
+							}
+						}
+					}
+				} else if($request->action == 'edit'){
+					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->first();
+					if(!empty($filename) && !empty($curStat)){
+						foreach ($filename as $key => $value) {
+							if(Storage::exists('public/uploaded/'.$curStat->$key)){
+								unlink(storage_path('app' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploaded' . DIRECTORY_SEPARATOR . $curStat->$key ));
+							}
+						}
+					}
+					$returnToSender = DB::table('hfsrbannexa')->where('id',$request->id)->update($toInsert);					
+
+					if(in_array($request->prof, $arrPharma) || in_array($request->prof, $arrMach) || $customInsertMach || $customInsertPhar){
+
+						$pharma['hfsrbannexaID'] = $request->id;
+						$mach['hfsrbannexaID'] = $request->id;
+
+						//MFOWS  not included in``````````````````````````````````````````````````````````````````````````````````````````
+						if($hgpid=='12'){
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
+						}
+
+						if(in_array($request->prof, $arrPharma ) || $customInsertPhar){
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update($pharma);
+						}else{
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update($pharma);
+							DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
+						}
+
+						if(in_array($request->prof, $arrMach) || $customInsertMach){
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
+						}else{
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update($mach);
+							DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->update(['isdelete'=>'TRUE']);
+						}
+					}
+				} else if($request->action == 'delete') {
+					$curStat = DB::table('hfsrbannexa')->where('id',$request->id)->select('status')->first()->status;
+					$returnToSender = DB::table('hfsrbannexa')->where('id',$request->id)->update(['status' => ($curStat == 1 ? 2 : 1)]);
+
+					DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
+					DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
+				}
+				return ($returnToSender > 0 ? "DONE" : "ERROR");
+			}
+		/*} else {
+			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
+		}*/
+	}
+
 	//hfsrb requirements
 	public function reg_annexa(Request $request, $regfac_id, $appid=null){
 		//if(FunctionsClientController::isUserApplication($appid)){
