@@ -56,11 +56,11 @@
 					?>
 					<p>Application period for Initial / New health facility is from the 1st working day of the year to November 15 of the same year based on the <a href="https://hfsrb.doh.gov.ph/wp-content/uploads/2021/12/ao2019-0004.pdf">A.O. 2019-0004</a>.</p>
 					
-					@if($initial_period_1 <= $todays_date &&  $initial_period_2 >= $todays_date)
+					{{--@if($initial_period_1 <= $todays_date &&  $initial_period_2 >= $todays_date) --}}
 					<button class="btn btn-info btn-block" style="text-decoration: none;color:#fff;" data-toggle="modal" data-target="#applicationTypeModal" >
 						Create New Application
 					</button>
-					@endif
+					{{-- @endif --}}
 					@if($renewal_period_1 <= $todays_date &&  $renewal_period_2 >= $todays_date)
 						
 						<button class="btn btn-success btn-block" style="text-decoration: none;color:#fff; margin-top: 10%" data-toggle="modal" data-target="#applicationTypeModalRenew" >

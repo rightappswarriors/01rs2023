@@ -72,9 +72,10 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="row">  
                                     <!---  Main Form  -->
-                                    @if($functype == 'av')
+                                    @if($functype == 'annexa')
+                                        @include('client1.apply.LTO1.hfsrb.annexa-part-personnel')
+                                    @elseif($functype == 'av')
                                         @include('dashboard.client.forms.ambulance-vehicle-form')
                                     @elseif($functype == 'cs')
                                         @include('dashboard.client.forms.change-service-form')
@@ -83,14 +84,20 @@
                                         @include('dashboard.client.forms.parts-change.list-of-change-details')
                                     @endif
                                     <!---  Main Form  -->
-                                </div>
 
                                 <!---  Main Form Submit -->
-                                @if($functype == 'av')
-
-                                @elseif($functype == 'cs')
+                                @if($functype == 'av' || $functype == 'cs' || $functype == 'annexa' || $functype == 'annexb')
+                                    
+                                    <div class="row">
+                                        <div class="text-center" style="margin:auto; margin-top:10px;">
+                                            <a class="btn btn-secondary action-btn btn-block" href="{{asset('client1/changerequest')}}/{{$registered_facility->regfac_id}}/main">
+                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Main Form
+                                            </a>
+                                        </div>
+                                    </div>
 
                                 @else
+
                                     @isset($appid)
                                         @if($appid > 0)
                                             <div class="row">
@@ -116,6 +123,7 @@
                                             </form>  
                                         @endif
                                     @endisset
+                                    
                                 @endif
                                 <!---  Main Form  -->
                             </div>
@@ -124,13 +132,7 @@
                 </div>
                 <!-- end of initial change form -->
                 <div class="col-md-4">
-                    @if($functype == 'av')
-                        @include('dashboard.client.forms.parts.payment.payment-form')
-                    @elseif($functype == 'cs')
-                        @include('dashboard.client.forms.parts.payment.payment-form')
-                    @else
-                        @include('dashboard.client.forms.parts.payment.payment-form-change')
-                    @endif
+                    @include('dashboard.client.forms.parts.payment.payment-form-change')
                 </div>
             </div>
         </div>

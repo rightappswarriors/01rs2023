@@ -4,7 +4,7 @@
         <h4 class="text-uppercase font-weight-bold" style="font-size:30px ;">List of Details for Change</h4>
     </div>
     <div class="col-md-12">
-        <table class="table dataTable no-footer" >
+        <table class="table display" id="example" style="overflow-x: scroll;">
             <thead>
                 <tr>
                     <th style="white-space: nowrap; width: 50px;" class="sorting_disabled">Line No.</th>
