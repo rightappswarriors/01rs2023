@@ -1,153 +1,263 @@
 @php 
+    $_aptid = $aptid;
+    $_aptdesc = "Change Request";
+    $_dispSubmit = true;
+    $_dispData = "Update Details";
+
     $main_serv_desc = "Main Services"; 
-    $addon_serv_desc = "Add On Services";
+    $addon_serv_desc = "Add Ons / Ancilliary / Other Services";
+    $main_colspan = 2;
+    $addon_colspan = 2;
 @endphp
+@if($isupdate == 1) @php ++$main_colspan; ++$addon_colspan; @endphp @endif
 <div class="row">
-    <div class="col-md-12 text-center">
-        <h3 class="text-uppercase font-weight-bold">List of {{$main_serv_desc}}</h3>
-    </div>
-    @php
-        $_aptid = $aptid;
-        $_aptdesc = "Change Request";
-        $_dispSubmit = true;
-        $_dispData = "Update Details";
-    @endphp      
-    <div class="col-md-12">  
-        <form id="mainForm">
-            {{csrf_field()}}
-            <input type="hidden" name="uid" id="uid" value="{{isset($user->uid) ? $user->uid : '' }}"/>
-            <input type="hidden" name="appid" id="appid" />              
-            <div class="row">
-                <div class="text-center">
-                    <a class="btn btn-success action-btn" href="#" title="Add New Assessment Part" data-toggle="modal" data-target="#mainService">
-                        <i class="fa fa-plus-circle"></i>&nbsp;Add new
+    <div class="col-md-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a class="nav-link active" id="v-main-applied-tab" data-toggle="tab" href="#v-main-applied" role="tab" aria-controls="v-main-applied" aria-selected="true">
+                        <i class="fa fa-file"></i> List of Services  to Apply
+                    </a> 
+                </li>
+                <li>
+                    <a class="nav-link" id="v-main-reg-tab" data-toggle="pill" href="#v-main-reg" role="tab" aria-controls="v-main-reg" aria-selected="false">
+                        <i class="fa fa-check"></i> List of Registered Services
                     </a>
-                </div>
-            </div>
-            <table class="table display" id="example" style="overflow-x: scroll;">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width:  auto">Description</th>
-                        <th class="text-center" style="width:  auto">
-                            <center>Options</center>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                @if (isset($data))
-                    @foreach ($data as $d)
-                        <tr>
-                            <td class="text-center">{{$d->hgpdesc}}</td>
-                            <td class="text-center"><button class="btn-primarys" onclick="showData(
-                                '{{$d->facilityname}}',
-                                '{{$d->owner}}',
-                                '{{$d->facid}}',
-                                '{{$d->rgnid}}',
-                                '{{$d->street_number}}',
-                                '{{$d->street_name}}',
-                                '{{$d->zipcode}}',
-                                '{{$d->ownerMobile}}',
-                                '{{$d->ownerEmail}}',
-                                '{{$d->ocid}}',
-                                '{{$d->mailingAddress}}',
-                                '{{$d->approvingauthority}}',
-                                '{{$d->approvingauthoritypos}}',
-                                '{{$d->facmode}}',
-                                '{{$d->funcid}}',
-                                '{{$d->provid}}',
-                                '{{$d->cmid}}',
-                                '{{$d->brgyid}}',
-                                '{{$d->classid}}',
-                                '{{$d->subClassid}}',
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-5">	
 
-                            )" data-toggle="modal" data-target="#myModal"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                    @endforeach	
-                @else
-                    <tr>
-                        <td colspan="2" class="text-center">No Records found.</td>
-                    </tr>
-                @endif
-                </tbody>
-            </table>
-        </form>
-    </div>
+                <div class="tab-pane active" id="v-main-applied">
+
+                    <div class="col-md-12 text-center">
+                        <h3 class="text-uppercase font-weight-bold">List of {{$main_serv_desc}} to Apply</h3>
+                    </div>                  
+                    <div class="col-md-12">  
+                        <form id="mainForm">
+                            {{csrf_field()}}
+                            <input type="hidden" name="uid" id="uid" value="{{isset($user->uid) ? $user->uid : '' }}"/>
+                            <input type="hidden" name="appid" id="appid" />      
+                            {{-- @if($isaddnew == 1)        
+                                <div class="row">
+                                    <div class="text-center">
+                                        <a class="btn btn-success action-btn" href="#" title="Add New {{$main_serv_desc}}" data-toggle="modal" data-target="#mainService">
+                                            <i class="fa fa-plus-circle"></i>&nbsp;Add New {{$main_serv_desc}}
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif        --}}
+                            <table class="table display" id="example" style="overflow-x: scroll;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
+                                        <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
+                                        
+                                        @if($isupdate == 1)        
+                                            <th class="text-center" style="width:  auto">
+                                                <center>Options</center>
+                                            </th>
+                                        @endif    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @if (isset($mainservices_applied))
+                                    @foreach ($mainservices_applied as $d)
+                                        <tr>
+                                            <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                            <td class="text-center">{{$d->facname}}</td>
+                                            <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                            <td class="text-center">{{$d->facname}}</td>
+
+                                            @if($isupdate == 1)   
+                                                <td class="text-center"><button class="btn-primary" onclick="showData(
+                                                    '{{$d->facid}}',
+                                                    '{{$d->facname}}'
+
+                                                )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button>
+                                                    <button class="btn btn-danger " onclick=""><i class="fa fa-minus-circle"></i></button></td>
+                                            @endif 
+                                        </tr>
+                                    @endforeach	
+                                @else
+                                    <tr>
+                                        <td colspan="{{$main_colspan+2}}" class="text-center">No Records found.</td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+                    <div class="col-md-12 text-center">
+                        <h3 class="text-uppercase font-weight-bold">List of {{$addon_serv_desc}}  to Apply</h3>
+                    </div> 
+                    <div class="col-md-12">  
+                        <form id="addOnForm">
+                            {{csrf_field()}}
+                            <input type="hidden" name="uid" id="uid" value="{{isset($user->uid) ? $user->uid : '' }}"/>
+                            <input type="hidden" name="appid" id="appid" />
+                            @if($isaddnew == 1)       
+                                <div class="row">
+                                    <div class="text-center">
+                                        <a class="btn btn-success action-btn" href="#" title="Add New {{$addon_serv_desc}}" data-toggle="modal" data-target="#addOnService">
+                                            <i class="fa fa-plus-circle"></i>&nbsp;Add New {{$addon_serv_desc}}
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                            <table class="table display" id="example" style="overflow-x: scroll;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
+                                        <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
+                                        {{-- <th class="text-center" style="width: auto;text-align: center">Type</th>
+                                        <th class="text-center" style="width: auto;text-align: center">Details</th>  --}}
+                                        @if($isupdate == 1)   
+                                            <th class="text-center" style="width:  auto">
+                                                <center>Options</center>
+                                            </th>
+                                        @endif 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @php $proceed_addon = 0; @endphp
+                                @if (isset($addOnservices_applied))
+                                    @foreach ($addOnservices_applied as $d)
+                                        @php $proceed_addon = 1; @endphp
+                                        <tr>
+                                            <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                            <td class="text-center">{{$d->facname}}</td>
+                                            <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                            <td class="text-center">{{$d->facname}}</td>
+                                            {{-- <td class="text-center">Owned</td>
+                                            <td class="text-center">Remarks</td>  --}}
+                                            @if($isupdate == 1)   
+                                                <td class="text-center">
+                                                    <button class="btn-primary" onclick="showData(
+                                                    '{{$d->facid}}',
+                                                    '{{$d->facname}}'
+                                                    )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button>
+                                                    <button class="btn btn-danger " onclick=""><i class="fa fa-minus-circle"></i></button>
+                                                </td>
+                                            @endif 
+                                        </tr>
+                                    @endforeach	
+                                @endif
+                                
+                                @if($proceed_addon == 0)   
+                                    <tr>
+                                        <td colspan="{{$addon_colspan+2}}" class="text-center">No Records found.</td>
+                                    </tr>
+                                @endif
+                                
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="v-main-reg">
+
+                    <div class="col-md-12 text-center">
+                        <h3 class="text-uppercase font-weight-bold">List of Registered {{$main_serv_desc}}</h3>
+                    </div>                  
+                    <div class="col-md-12">  
+                        <table class="table display" id="example" style="overflow-x: scroll;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:  auto">Group</th>
+                                    <th class="text-center" style="width:  auto">Description</th> 
+                                    @if($isupdate == 1)        
+                                        <th class="text-center" style="width:  auto">
+                                            <center>Options</center>
+                                        </th>
+                                    @endif   
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if (isset($mainservices_reg))
+                                @foreach ($mainservices_reg as $d)
+                                    <tr>
+                                        <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                        <td class="text-center">{{$d->facname}}</td>
+
+                                        @if($isupdate == 1)   
+                                            <td class="text-center"><button class="btn-primary" onclick="showData(
+                                                '{{$d->facid}}',
+                                                '{{$d->facname}}'
+
+                                            )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button></td>
+                                        @endif 
+                                    </tr>
+                                @endforeach	
+                            @else
+                                <tr>
+                                    <td colspan="2" class="text-center">No Records found.</td>
+                                </tr>
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12 text-center">
+                        <h3 class="text-uppercase font-weight-bold">List of Registered {{$addon_serv_desc}}</h3>
+                    </div> 
+                    <div class="col-md-12">  
+                        <table class="table display" id="example" style="overflow-x: scroll;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:  auto">Group</th>
+                                    <th class="text-center" style="width:  auto">Description</th>
+                                    {{-- <th class="text-center" style="width: auto;text-align: center">Type</th>
+                                    <th class="text-center" style="width: auto;text-align: center">Details</th>  --}}
+                                    @if($isupdate == 1)        
+                                        <th class="text-center" style="width:  auto">
+                                            <center>Options</center>
+                                        </th>
+                                    @endif   
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @php $proceed_addon = 0; @endphp
+                            @if (isset($addOnservices_reg))
+                                @foreach ($addOnservices_reg as $d)
+                                    @php $proceed_addon = 1; @endphp
+                                    <tr>
+                                        <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
+                                        <td class="text-center">{{$d->facname}}</td>
+                                        {{-- <td class="text-center">Owned</td>
+                                        <td class="text-center">Remarks</td>  --}}
+                                        @if($isupdate == 1)   
+                                            <td class="text-center">
+                                                <button class="btn-primary" onclick="showData(
+                                                '{{$d->facid}}',
+                                                '{{$d->facname}}'
+                                                )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button>
+                                            </td>
+                                        @endif 
+                                    </tr>
+                                @endforeach	
+                            @endif
+                            
+                            @if($proceed_addon == 0)   
+                                <tr>
+                                    <td colspan="{{$addon_colspan}}" class="text-center">No Records found.</td>
+                                </tr>
+                            @endif
+                            
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div> 
+    </div> 
     
-    <div class="col-md-12 text-center">
-        <h3 class="text-uppercase font-weight-bold">List of  {{$addon_serv_desc}}</h3>
-    </div>
-    @php
-        $_aptid = $aptid;
-        $_aptdesc = "Change Request";
-        $_dispSubmit = true;
-        $_dispData = "Update Details";
-    @endphp      
-    <div class="col-md-12">  
-        <form id="addOnForm">
-            {{csrf_field()}}
-            <input type="hidden" name="uid" id="uid" value="{{isset($user->uid) ? $user->uid : '' }}"/>
-            <input type="hidden" name="appid" id="appid" />
-
-            <div class="row">
-                <div class="text-center">
-                    <a class="btn btn-success action-btn" href="#" title="Add New Assessment Part" data-toggle="modal" data-target="#addOnService">
-                        <i class="fa fa-plus-circle"></i>&nbsp;Add new
-                    </a>
-                </div>
-            </div>
-            <table class="table display" id="example" style="overflow-x: scroll;">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width:  auto">Description</th>
-                        <th class="text-center" style="width: auto;text-align: center">Type</th>
-                        <th class="text-center" style="width: auto;text-align: center">Details</th>
-                        <th class="text-center" style="width:  auto">
-                            <center>Options</center>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                @if (isset($data))
-                    @foreach ($data as $d)
-                        <tr>
-                            <td class="text-center">{{$d->hgpdesc}}</td>
-                            <td class="text-center">{{$d->owner}}</td>
-                            <td class="text-center">{{$d->owner}}</td>
-                            <td class="text-center"><button class="btn-primarys" onclick="showData(
-                                '{{$d->facilityname}}',
-                                '{{$d->owner}}',
-                                '{{$d->facid}}',
-                                '{{$d->rgnid}}',
-                                '{{$d->street_number}}',
-                                '{{$d->street_name}}',
-                                '{{$d->zipcode}}',
-                                '{{$d->ownerMobile}}',
-                                '{{$d->ownerEmail}}',
-                                '{{$d->ocid}}',
-                                '{{$d->mailingAddress}}',
-                                '{{$d->approvingauthority}}',
-                                '{{$d->approvingauthoritypos}}',
-                                '{{$d->facmode}}',
-                                '{{$d->funcid}}',
-                                '{{$d->provid}}',
-                                '{{$d->cmid}}',
-                                '{{$d->brgyid}}',
-                                '{{$d->classid}}',
-                                '{{$d->subClassid}}',
-
-                            )" data-toggle="modal" data-target="#myModal"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                    @endforeach	
-                @else
-                    <tr>
-                        <td colspan="4" class="text-center">No Records found.</td>
-                    </tr>
-                @endif
-                
-                </tbody>
-            </table>
-        </form>
-    </div>
+    
 </div>
 
 

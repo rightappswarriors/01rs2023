@@ -1,5 +1,11 @@
 @if (session()->exists('uData'))  
+	@extends('main')
+	@section('content')
+	@include('client1.cmp.__apply')
 	@include('client1.cmp.requirementsSlider')
+	@include('client1.cmp.nav')
+	@include('client1.cmp.breadcrumb')
+	@include('client1.cmp.msg')
 	<style>
 		fieldset 
 		{
@@ -11,7 +17,8 @@
 			border-radius:4px;
 			background-color:#f5f5f5;
 			padding-left:10px!important;
-		}		
+		}	
+		
 		legend
 		{
 			font-size:14px;
@@ -23,21 +30,26 @@
 			padding: 5px 5px 5px 10px; 
 			background-color: #ffffff;
 		}
+
 		@media (min-width: 576px) {
 			.modal-dialog { max-width: none; }
 		}
+
 		.modal-dialog {
 			width: 98%;
 			height: 92%;
 			padding: 0;
 		}
+
 		.modal-body {
 			max-height: calc(100vh - 200px);
 			overflow-y: auto;
 		}
+
 		.modal-content {
 			height: auto;
 		}
+
 		.select2-container--default .select2-selection--single {
 			height: 40px !important;
 			padding: 10px 16px;
@@ -56,6 +68,8 @@
 			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
 			transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 		}
+	</style>
+	<style>
 		@media print{
 			
 			footer, nav, button, #navBarWiz, div.dfn-hover, span.text-danger{
@@ -107,6 +121,19 @@
 		dfn:hover::after {top: 40px;}
 		dfn:hover::before {top: 30px;}
 	</style>
+	<body>
+		@include('client1.cmp.__wizard')
+
+		<div class="container-fluid mt-5">
+			<div class="row">
+				<div class="col-md-6 d-flex justify-content-start" id="prevDiv">
+					<a href="#" class="inactiveSlider slider">&laquo; Previous</a>
+				</div>
+				<div class="col-md-6 d-flex justify-content-end" id="nextDiv">
+					<a href="#" class="activeSlider slider">Next &raquo;</a>
+				</div>
+			</div>
+		</div>
 		<div class="container text-center font-weight-bold mt-5">List of Personnel Annex A</div>
 		<div class="container-fluid table-responsive pb-3">
 			@if($canAdd)
@@ -565,7 +592,9 @@
 				
 				chceb('head', ' Make as Head of Radiology');
 				chceb('po', ' Make as Radiation protection officer');
-				chceb('pharmahead', ' Make as Chief Pharmacist');				
+				chceb('pharmahead', ' Make as Chief Pharmacist');
+
+				
 			}
 			function getAss(value){
 
@@ -635,6 +664,40 @@
 						canBeRequired.removeAttr('required').removeClass('required').parent().prev().find('span').remove();
 					break;
 
+					// case (jQuery.inArray($(this).val(), rad) != -1):
+					// 	fieldOnUp.removeAttr('hidden');
+					// 	$(".first").removeAttr('hidden');
+					// 	inputs = $(".first").find('input[type=file]');
+					// 	if(inputs.length > 0){
+					// 		inputs.each(function(index, el) {
+					// 			$(this).attr('required',true).removeAttr('hidden');
+					// 		});
+					// 	}
+					// 	$(".second").attr('hidden',true);
+					// 	inputs = $(".second").find('input[type=file]');
+					// 	if(inputs.length > 0){
+					// 		inputs.each(function(index, el) {
+					// 			$(this).removeAttr('required').attr('hidden',true).val('');
+					// 		});
+					// 	}
+					// 	break;
+					// case (jQuery.inArray($(this).val(), par) != -1):
+					// 	fieldOnUp.removeAttr('hidden');
+					// 	$(".second").removeAttr('hidden');
+					// 	inputs = $(".second").find('input[type=file]');
+					// 	if(inputs.length > 0){
+					// 		inputs.each(function(index, el) {
+					// 			$(this).attr('required',true).removeAttr('hidden');
+					// 		});
+					// 	}
+					// 	$(".first").attr('hidden',true);
+					// 	inputs = $(".first").find('input[type=file]');
+					// 	if(inputs.length > 0){
+					// 		inputs.each(function(index, el) {
+					// 			$(this).removeAttr('required').attr('hidden',true).val('');
+					// 		});
+					// 	}
+					// 	break;
 					default:
 						fieldOnUp.attr('hidden',true);
 						$(".first .second").attr('hidden',true);
@@ -649,8 +712,23 @@
 			});
 
 			"use strict";
-			
+			// var ___div = document.getElementById('__applyBread'), ___wizardcount = document.getElementsByClassName('wizardcount');
+			// document.getElementById('stepDetails').innerHTML = 'Step 3.b: HFSRB Requirement';
+			// if(___wizardcount != null || ___wizardcount != undefined) {
+			// 	for(let i = 0; i < ___wizardcount.length; i++) {
+			// 		if(i < 2) {
+			// 			___wizardcount[i].parentNode.classList.add('past');
+			// 		}
+			// 		if(i == 2) {
+			// 			___wizardcount[i].parentNode.classList.add('active');
+			// 		}
+			// 	}
+			// }
+			// if(___div != null || ___div != undefined) {
+			// 	___div.classList.remove('active');	___div.classList.add('text-primary');
+			// }
 		</script>
+		@include('client1.cmp.footer')
 		<script>
             onStep(3);
             slider([],['hfsrb','annexb',{{$appid}}]);
@@ -673,7 +751,10 @@
 				    	$('select[name='+fieldsForInput[j]+']').val("").trigger('change');
 				    }
 				}
-				
+				// $("input[type=file]:hidden").each(function(index, el) {
+				// 	$(this).parent().prev().append('<span class="text-danger" style="font-size: 20px;">*</span>');
+				// 	$(this).attr('required',true);
+				// });
 			}
 			function showData(id,pre,sur,first,mid,suf,prof,prcno,valid,dob,sex,emp,pos/*,des,area*/,qual,email/*,tin*/, head = null, po = null, pharmahead = null, isXrayTech = null, isChiefRadTech = null, profession){
 
@@ -684,6 +765,12 @@
 				});
 			}
 
+			// function toReq(){
+			// 	$(".required").each(function(index, el) {
+			// 		$(el).append('<span class="text-danger" style="font-size: 20px;">*</span>');
+			// 	});
+			// }
+
 			function otherFunction(id,pre,sur,first,mid,suf,prof,prcno,valid,dob,sex,emp,pos/*,des,area*/,qual,email/*,tin*/,head, po, pharmahead, isXrayTech, isChiefRadTech,profession){
 				
 				if(profession){
@@ -692,10 +779,32 @@
 						$('#'+v).prop('checked',true);
 					});
 				}
+				
+				//console.log(profession);
 				$("#actionModalCRUD").empty().html('Edit Personnel');
 				$("#toChange").val('edit');
 				$("#idToAdd").val(id);
 				$("#forCred").empty().append('(You may resubmit or if not, details of credentials will be retained)');
+				//console.log(arguments)
+				// if(arguments.length == fieldsForInput.length){
+					// if(head != ""){
+					// 	$('[name=head]').show();
+					// 	$('[name=head]').attr('value',1);
+					// 	$('[name=head]').prop('checked',true);
+					// }
+					// if(po != ""){
+					// 	$('[name=po]').show();
+					// 	$('[name=po]').attr('value',1);
+					// 	$('[name=po]').prop('checked',true);
+					// }
+					// if(pharmahead != ""){
+					// 	$('[name=pharmahead]').show();
+					// 	$('[name=pharmahead]').attr('value',1);
+					// 	$('[name=pharmahead]').prop('checked',true);
+					// }
+				//console.log("head")
+				//console.log(isXrayTech)
+				//console.log(isChiefRadTech)
 					if(head == 1){
 						
 						$('[name=head1]').attr('value',1);
@@ -717,6 +826,8 @@
 						$('[name=po1]').attr('value',1);
 						$('[name=po1]').prop('checked',true);
 					}
+					//console.log("pharmahead")
+					//console.log(pharmahead)
 					if(pharmahead == 1){
 						
 						$('[name=pharmahead1]').attr('value',1);
@@ -850,10 +961,14 @@
 					}
 				});
 			})
+
 		@endif
 		</script>
-		
-
+	</body>
+	@endsection
 @else
   <script type="text/javascript">window.location.href= "{{ asset('client1/apply') }}";</script>
 @endif
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.0.3/css/dataTables.dateTime.min.css" />

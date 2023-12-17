@@ -694,6 +694,7 @@ class FunctionsClientController extends Controller {
 			return $e;
 		}
 	}
+
 	public static function getServFaclDetails($appid = "") {
 		try {
 			$arrRet = [];
@@ -710,6 +711,7 @@ class FunctionsClientController extends Controller {
 			return $e;
 		}
 	}
+
 	// public static function getServFaclDetails($appid = "") {
 	// 	try {
 	// 		$arrRet = [];
@@ -725,6 +727,145 @@ class FunctionsClientController extends Controller {
 	// 		return $e;
 	// 	}
 	// }
+	// get services of applied application. this includes mainservice(1), addons(2), hopitallevels(3-5)
+	public static function get_view_facility_services_per_appform($appid, $servtype_id = 0, $orderby_servtype_id = 'ASC')
+	{/*$appid = '9193';*/
+		try {
+			$retArr = [];
+
+			if($servtype_id == 0){
+				$retArr = DB::table('view_facility_services_per_appform')
+							->where('appid','=',$appid)->where('facid','not like','%-REGIS')
+							->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+			}
+			else{
+				if($servtype_id == 1)
+				{
+					$retArr = DB::table('view_facility_services_per_appform')
+								->where('appid','=',$appid)->where('servtype_id','=',$servtype_id)->where('facid','not like','%-REGIS')
+								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+				}
+				else{
+					$retArr = DB::table('view_facility_services_per_appform')
+								->where('appid','=',$appid)->where('servtype_id','>',$servtype_id)->where('facid','not like','%-REGIS')
+								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+				}
+			}
+
+			return $retArr;
+		}
+		catch(Exception $e) {
+			return $e;
+			dd($e);
+		}
+	}
+
+	// get services of registered facility. this includes mainservice(1), addons(2), hopitallevels(3-5)
+	public static function get_view_reg_facility_services($regfac_id, $servtype_id = 0, $orderby_servtype_id = 'ASC')
+	{
+		try {
+			$retArr = [];
+
+			if($servtype_id == 0){
+				$retArr = DB::table('view_reg_facility_services')->where('regfac_id','=',$regfac_id)
+							->ORDERBY('servtype_id','ASC')->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+			}
+			else{
+				if($servtype_id == 1)
+				{
+					$retArr = DB::table('view_reg_facility_services')->where('regfac_id','=',$regfac_id)->where('servtype_id','=',$servtype_id)
+								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+				}
+				else{
+					$retArr = DB::table('view_reg_facility_services')->where('regfac_id','=',$regfac_id)->where('servtype_id','>=',$servtype_id)
+								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+				}
+			}
+
+			return $retArr;
+		}
+		catch(Exception $e) {
+			return $e;
+			dd($e);
+		}
+	}
+
+	// get services list $arrVal = array of facility ids, $hfser = LTO/COR/etc
+	public static function get_view_ServiceCharge($arrVal = [], $hfser = "", $facmode = "", $extraHgpid = "", $aptid = "", $isInitialChange = FALSE)
+	{
+		try {
+			$retArr = [];
+			if(count($arrVal) > 0) {	
+				
+				if(isset($hfser) && !empty($hfser)){
+
+					if(isset($facmode) && isset($extraHgpid)){
+
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)->where([['hfser_id', $hfser],['facmid',$facmode], ['extrahgpid', $extraHgpid]])
+						->where('aptid', $aptid) 
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+					if(count($retArr) <= 0){
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)
+						->where([['hfser_id', $hfser], ['facmid',null], ['extrahgpid', null]])
+						->where('aptid', $aptid)
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+				}
+				elseif($isInitialChange == TRUE){
+					if(isset($facmode) && isset($extraHgpid)){
+
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)->where([['facmid',$facmode], ['extrahgpid', $extraHgpid]])
+						->where(function ($query) {
+							$query->where('aptid','=','IN')
+								->orWhere('aptid','=','IC');
+						})
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+					if(count($retArr) <= 0){
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)
+						->where([['facmid',null], ['extrahgpid', null]])
+						->where(function ($query) {
+							$query->where('aptid','=','IN')
+								->orWhere('aptid','=','IC');
+						})
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+				}	 
+				else{
+					if(isset($facmode) && isset($extraHgpid)){
+
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)->where([['facmid',$facmode], ['extrahgpid', $extraHgpid]])
+						->where('aptid', $aptid) 
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+					if(count($retArr) <= 0){
+						$retArr = DB::table('view_ServiceCharge')
+						->whereIn('facid', $arrVal)
+						->where([['facmid',null], ['extrahgpid', null]])
+						->where('aptid', $aptid)
+						->select('facname', 'amt', 'chgapp_id', 'facid')
+						->get();
+					}
+				}				
+			}
+
+			return $retArr;
+		} catch(Exception $e) {
+			return $e;
+		}
+	}
+
 	public static function getServiceCharge($arrVal = [], $hfser = "", $facmode = "", $extraHgpid = "", $aptid = "") {
 		try {
 			$retArr = [];
@@ -737,6 +878,7 @@ class FunctionsClientController extends Controller {
 				// }					
 
 				if(isset($facmode) && isset($extraHgpid)){
+
 					$retArr = DB::table('serv_chg')->leftJoin('facilitytyp', 'facilitytyp.facid', '=', 'serv_chg.facid')->leftJoin('chg_app', 'chg_app.chgapp_id', '=', 'serv_chg.chgapp_id')->whereIn('serv_chg.facid', $arrVal)->where([['serv_chg.hfser_id', $hfser],['serv_chg.facmid',$facmode], ['extrahgpid', $extraHgpid]])
 					->where('chg_app.aptid', $aptid) // 6-4-2021
 					->select('facilitytyp.facname', 'chg_app.amt', 'chg_app.chgapp_id', 'serv_chg.facid')
@@ -760,13 +902,13 @@ class FunctionsClientController extends Controller {
 		}
 	}
 
-	//Get Payment of Ancillary Services
 	//almost the same with AjaxController:getAllServices()
+	//get all services of add ons, otherwise services of hospital levels if Request has selected value.
 	public static function getAncillaryServices($hgpid,$selected = null, $hfserid){
 		try {
 			$retArr = [];
 			if(!empty($hgpid)){
-				if(!isset($selected)){
+				/*if(!isset($selected)){
 					return json_encode(DB::table('facilitytyp')
 					->where([['facilitytyp.servtype_id', 2],['facilitytyp.hgpid',$hgpid]])->get());
 				} else {
@@ -783,7 +925,28 @@ class FunctionsClientController extends Controller {
 					// dd($toReturn);
 					
 					return json_encode($toReturn);
+				}*/
+
+				//2023-12-17
+				if(!isset($selected)){
+					return json_encode(DB::table('view_ServiceList')
+					->where([['servtype_id', 2],['hgpid',$hgpid]])->get());
+				} else {
+					$toReturn = DB::table('view_ServiceList')
+					->where([['servtype_id', '>' , 1],['specified',$selected]]);
+
+					
+					if(isset($hfserid)){
+						$toReturn = $toReturn->where('hfser_id',$hfserid)->get();
+					} else {
+						$toReturn = $toReturn->get();
+					}
+
+					// dd($toReturn);
+					
+					return json_encode($toReturn);
 				}
+
 			}
 		} catch (Exception $e) {
 			return $e;

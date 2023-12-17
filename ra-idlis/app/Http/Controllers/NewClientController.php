@@ -3168,6 +3168,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				$locRet 	= "dashboard.client.forms.request-for-change";
 				$hfser_id 	=  $data[0]->hfser_id;
 				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;	
+				$regservices	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 0);
 				$appform 	= $this->checkAppForm($reg_fac_id);	//CHECK APP id			
 				$appid = -1;
 				$savingStat = NULL;
@@ -3192,13 +3193,16 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$appform_changeaction = ($functype == '' || $functype == 'main') ? DB::select("SELECT aca.id, aca.appid, aca.cat_id, ctyp.description, aca.remarks FROM `appform_changeaction` aca LEFT JOIN change_action_type ctyp ON aca.cat_id=ctyp.cat_id WHERE appid='$appid';") : null;
 				}
 
+				
+
 				$data = [
 					'appid'					=> $appid, //old app id
 					'functype'				=> $functype,
 					'registered_facility'	=> (count($data) > 0) ? $data[0] : null,
 					'validity'				=> $validity,
 					'uid'					=> $user_data->uid,
-					'appform_changeaction'	=> $appform_changeaction,
+					'appform_changeaction'	=> $appform_changeaction,					
+					'regservices'			=> $regservices,
 					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee"),
 					'chgfil_sf'				=> FunctionsClientController::getChargesByAppID($appid, "Service Fee"),
 					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee")					
@@ -3210,8 +3214,20 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$data2 = $this->reg_annexa_COR($request, $reg_fac_id, $appid);
 					$data = array_merge($data, $data2);
 				}
-				else if($functype == 'cs')
+				else if($functype == 'annexb')
 				{
+					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
+					$data2 = $this->reg_annexb_COR($request, $appid);
+					$data = array_merge($data, $data2);
+				}
+				else if($functype == 'cs' || $functype == 'as')
+				{									
+					$isaddnew 		= 0;
+					$isupdate 		= 0;
+					$mainservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 1);
+					$addOnservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 2);
+					$mainservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 1);
+					$addOnservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 2);
 					$chk			=  DB::table('x08_ft')->where([['appid', $appid]])->first();
 					$chkFacid 		= new stdClass();
 					$proceesedAmb 	= []; 
@@ -3221,6 +3237,15 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$appGet 		= FunctionsClientController::getUserDetailsByAppform($appid, NULL);	
 					$apptype 		= ($appid > 0 && count($appGet) > 0 ) ? $appGet[0]->hfser_id :	$hfser_id;													
 					$hfaci_sql 		= "SELECT * FROM hfaci_grp WHERE hgpid IN (SELECT hgpid FROM `facl_grp` WHERE hfser_id = '$apptype')"; 
+
+					if($functype == 'as')
+					{						
+						$isaddnew 		= 1;
+					}
+					if($functype == 'cs')
+					{						
+						$isupdate 		= 1;
+					}
 					
 					foreach ($facl_grp as $f) {	array_push($faclArr, $f->hgpid);	}
 
@@ -3269,8 +3294,15 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						'hideExtensions'	=> null,
 						'ambcharges'		=> DB::table('chg_app')->whereIn('chgapp_id', ['284', '472'])->get(),
 						'group'				=> json_encode(DB::table('facilitytyp')->where('servtype_id','>',1)->whereNotNull('grphrz_name')->get()),
-						'forAmbulance'		=> json_encode($proceesedAmb)
+						'forAmbulance'		=> json_encode($proceesedAmb),	
+						'mainservices_reg'		=> $mainservices_reg,
+						'addOnservices_reg'		=> $addOnservices_reg,
+						'mainservices_applied'		=> $mainservices_applied,
+						'addOnservices_applied'		=> $addOnservices_applied,
+						'isaddnew'		=> $isaddnew,
+						'isupdate'		=> $isupdate
 					];
+					
 					$data = array_merge($data, $data2);
 				}
 				
@@ -4186,6 +4218,42 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		/*} else {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
 		}*/
+	}
+
+	public function reg_annexb_COR(Request $request, $appid = "0"){
+
+		//if(FunctionsClientController::isUserApplication($appid)){
+
+			if($request->isMethod('get')){
+				$arrRet = [
+					'hfsrbannexb' => DB::table('hfsrbannexb')->where('appid',$appid)->get(),
+					// 'canAdd' => DB::table('appform')->where([['appid',$appid],['isReadyForInspec',0]])->exists()
+					'canAdd' => true,
+					'appid' =>$appid
+				];
+				return $arrRet;
+			} else if($request->isMethod('post')) {
+				if($request->action == 'add'){
+					$returnToSender = DB::table('hfsrbannexb')->insert(['equipment' => $request->equipment, 'brandname' => $request->brandname, 'model' => $request->model, 'serial' => $request->serial, 'quantity' => $request->quantity, 'dop' => $request->dop, 'manDate' => $request->manDate, 'appid' => $appid]);
+				} else if($request->action == 'edit'){
+					$returnToSender = DB::table('hfsrbannexb')
+					->where('id',$request->id)->update([
+						'equipment' => $request->equipment, 
+						'brandname' => $request->brandname, 
+						'model' => $request->model, 
+						'serial' => $request->serial, 
+						'quantity' => $request->quantity, 
+						'manDate' => $request->manDate,
+						'dop' => $request->dop
+					]);
+				} else if($request->action == 'delete') {
+					$returnToSender = DB::table('hfsrbannexb')->where('id',$request->id)->delete();
+				}
+				return ($returnToSender > 0 ? "DONE" : "ERROR");
+			}
+		//} else {
+		//	return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
+		//}
 	}
 
 	//hfsrb requirements
@@ -6075,7 +6143,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							if(isset($request->facid) && isset($request->appid)) {
 								// session()->forget('ambcharge');
 								$retArr = FunctionsClientController::getServiceCharge($request->facid, $request->hfser_id, $request->facmode, $request->extrahgpid, $request->aptid); 
-								// $retArr = FunctionsClientController::getServiceCharge($request->facid, $request->hfser_id, $request->facmode, $request->extrahgpid, $request->aptid); 
 								$sql = "SELECT 'Application Payment' AS facname, appform_orderofpayment.oop_paid AS amt, '297' AS chgapp_id FROM appform_orderofpayment WHERE appid = '$request->appid'"; 
 								$chkOop = DB::select($sql);
 								$sessSave = ((count($chkOop) > 0) ? $chkOop : $retArr);
@@ -6087,7 +6154,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							}
 							return json_encode($retArr);
 							break;
-						case 'getAncillary':
+						
+						case 'getAncillary':  
 							$retArr = [];
 							if(isset($request->id) && !empty($request->id)) {
 								$hfserid = null;
@@ -6113,6 +6181,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 											break;
 									}
 								}
+								//get all services of add ons, otherwise services of hospital levels if Request has selected value.
 								$retArr = FunctionsClientController::getAncillaryServices($request->id,$request->selected,$hfserid); 
 
 							}

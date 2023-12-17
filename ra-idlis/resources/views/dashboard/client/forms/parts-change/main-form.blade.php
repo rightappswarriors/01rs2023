@@ -36,6 +36,8 @@
     </div>
 @endif
 
+
+
 <!-- Facility Address -->
 <div class="col-md-12">
     <label for="facility_name"><i class="fa fa-map"></i> Registered HF Complete Address: </label>
@@ -142,7 +144,15 @@
 
 <div class="col-md-6">                                        
     <label>Services:</label>
-    <ul style="list-style-type: none; "><li>Service 1, Service 2, Service 3, Service 4, Service </li></ul>
+    <ul style="list-style-type: none; "><li>
+        
+        @if (isset($regservices))
+            @foreach ($regservices as $d)
+                {{$d->facname}}, 
+            @endforeach	
+        @endif
+
+    </li></ul>
 </div>
 
 @if($registered_facility->facilitytype != $registered_facility->facilitytype)
