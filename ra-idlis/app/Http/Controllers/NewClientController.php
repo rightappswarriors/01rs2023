@@ -3220,6 +3220,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$data2 = $this->reg_annexb_COR($request, $appid);
 					$data = array_merge($data, $data2);
 				}
+				else if($functype == 'av')
+				{
+					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
+					//$data2 = $this->reg_annexb_COR($request, $appid);
+					//$data = array_merge($data, $data2);
+				}
 				else if($functype == 'cs' || $functype == 'as')
 				{									
 					$isaddnew 		= 0;
