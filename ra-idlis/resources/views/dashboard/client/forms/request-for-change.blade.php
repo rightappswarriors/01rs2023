@@ -72,21 +72,23 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                    <!---  Main Form  -->
-                                    @if($functype == 'annexa')
-                                        @include('client1.apply.LTO1.hfsrb.annexa-part-personnel')
-                                    @elseif($functype == 'av')
-                                        @include('dashboard.client.forms.ambulance-vehicle-form')
-                                    @elseif($functype == 'cs')
-                                        @include('dashboard.client.forms.change-service-form')
-                                    @else
-                                        @include('dashboard.client.forms.parts-change.main-form-action-button')
-                                        @include('dashboard.client.forms.parts-change.list-of-change-details')
-                                    @endif
-                                    <!---  Main Form  -->
+                                <!---  Main Form  -->
+                                @if($functype == 'annexa')
+                                    @include('client1.apply.LTO1.hfsrb.annexa-part-personnel')
+                                @elseif($functype == 'annexb')
+                                    @include('client1.apply.LTO1.hfsrb.annexb-part-equipment')
+                                @elseif($functype == 'av')
+                                    @include('dashboard.client.forms.ambulance-vehicle-form')
+                                @elseif($functype == 'cs' || $functype == 'as')
+                                    @include('dashboard.client.forms.change-service-form')
+                                @else
+                                    @include('dashboard.client.forms.parts-change.main-form-action-button')
+                                    @include('dashboard.client.forms.parts-change.list-of-change-details')
+                                @endif
+                                <!---  Main Form  -->
 
                                 <!---  Main Form Submit -->
-                                @if($functype == 'av' || $functype == 'cs' || $functype == 'annexa' || $functype == 'annexb')
+                                @if($functype == 'av' || $functype == 'cs' || $functype == 'as' || $functype == 'annexa' || $functype == 'annexb')
                                     
                                     <div class="row">
                                         <div class="text-center" style="margin:auto; margin-top:10px;">
@@ -123,7 +125,7 @@
                                             </form>  
                                         @endif
                                     @endisset
-                                    
+
                                 @endif
                                 <!---  Main Form  -->
                             </div>
