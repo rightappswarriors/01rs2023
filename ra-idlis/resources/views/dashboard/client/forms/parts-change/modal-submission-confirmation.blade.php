@@ -26,6 +26,7 @@
                 <form id="change_mainform" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST" >
                                                 {{ csrf_field() }}
                                                 <input type="hidden" name="cat_id" id="cat_id" value="100000">
+                                                <input type="hidden" name="hfser_id" value="{{$registered_facility->hfser_id}}">   
                                                 <input type="hidden" name="appid" id="appid" value="{{$registered_facility->appid}}">         
                                                 <input type="hidden" name="regfac_id" id="regfac_id" value="{{$registered_facility->regfac_id}}">  
                                                 <input type="hidden" class="form-control" id="aptidnew" name="aptidnew" value="IC">       
