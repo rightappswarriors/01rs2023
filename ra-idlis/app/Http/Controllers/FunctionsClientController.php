@@ -732,25 +732,23 @@ class FunctionsClientController extends Controller {
 	{/*$appid = '9193';*/
 		try {
 			$retArr = [];
+			$retArr = DB::table('view_facility_services_per_appform')->where('appid','=',$appid)->where('facid','not like','%-REGIS');
 
 			if($servtype_id == 0){
-				$retArr = DB::table('view_facility_services_per_appform')
-							->where('appid','=',$appid)->where('facid','not like','%-REGIS')
-							->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+							
+				$retArr = 	$retArr->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC');
 			}
 			else{
 				if($servtype_id == 1)
 				{
-					$retArr = DB::table('view_facility_services_per_appform')
-								->where('appid','=',$appid)->where('servtype_id','=',$servtype_id)->where('facid','not like','%-REGIS')
-								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+					$retArr = 	$retArr->where('servtype_id','=',$servtype_id)->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC');
 				}
 				else{
-					$retArr = DB::table('view_facility_services_per_appform')
-								->where('appid','=',$appid)->where('servtype_id','>',$servtype_id)->where('facid','not like','%-REGIS')
-								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
+					$retArr = 	$retArr->where('servtype_id','>=',$servtype_id)->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC');
 				}
 			}
+
+			$retArr = 	$retArr->get();
 
 			return $retArr;
 		}
@@ -776,7 +774,7 @@ class FunctionsClientController extends Controller {
 					$retArr = DB::table('view_reg_facility_services')->where('regfac_id','=',$regfac_id)->where('servtype_id','=',$servtype_id)
 								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
 				}
-				else{
+				elseif($servtype_id > 1){
 					$retArr = DB::table('view_reg_facility_services')->where('regfac_id','=',$regfac_id)->where('servtype_id','>=',$servtype_id)
 								->ORDERBY('anc_name','ASC')->ORDERBY('facid','ASC')->get();
 				}
@@ -797,7 +795,19 @@ class FunctionsClientController extends Controller {
 			$retArr = [];
 			if(count($arrVal) > 0) {	
 				
-				if(isset($hfser) && !empty($hfser)){
+				if($isInitialChange == TRUE){
+					$retArr = DB::table('view_ServiceCharge')->whereIn('facid', $arrVal)->where('chg_code','not like','%-REGIS')
+								->where('hfser_id','!=','PTC')->where('hfser_id','!=','CON')->where('aptid','!=','R');
+
+					if(isset($facmode) && !empty($facmode)){
+						$retArr = $retArr->where('facmid','=',$facmode);		
+					}
+					if(isset($extraHgpid) && !empty($extraHgpid)){
+						$retArr = $retArr->where('extrahgpid','=',$extraHgpid);							
+					}
+					$retArr = $retArr->select('facname', 'amt', 'chgapp_id', 'facid')->distinct()->get();
+				}
+				else if(isset($hfser) && !empty($hfser)){
 
 					if(isset($facmode) && isset($extraHgpid)){
 
@@ -816,30 +826,6 @@ class FunctionsClientController extends Controller {
 						->get();
 					}
 				}
-				elseif($isInitialChange == TRUE){
-					if(isset($facmode) && isset($extraHgpid)){
-
-						$retArr = DB::table('view_ServiceCharge')
-						->whereIn('facid', $arrVal)->where([['facmid',$facmode], ['extrahgpid', $extraHgpid]])
-						->where(function ($query) {
-							$query->where('aptid','=','IN')
-								->orWhere('aptid','=','IC');
-						})
-						->select('facname', 'amt', 'chgapp_id', 'facid')
-						->get();
-					}
-					if(count($retArr) <= 0){
-						$retArr = DB::table('view_ServiceCharge')
-						->whereIn('facid', $arrVal)
-						->where([['facmid',null], ['extrahgpid', null]])
-						->where(function ($query) {
-							$query->where('aptid','=','IN')
-								->orWhere('aptid','=','IC');
-						})
-						->select('facname', 'amt', 'chgapp_id', 'facid')
-						->get();
-					}
-				}	 
 				else{
 					if(isset($facmode) && isset($extraHgpid)){
 
@@ -898,6 +884,71 @@ class FunctionsClientController extends Controller {
 
 			return $retArr;
 		} catch(Exception $e) {
+			return $e;
+		}
+	}
+
+	//2023-12-17
+	//almost the same with AjaxController:getAllServices()
+	//get all master list of services of add ons, otherwise services of hospital levels if Request has selected value.
+	public static function get_view_ServiceList($hgpid=null, $servtype_id = 0){
+		try {
+			$retArr = [];
+			$retArr = DB::table('view_ServiceList')->where('facid','not like','%-REGIS');
+
+			if(isset($hgpid)){
+
+				if($hgpid == "6")
+				{
+					$retArr = $retArr->where(function ($query) {
+						$query->where('view_ServiceList.hgpid','=','6')
+							->orWhere('view_ServiceList.hgpid','=','34');
+					});
+				}
+				else{
+					$retArr = $retArr->where('hgpid','=',$hgpid);
+				}				
+			}
+
+			if($servtype_id == 1 ){
+				$retArr = $retArr->where('servtype_id','=',$servtype_id);
+			} elseif($servtype_id > 1 ) {
+				$retArr = $retArr->where('servtype_id','>=',$servtype_id);
+			} 
+
+			$retArr = $retArr->get();
+			
+			return $retArr;
+		} catch (Exception $e) {
+			return $e;
+		}
+	}
+	// not done-- for testing - 2023-12-18
+	public static function get_view_ServiceList_with_services_appform($hgpid=null, $servtype_id = 0, $appid=null){
+		try {
+			$retArr = [];
+			
+			$retArr = DB::table('view_ServiceList');
+			
+			if(isset($appid)){
+				$retArr = $retArr->select('view_ServiceList.*', 'view_facility_services_per_appform.forSpecialty', 'view_facility_services_per_appform.year_validity')
+				->leftJoin('view_facility_services_per_appform','view_ServiceList.facid','=','view_facility_services_per_appform.facid')->where('view_facility_services_per_appform.appid','=', $appid);
+			}
+
+			if(isset($hgpid)){
+				$retArr = $retArr->where('view_ServiceList.hgpid','=',$hgpid);
+			}
+
+			if($servtype_id == 1 ){
+				$retArr = $retArr->where('view_ServiceList.servtype_id','=',$servtype_id);
+			} elseif($servtype_id > 1 ) {
+				$retArr = $retArr->where('view_ServiceList.servtype_id','>=',$servtype_id);
+			} 
+
+			$retArr = $retArr->where('view_ServiceList.facid','not like','%-REGIS')->orderBy('view_ServiceList.facid','asc')->get();
+			
+			return $retArr;
+		} catch (Exception $e) {
 			return $e;
 		}
 	}
@@ -1055,7 +1106,7 @@ class FunctionsClientController extends Controller {
 	}
 	
 	//TypeOfFees = Facility Registration Fee, Ambulance Fee, Service Fee
-	public static function getChargesByAppID($appid, $TypeOfFees = "" ){
+	public static function getChargesByAppID($appid, $TypeOfFees = "", $isChange=FALSE ){
 		$retArr = []; 
 
 		$WHERE = " AND t.appform_id='".$appid."' ";
@@ -1065,10 +1116,11 @@ class FunctionsClientController extends Controller {
 			$WHERE = $WHERE . " AND t.typ='".$TypeOfFees."' ";
 		}
 
-		$retArr = DB::select("SELECT * FROM
+		if($isChange){
+			$retArr = DB::select("SELECT DISTINCT * FROM
 						(
 							SELECT appform.ocid, appform.classid, appform.subClassid, chgfil.appform_id, chgfil.amount, chg_app.chgapp_id, 
-							charges.chg_code, charges.chg_desc, serv_chg.facid, facilitytyp.facname, chgfil.reference, 
+							charges.chg_code, charges.chg_desc, NULL AS facid, NULL AS facname, chgfil.reference, 
 							CASE WHEN charges.chg_code LIKE '%REGIS%' THEN 'Facility Registration Fee' 
 								WHEN chgfil.reference='Ambulance charge' THEN 'Ambulance Fee' 
 								ELSE 'Service Fee' END AS typ
@@ -1079,6 +1131,23 @@ class FunctionsClientController extends Controller {
 						) t
 						WHERE 1=1 ".$WHERE." ORDER BY t.appform_id, t.typ ASC
 					");
+		}
+		else{
+			$retArr = DB::select("SELECT * FROM
+							(
+								SELECT appform.ocid, appform.classid, appform.subClassid, chgfil.appform_id, chgfil.amount, chg_app.chgapp_id, 
+								charges.chg_code, charges.chg_desc, serv_chg.facid, facilitytyp.facname, chgfil.reference, 
+								CASE WHEN charges.chg_code LIKE '%REGIS%' THEN 'Facility Registration Fee' 
+									WHEN chgfil.reference='Ambulance charge' THEN 'Ambulance Fee' 
+									ELSE 'Service Fee' END AS typ
+								FROM chgfil LEFT JOIN chg_app ON chgfil.chgapp_id=chg_app.chgapp_id  
+								LEFT JOIN serv_chg ON chg_app.chgapp_id=serv_chg.chgapp_id LEFT JOIN facilitytyp ON facilitytyp.facid=serv_chg.facid
+								LEFT JOIN charges on chg_app.chg_code=charges.chg_code  LEFT JOIN appform ON appform.appid=chgfil.appform_id 
+								WHERE  chgfil.amount IS NOT NULL AND  (charges.chg_code NOT LIKE 'MOP-%' OR charges.chg_code IS NULL) 
+							) t
+							WHERE 1=1 ".$WHERE." ORDER BY t.appform_id, t.typ ASC
+						");
+		}
 
 		return $retArr;
 	}

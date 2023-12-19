@@ -4,7 +4,7 @@
     $_dispSubmit = true;
     $_dispData = "Update Details";
 
-    $main_serv_desc = "Main Services"; 
+    $main_serv_desc = "Hospital Level"; 
     $addon_serv_desc = "Add Ons / Ancilliary / Other Services";
     $main_colspan = 3;
     $addon_colspan = 3;

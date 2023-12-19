@@ -25,6 +25,7 @@ use App\Http\Controllers\FunctionsClientController as ControllersFunctionsClient
 use App\Models\FACLGroup;
 use App\Models\HFACIGroup;
 use App\Models\Regions;
+use Hamcrest\Arrays\IsArray;
 use QrCode;
 use stdClass;
 
@@ -169,6 +170,7 @@ class NewClientController extends Controller {
 			if(!session()->has('fornav')){
 				session()->put('fornav',$data);
 			}
+			
 			$uid = $data[0]->uid;
 			$appGet = FunctionsClientController::getApplicationDetailsWithTransactions(FunctionsClientController::getSessionParamObj("uData", "uid"), "IN", true);
 			//dd($appGet);
@@ -582,7 +584,7 @@ class NewClientController extends Controller {
 			}
 
 			$curForm = FunctionsClientController::getUserDetailsByAppform($appid);
-			//dd($curForm);
+			//dd($appid);
 			// dd($request);
 			if(count($curForm) < 1) {
 				return redirect('client1/apply')->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'No application selected.']);
@@ -2884,6 +2886,24 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Increase/Decrease In Ambulance Vehicle
 		else if($cat_id == 3)
 		{
+			$chgapp_id = "";
+			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+			
+			foreach ($fees as $d){
+				$chgapp_id = $d->chgapp_id;
+				$facname	= $d->facname;
+				$amt	= $d->amt;
+				
+				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+				$appcharge = json_encode($arr);
+				NewGeneralController::appCharge($appcharge, $appid, $uid);
+			}			
+
+			//added to service for assessment tool
+			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+
 			$remarks = "Increase/Decrease In Ambulance Vehicle.";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
@@ -2892,18 +2912,57 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Change In Service
 		else if($cat_id == 4)
 		{
-			$remarks = "Services applied.";
+			$chgapp_id = "";
+			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+			
+			foreach ($fees as $d){
+				$chgapp_id = $d->chgapp_id;
+				$facname	= $d->facname;
+				$amt	= $d->amt;
+				
+				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+				$appcharge = json_encode($arr);
+				NewGeneralController::appCharge($appcharge, $appid, $uid);
+			}			
+
+			//added to service for assessment tool
+			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+
+			$remarks = "New Service(s) has been updated.";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+
+			return redirect('client1/changerequest/'.$request->regfac_id.'/cs')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Service successfully saved.']);
 		}
 		//Additional In Service
 		else if($cat_id == 5)
 		{
-			$remarks = "Services applied.";
+			$chgapp_id = "";
+			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+
+			foreach ($fees as $d){
+				$chgapp_id = $d->chgapp_id;
+				$facname	= $d->facname;
+				$amt	= $d->amt;
+				
+				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+				$appcharge = json_encode($arr);
+				NewGeneralController::appCharge($appcharge, $appid, $uid);
+			}
+			//added to service for assessment tool
+			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+
+			$remarks = "New Service(s) has been added.";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			
+			return redirect('client1/changerequest/'.$request->regfac_id.'/as')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Service successfully saved.']);
 		}
 		//Update in Personnel
 		else if($cat_id == 6)
@@ -2954,10 +3013,28 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Downgrade in Hospital Level
 		else if($cat_id == 9)
 		{
-			$remarks = "Downgrade in Hospital";
+			$chgapp_id = "";
+			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+			
+			foreach ($fees as $d){
+				$chgapp_id = $d->chgapp_id;
+				$facname	= $d->facname;
+				$amt	= $d->amt;
+				
+				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+				$appcharge = json_encode($arr);
+				NewGeneralController::appCharge($appcharge, $appid, $uid);
+			}			
+
+			//added to service for assessment tool
+			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+
+			$remarks = "Update in Hospital Level";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
 		}
 		//Rename Facility
 		else if($cat_id == 10)
@@ -2986,10 +3063,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		else if($cat_id == 100000)
 		{
 			$remarks = "N";
+			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'Partial']);
+			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'final']);
 
-			return redirect('client1/apply/attachment/LTO/'.$request->appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
+			return redirect('client1/apply/attachment/LTO/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Finalized the Initial Change application. Proceeding to Requirements']);
 		}
 
 		return redirect('client1/changerequest/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
@@ -3161,6 +3239,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$nameofcomp 			= null;
 		$validity 				= "";
 		$user_data 				= session()->get('uData');
+		$hgpid					= null;
 
 		try {
 			if(count($data) > 0 && $user_data) 
@@ -3176,6 +3255,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				if (!is_null($appform)) { 
 					$appid 		= $appform->appid;
 					$savingStat = $appform->savingStat;
+					$hgpid		= $appform->hgpid;
+				}
+				else{
+					if (!is_null($data) && is_array($data)) { 
+						$hgpid		= $data[0]->hgpid;
+					}
 				}
 
 				try {
@@ -3191,28 +3276,32 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 								->join('view_registered_facility_for_change', 'view_registered_facility_for_change.regfac_id', '=', 'appform.regfac_id')
 								->orderBy('appid','DESC')->get();*/					
 					$appform_changeaction = ($functype == '' || $functype == 'main') ? DB::select("SELECT aca.id, aca.appid, aca.cat_id, ctyp.description, aca.remarks FROM `appform_changeaction` aca LEFT JOIN change_action_type ctyp ON aca.cat_id=ctyp.cat_id WHERE appid='$appid';") : null;
-				}
-
-				
+				}		
 
 				$data = [
 					'appid'					=> $appid, //old app id
+					'regfac_id'				=> $reg_fac_id,
 					'functype'				=> $functype,
 					'registered_facility'	=> (count($data) > 0) ? $data[0] : null,
 					'validity'				=> $validity,
 					'uid'					=> $user_data->uid,
 					'appform_changeaction'	=> $appform_changeaction,					
 					'regservices'			=> $regservices,
-					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee"),
-					'chgfil_sf'				=> FunctionsClientController::getChargesByAppID($appid, "Service Fee"),
-					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee")					
+					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee", TRUE),
+					'chgfil_sf'				=> FunctionsClientController::getChargesByAppID($appid, "Service Fee", TRUE),
+					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee", TRUE)					
 					//DB::table('chgfil')->where([['appform_id', $appid]])->get()
 				];
 				if($functype == 'annexa')
 				{
 					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
 					$data2 = $this->reg_annexa_COR($request, $reg_fac_id, $appid);
-					$data = array_merge($data, $data2);
+
+					if(is_array($data2))
+					{
+						$data = array_merge($data, $data2);
+					}
+					else return $data2;
 				}
 				else if($functype == 'annexb')
 				{
@@ -3222,14 +3311,38 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				}
 				else if($functype == 'av')
 				{
-					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
-					//$data2 = $this->reg_annexb_COR($request, $appid);
-					//$data = array_merge($data, $data2);
+					$isaddnew 		= 1;
+					$isupdate 		= 1;
+					$mainservicelist = FunctionsClientController::get_view_ServiceList($hgpid, 1);
+					$addonservicelist = FunctionsClientController::get_view_ServiceList(null, 2);
+					$mainservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 1);
+					$addOnservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 2);
+					$mainservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 1);
+					$addOnservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 2);
+					
+					$data2 = [
+						// 'grpid' =>  $grpid,
+						'aptid'				=> 'IC',
+						'apptypenew'		=> 'IC',
+						'mainservices_reg'		=> $mainservices_reg,
+						'addOnservices_reg'		=> $addOnservices_reg,
+						'mainservices_applied'	=> $mainservices_applied,
+						'addOnservices_applied'	=> $addOnservices_applied,
+						'mainservicelist'		=> $mainservicelist,
+						'addonservicelist'		=> $addonservicelist,
+						'isaddnew'				=> $isaddnew,
+						'isupdate'				=> $isupdate
+					];
+					
+					$data = array_merge($data, $data2);
 				}
-				else if($functype == 'cs' || $functype == 'as')
-				{									
+				else if($functype == 'cs' || $functype == 'as' || $functype == 'hospital')
+				{	
+					$cat_id			= 0;				
 					$isaddnew 		= 0;
 					$isupdate 		= 0;
+					$mainservicelist = FunctionsClientController::get_view_ServiceList($hgpid, 1);
+					$addonservicelist = FunctionsClientController::get_view_ServiceList(null, 2);
 					$mainservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 1);
 					$addOnservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 2);
 					$mainservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 1);
@@ -3246,11 +3359,19 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 					if($functype == 'as')
 					{						
-						$isaddnew 		= 1;
+						$isaddnew 		= 1;	
+						$cat_id			= 5;	
 					}
-					if($functype == 'cs')
+					if($functype == 'cs' )
 					{						
 						$isupdate 		= 1;
+						$cat_id			= 4;	
+					}
+					if($functype == 'hospital')
+					{
+						$isaddnew 		= 1;
+						$isupdate 		= 1;
+						$cat_id			= 9;		
 					}
 					
 					foreach ($facl_grp as $f) {	array_push($faclArr, $f->hgpid);	}
@@ -3303,13 +3424,17 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						'forAmbulance'		=> json_encode($proceesedAmb),	
 						'mainservices_reg'		=> $mainservices_reg,
 						'addOnservices_reg'		=> $addOnservices_reg,
-						'mainservices_applied'		=> $mainservices_applied,
-						'addOnservices_applied'		=> $addOnservices_applied,
+						'mainservices_applied'	=> $mainservices_applied,
+						'addOnservices_applied'	=> $addOnservices_applied,
+						'mainservicelist'		=> $mainservicelist,
+						'addonservicelist'		=> $addonservicelist,
 						'isaddnew'		=> $isaddnew,
-						'isupdate'		=> $isupdate
+						'isupdate'		=> $isupdate,
+						'cat_id'		=> $cat_id
 					];
 					
 					$data = array_merge($data, $data2);
+
 				}
 				
 				return view($locRet, $data);
