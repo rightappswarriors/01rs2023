@@ -111,6 +111,13 @@ Route::prefix('client1')->group(function() {
 	Route::prefix('changerequest')->group(function() {
 		// qweqwe - initial change
 		Route::match(['get', 'post'], '/{reg_fac_id}/{functype}', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		/*Route::match(['get', 'post'], '/{reg_fac_id}/main', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/cs', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/as', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/av', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/hospital', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/annexa', 'NewClientController@__editAppCoRNew');  //functype default value is main
+		Route::match(['get', 'post'], '/{reg_fac_id}/annexb', 'NewClientController@__editAppCoRNew');  //functype default value is main*/
 		Route::match(['get', 'post'], '/actionsubmit', 'NewClientController@__editAppCoRSubmit');   //submitted bed capacity
 	});
 	

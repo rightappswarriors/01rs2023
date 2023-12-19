@@ -26,40 +26,44 @@
             <i class="fa fa-edit" aria-hidden="true"></i> Equipment
         </a>
     </div>
+    
+    {{-- @if($registered_facility->hgpid == '6')  --}}
+    <div class="form-group col-md-3">
+       {{-- <button id="submitDowngradeHospital"  class="btn btn-block btn-primary btn-flat" type="button" value="downgradehospital" name="submit" data-toggle="modal" data-target="#changeDowngradeHospital">
+            <i class="fa  fa-plus" aria-hidden="true"></i>/<i class="fa  fa-minus" aria-hidden="true"></i> <small >Downgrade Hospital</small>
+        </button>   --}}
+        
+        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/hospital">
+            <i class="fa  fa-plus" aria-hidden="true"></i>/<i class="fa  fa-minus" aria-hidden="true"></i> Update Hospital Level
+        </a>
+    </div>
+    {{-- @endif    --}}
+
+    <div class="form-group col-md-3">
+        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/as">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add On Service
+        </a>
+    </div>  
 
     <div class="form-group col-md-3">
         <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/cs">
             <i class="fa fa-edit" aria-hidden="true"></i> Change in Service
         </a>
-    </div>
+    </div>                                 
 
     <div class="form-group col-md-3">
-        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/cs">
-            <i class="fa fa-plus" aria-hidden="true"></i> Add On Service
-        </a>
-    </div>                                   
-
-    <div class="form-group col-md-3">
-        <a class="btn btn-block btn-primary btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/av">
+        <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/av">
             <i class="fa fa-ambulance" aria-hidden="true"></i> Ambulance
         </a>
     </div>
 
     <div class="form-group col-md-3">
-        <button id="submitCFIO"  class="btn btn-block btn-info btn-flat" type="button" value="cfio" name="submit" data-toggle="modal" data-target="#changeCFIO">
+        <button id="submitCFIO"  class="btn btn-block btn-primary btn-flat" type="button" value="cfio" name="submit" data-toggle="modal" data-target="#changeCFIO">
             <i class="fa fa-edit" aria-hidden="true"></i> 
             Classification
         </a>
     </div> 
     
-    {{-- @if($registered_facility->hgpid == '6')  --}}
-    <div class="form-group col-md-3">
-        <button id="submitDowngradeHospital"  class="btn btn-block btn-primary btn-flat" type="button" value="downgradehospital" name="submit" data-toggle="modal" data-target="#changeDowngradeHospital">
-            <i class="fa  fa-plus" aria-hidden="true"></i>/<i class="fa  fa-minus" aria-hidden="true"></i> <small >Downgrade Hospital</small>
-        </button>   
-    </div>
-    {{-- @endif    --}}
-
     <div class="form-group col-md-3">
         <button id="submitRenameHF"  class="btn btn-block btn-primary btn-flat" type="button" value="renamehf" name="submit" data-toggle="modal" data-target="#changeRenameHF">
             <i class="fa fa-file-word-o" aria-hidden="true"></i> Rename Facility

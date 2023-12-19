@@ -45,7 +45,7 @@
                                     @if(isset($chgfil_sf)):
                                         @foreach ($chgfil_sf as $item)                                         
                                             <tr>
-                                                <td>{{$item->reference}}</td>
+                                                <td><small style="color:#ccc">[{{$item->chg_desc}}]</small><br/>{{$item->reference}}</td>
                                                 <td>{{number_format($item->amount, 2, '.', ',')}}@php $amt = floatval($item->amount); $total_amt = $total_amt + $amt; @endphp</td>
                                             </tr>   
                                         @endforeach                                     

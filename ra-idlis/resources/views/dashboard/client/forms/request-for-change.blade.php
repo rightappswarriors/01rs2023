@@ -79,6 +79,8 @@
                                     @include('client1.apply.LTO1.hfsrb.annexb-part-equipment')
                                 @elseif($functype == 'av')
                                     @include('dashboard.client.forms.ambulance-vehicle-form')
+                                @elseif($functype == 'hospital')
+                                    @include('dashboard.client.forms.change-hospital-form')
                                 @elseif($functype == 'cs' || $functype == 'as')
                                     @include('dashboard.client.forms.change-service-form')
                                 @else
@@ -88,18 +90,8 @@
                                 <!---  Main Form  -->
 
                                 <!---  Main Form Submit -->
-                                @if($functype == 'av' || $functype == 'cs' || $functype == 'as' || $functype == 'annexa' || $functype == 'annexb')
-                                    
-                                    <div class="row">
-                                        <div class="text-center" style="margin:auto; margin-top:10px;">
-                                            <a class="btn btn-secondary action-btn btn-block" href="{{asset('client1/changerequest')}}/{{$registered_facility->regfac_id}}/main">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Main Form
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                @else
-
+                                @if($functype == 'main' || $functype == '')
+                                
                                     @isset($appid)
                                         @if($appid > 0)
                                             <div class="row">
@@ -113,18 +105,20 @@
                                                 </div>                                    
                                             </div>
 
-                                            <form id="change_mainform" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST" >
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="cat_id" id="cat_id" value="100000">
-                                                <input type="hidden" name="appid" id="appid" value="{{$registered_facility->appid}}">         
-                                                <input type="hidden" name="regfac_id" id="regfac_id" value="{{$registered_facility->regfac_id}}">  
-                                                <input type="hidden" class="form-control" id="aptidnew" name="aptidnew" value="IC">       
-                                                <input type="hidden" class="form-control" id="aptid" name="aptid" value="IC">       
-                                                <input id="saveasn"  name="saveasn" value="partial" type="hidden" />
-                                                @include('dashboard.client.forms.parts-change.modal-submission-confirmation')
-                                            </form>  
+                                            @include('dashboard.client.forms.parts-change.modal-submission-confirmation')
                                         @endif
                                     @endisset
+
+
+                                @else
+                                    
+                                    <div class="row">
+                                        <div class="text-center" style="margin:auto; margin-top:10px;">
+                                            <a class="btn btn-secondary action-btn btn-block" href="{{asset('client1/changerequest')}}/{{$registered_facility->regfac_id}}/main">
+                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Main Form
+                                            </a>
+                                        </div>
+                                    </div>
 
                                 @endif
                                 <!---  Main Form  -->
