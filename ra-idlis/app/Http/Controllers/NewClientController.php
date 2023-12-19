@@ -2859,10 +2859,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$appform 	= $this->checkAppForm($regfac_id);	//CHECK APP id			
 		$appid = -1;
 		$savingStat = NULL;
+		$hgpid = 0;
 
 		if (!is_null($appform)) { 
 			$appid 		= $appform->appid;
 			$savingStat = $appform->savingStat;
+			$hgpid = $appform->hgpid;
 		}
 
 		if($appid < 1) {	$appid = $this->insertAppForm($regfac_id);	}
@@ -2870,7 +2872,49 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Increase/Decrease In Bed Capacity
 		if($cat_id == 1)
 		{
-			$remarks = "No. Of Bed Applied is ".$request->noofbed_applied;
+			$amt = "0.00";
+			$facid = "";
+
+			if($hgpid == 6)
+			{
+				if($request->noofbed_applied <= 100)
+				{
+					$facid='H';
+					$remarks = "Level 1";
+					$chgapp_id = "229";
+					$amt = "6500";
+				}
+				if($request->noofbed_applied <= 200)
+				{
+					$facid='H2';
+					$remarks = "Level 2";
+					$chgapp_id = "232";
+					$amt = "8500";
+				} 
+				else{
+					$facid='H3';
+					$remarks = "Level 3";
+					$chgapp_id = "235";
+					$amt = "10500";
+				}
+			}
+			else{
+
+			}
+			
+			DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+
+			$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $remarks, 'amount'=>$amt));
+			$appcharge = json_encode($arr);
+			NewGeneralController::appCharge($appcharge, $appid, $uid);
+
+			if(isset($facid) && !empty($facid) )
+			{
+				DB::table('x08_ft')->where(array('facid' => $facid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $facid]);
+			}
+
+			$remarks = "Adjusted No. Of Bed Applied is ".$request->noofbed_applied;
 
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
@@ -2879,6 +2923,36 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Increase/Decrease In Dialysis Clinic
 		else if($cat_id == 2)
 		{
+			$facid = "";
+			$amt = "0.00";
+
+			if($hgpid == 6)
+			{
+				$remarks = "Dialysis Clinic";
+				$chgapp_id = "261";
+				$amt = "3000.00";
+
+				$facid='H1-AO-DC';
+			}
+			else{
+				$remarks = "Dialysis Clinic";
+				$chgapp_id = "11";
+				$amt = "9500.00";
+				$facid='HDS';
+			}
+			
+			DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+
+			$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $remarks, 'amount'=>$amt));
+			$appcharge = json_encode($arr);
+			NewGeneralController::appCharge($appcharge, $appid, $uid);
+
+			if(isset($facid) && !empty($facid) )
+			{
+				DB::table('x08_ft')->where(array('facid' => $facid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $facid]);
+			}
+
 			$remarks = "No. Of Dialysis Clinic Applied is ".$request->noofdialysis;
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
@@ -2913,55 +2987,99 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Change In Service
 		else if($cat_id == 4)
 		{
-			$chgapp_id = "";
-			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
-			
-			foreach ($fees as $d){
-				$chgapp_id = $d->chgapp_id;
-				$facname	= $d->facname;
-				$amt	= $d->amt;
+			$action = $request->action;
+
+			if($action == "del"){
+
+				$fromRegistered = $request->fromRegistered;
+				$facid = $request->facid;
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				}
+				DB::table('x08_ft')->where(array('appid'=>$appid, 'facid'=> $facid))->delete();
+
+				if($fromRegistered){
+
+				}
+			}
+			else{
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
 				
-				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
-				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
-				$appcharge = json_encode($arr);
-				NewGeneralController::appCharge($appcharge, $appid, $uid);
-			}			
-
-			//added to service for assessment tool
-			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
-			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
-
-			$remarks = "New Service(s) has been updated.";
-			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
-			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					$facname	= $d->facname;
+					$amt	= $d->amt;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+					$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+					$appcharge = json_encode($arr);
+					NewGeneralController::appCharge($appcharge, $appid, $uid);
+				}
+	
+				//added to service for assessment tool
+				DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+	
+				$remarks = "New Service(s) has been updated.";
+				DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
+				DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
+				//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			}
 
 			return redirect('client1/changerequest/'.$request->regfac_id.'/cs')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Service successfully saved.']);
 		}
 		//Additional In Service
 		else if($cat_id == 5)
 		{
-			$chgapp_id = "";
-			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+			$action = $request->action;
 
-			foreach ($fees as $d){
-				$chgapp_id = $d->chgapp_id;
-				$facname	= $d->facname;
-				$amt	= $d->amt;
-				
-				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
-				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
-				$appcharge = json_encode($arr);
-				NewGeneralController::appCharge($appcharge, $appid, $uid);
+			if($action == "del"){
+
+				$fromRegistered = $request->fromRegistered;
+				$facid = $request->facid;
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				}
+				DB::table('x08_ft')->where(array('appid'=>$appid, 'facid'=> $facid))->delete();
+
+				if($fromRegistered){
+
+				}
 			}
-			//added to service for assessment tool
-			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
-			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
-
-			$remarks = "New Service(s) has been added.";
-			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
-			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			else{
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+	
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					$facname	= $d->facname;
+					$amt	= $d->amt;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+					$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+					$appcharge = json_encode($arr);
+					NewGeneralController::appCharge($appcharge, $appid, $uid);
+				}
+				//added to service for assessment tool
+				DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+	
+				$remarks = "New Service(s) has been added.";
+				DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
+				DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
+				//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			}
 			
 			return redirect('client1/changerequest/'.$request->regfac_id.'/as')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Service successfully saved.']);
 		}
@@ -3014,28 +3132,49 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Downgrade in Hospital Level
 		else if($cat_id == 9)
 		{
-			$chgapp_id = "";
-			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
-			
-			foreach ($fees as $d){
-				$chgapp_id = $d->chgapp_id;
-				$facname	= $d->facname;
-				$amt	= $d->amt;
-				
-				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
-				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
-				$appcharge = json_encode($arr);
-				NewGeneralController::appCharge($appcharge, $appid, $uid);
-			}			
+			$action = $request->action;
 
-			//added to service for assessment tool
-			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
-			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+			if($action == "del"){
 
-			$remarks = "Update in Hospital Level";
-			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
-			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+				$fromRegistered = $request->fromRegistered;
+				$facid = $request->facid;
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+				}
+				DB::table('x08_ft')->where(array('appid'=>$appid, 'facid'=> $facid))->delete();
+
+				if($fromRegistered){
+
+				}
+			}
+			else{
+				$chgapp_id = "";
+				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
+	
+				foreach ($fees as $d){
+					$chgapp_id = $d->chgapp_id;
+					$facname	= $d->facname;
+					$amt	= $d->amt;
+					
+					DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+					$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+					$appcharge = json_encode($arr);
+					NewGeneralController::appCharge($appcharge, $appid, $uid);
+				}
+				//added to service for assessment tool
+				DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+	
+				$remarks = "Update in Hospital Level";
+				DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
+				DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
+				//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			}
 		}
 		//Rename Facility
 		else if($cat_id == 10)
