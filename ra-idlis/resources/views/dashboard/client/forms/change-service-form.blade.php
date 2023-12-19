@@ -293,13 +293,13 @@
                 <div class="container">
                     <form id="frmMainService" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST">
                         {{ csrf_field() }}
-                        <input type="text" name="cat_id"value="{{$cat_id}}">
-                        <input type="text" name="appid" value="{{$appid}}">         
-                        <input type="text" name="regfac_id" value="{{$regfac_id}}">     
-                        <input type="text" name="action" id="ms_action" value="add">
-                        <input type="text" name="facid_old" id="ms_facid_old" >
-                        <input type="text" name="servowner" id="ms_servowner" >
-                        <input type="text" name="servtyp" id="ms_servowner" >
+                        <input type="hidden" name="cat_id"value="{{$cat_id}}">
+                        <input type="hidden" name="appid" value="{{$appid}}">         
+                        <input type="hidden" name="regfac_id" value="{{$regfac_id}}">     
+                        <input type="hidden" name="action" id="ms_action" value="add">
+                        <input type="hidden" name="facid_old" id="ms_facid_old" >
+                        <input type="hidden" name="servowner" id="ms_servowner" >
+                        <input type="hidden" name="servtyp" id="ms_servowner" >
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display:none" id="AddErrorAlert" role="alert">
                             <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
                             <button type="button" class="close" onclick="$('#AddErrorAlert').hide(1000);" aria-label="Close">
@@ -347,10 +347,13 @@
                 <div class="container">
                     <form id="frmAddOnService" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST">
                         {{ csrf_field() }}
-                        <input type="text" name="cat_id" value="{{$cat_id}}">
-                        <input type="text" name="appid" value="{{$appid}}">         
-                        <input type="text" name="regfac_id" value="{{$regfac_id}}">     
-                        <input type="text" name="action" id="ao_action" value="add">
+                        <input type="hidden" name="cat_id" value="{{$cat_id}}">
+                        <input type="hidden" name="appid" value="{{$appid}}">         
+                        <input type="hidden" name="regfac_id" value="{{$regfac_id}}">     
+                        <input type="hidden" name="action" id="ao_action" value="add">
+                        <input type="hidden" name="facid_old" id="ms_facid_old" >
+                        <input type="hidden" name="servowner" id="ms_servowner" >
+                        <input type="hidden" name="servtyp" id="ms_servowner" >
                         
                         @if(!$isupdate)
                         <input type="text" name="facid_old" value="">  

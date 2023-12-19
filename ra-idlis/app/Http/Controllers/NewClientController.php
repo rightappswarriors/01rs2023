@@ -2852,6 +2852,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	public function __editAppCoRSubmit(Request $request) 
 	{
 		$remarks = "";
+		$hfser_id = $request->regfac_id;
 		$regfac_id = $request->regfac_id;
 		$cat_id = $request->cat_id;		
 		$uid = FunctionsClientController::getSessionParamObj("uData", "uid");
@@ -3065,9 +3066,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$remarks = "N";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'final']);
+			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'final']);			
 
-			return redirect('client1/apply/attachment/LTO/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Finalized the Initial Change application. Proceeding to Requirements']);
+			//return redirect('client1/apply/attachment/'.$hfser_id.'/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Finalized the Initial Change application. Proceeding to Requirements']);
+
+			return redirect('client1/apply/assessmentReady/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully finalized the initial change applicaiton. Proceeding to Assessment tool']);
 		}
 
 		return redirect('client1/changerequest/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);

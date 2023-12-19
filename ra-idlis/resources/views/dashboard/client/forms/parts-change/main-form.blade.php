@@ -2,7 +2,7 @@
 <div class="col-md-3">
     @isset($appid)
         <label>Type: </label>
-        <label><strong class="text-xl">Initial Change </strong></label>
+        <label><strong class="text-xl">Initial Change - {{$registered_facility->hfser_id}}</strong></label>
     @endisset
 </div>
 <div class="col-md-3">

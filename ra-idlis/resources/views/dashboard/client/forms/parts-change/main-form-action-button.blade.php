@@ -27,17 +27,14 @@
         </a>
     </div>
     
-    {{-- @if($registered_facility->hgpid == '6')  --}}
+    @if($registered_facility->hgpid == '6')
     <div class="form-group col-md-3">
-       {{-- <button id="submitDowngradeHospital"  class="btn btn-block btn-primary btn-flat" type="button" value="downgradehospital" name="submit" data-toggle="modal" data-target="#changeDowngradeHospital">
-            <i class="fa  fa-plus" aria-hidden="true"></i>/<i class="fa  fa-minus" aria-hidden="true"></i> <small >Downgrade Hospital</small>
-        </button>   --}}
         
         <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/hospital">
             <i class="fa  fa-plus" aria-hidden="true"></i>/<i class="fa  fa-minus" aria-hidden="true"></i> Update Hospital Level
         </a>
     </div>
-    {{-- @endif    --}}
+    @endif
 
     <div class="form-group col-md-3">
         <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/as">
