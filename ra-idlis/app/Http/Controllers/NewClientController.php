@@ -2860,6 +2860,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$appid = -1;
 		$savingStat = NULL;
 		$hgpid = 0;
+		$addOnDesc = NULL;
 
 		if (!is_null($appform)) { 
 			$appid 		= $appform->appid;
@@ -3211,11 +3212,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$remarks = "N";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'final']);			
+			DB::table('appform')->where('appid',$appid)->update(['savingStat' => 'final', 't_date'=>Carbon::now()->toDateString(), 'isPayEval' => '1', 'status'=>'CRFE']);			
 
 			//return redirect('client1/apply/attachment/'.$hfser_id.'/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Finalized the Initial Change application. Proceeding to Requirements']);
+			$x08_ft_cnt = DB::table('x08_ft')->where('appid', '=', $appid)->count();
 
-			return redirect('client1/apply/assessmentReady/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully finalized the initial change applicaiton. Proceeding to Assessment tool']);
+			if($x08_ft_cnt > 0){
+				return redirect('client1/apply/assessmentReady/'.$appid.'')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully finalized the initial change applicaiton. Proceeding to Assessment tool']);
+			}
+			else{
+				return redirect('client1/apply')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully finalized the initial change applicaiton.']);
+			}
+			
 		}
 
 		return redirect('client1/changerequest/'.$request->regfac_id.'/main')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Successfully Created/Updated Initial Change application.']);
@@ -5594,6 +5602,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			if($toViewArr){
 				$toViewArr['appid'] = $appid;
 				$toViewArr['hfser_id'] = $app->hfser_id;
+				$toViewArr['aptid'] = $app->aptid;
 				return view('client1.assessment.assessmentGeneratedClient',$toViewArr);
 			}
 			return back()->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Assessment records not found.']);

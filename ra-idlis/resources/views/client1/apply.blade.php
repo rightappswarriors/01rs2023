@@ -49,7 +49,7 @@
 						$initial_period_1 =  date("Y")."-01-01 00:00:00";
 						$initial_period_2 =  date("Y")."-11-15 23:59:59";
 						$renewal_period_1 =  date("Y")."-10-01 00:00:00";
-						$renewal_period_2 =  date("Y")."-12-15 23:59:59";				
+						$renewal_period_2 =  date("Y")."-12-31 23:59:59";				
 						
 						$late_renewal_period_1 =  date("Y")."-01-01 00:00:00";
 						$late_renewal_period_2 =  date("Y")."-03-31 23:59:59";	
