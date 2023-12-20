@@ -2961,28 +2961,34 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		//Increase/Decrease In Ambulance Vehicle
 		else if($cat_id == 3)
 		{
-			$chgapp_id = "";
-			$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
-			
-			foreach ($fees as $d){
-				$chgapp_id = $d->chgapp_id;
-				$facname	= $d->facname;
-				$amt	= $d->amt;
-				
-				DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
-				$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
-				$appcharge = json_encode($arr);
-				NewGeneralController::appCharge($appcharge, $appid, $uid);
-			}			
+			$id = $request->id;
+			$amb_arr = [
+				'appid'	=> $appid,
+				'typeamb' => $request->typeamb,
+				'ambtyp' => $request->ambtyp,
+				'plate_number' => $request->plate_number,
+				'ambOwner' => $request->ambOwner
+			];
+			//Savings on ambulance
+			DB::table('appform_ambulance')->where(array('id'=>$id))->delete();
+			DB::table('appform_ambulance')->insert($amb_arr);
+			$amt = 0.00;
+			$NoOfAmb =	DB::table('appform_ambulance')->where(array('appid'=>$appid, 'ambtyp'=>'2'))->count();
 
-			//added to service for assessment tool
-			DB::table('x08_ft')->where(array('facid' => $request->facid, 'appid' => $appid))->delete();
-			DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $request->facid, 'servowner' => $request->servowner, 'servtyp' => $request->servtyp, 'facid_old' => $request->facid_old]);
+			if($NoOfAmb > 0)
+			{				
+				$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+			}
+			
+			DB::table('chgfil')->where(array('appform_id'=>$appid, 'reference'=> 'Ambulance charge'))->delete();
+			$arr = array(array('reference'=> 'Ambulance charge', 'amount'=>$amt));
+			$appcharge = json_encode($arr);
+			NewGeneralController::appChargeAmb($appcharge, $appid, $uid);
 
 			$remarks = "Increase/Decrease In Ambulance Vehicle.";
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			return redirect('client1/changerequest/'.$request->regfac_id.'/av')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Ambulance successfully saved.']);
 		}
 		//Change In Service
 		else if($cat_id == 4)
@@ -3455,12 +3461,11 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				{				
 					
 					$data_reg 	= DB::table('view_registered_facility_for_change')->WHERE('regfac_id','=',$reg_fac_id )->first();
-										
 					$isaddnew 		= 1;
 					$isupdate 		= 1;
 					$reg_ambulance_temp = null;
 					$appform_ambulance_temp = null;
-
+					/*
 					if (!is_null($appform)) { 
 						$appform_ambulance_temp = [
 							'typeamb' 		=> json_decode($appform->typeamb), 
@@ -3468,7 +3473,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							'plate_number'	=> json_decode($appform->plate_number), 
 							'ambOwner'		=> json_decode($appform->ambOwner)
 						];
-					}	
+					}	*/
 					if (!is_null($data_reg) && is_array($data_reg)){ 
 						$reg_ambulance_temp = [
 							'typeamb' 		=> json_decode($data_reg->typeamb), 
@@ -3478,9 +3483,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						];
 					}
 
-					$appform_ambulance = null;
+					$appform_ambulance= DB::table('appform_ambulance')->WHERE('appid','=',$appid )->get();
 					$reg_ambulance = null;
-					
+					/*
 					//dd($appform_ambulance_temp);
 					if(isset($appform_ambulance_temp))
 					{
@@ -3515,7 +3520,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 									$appform_ambulance[$j]['ambOwner'] = $d[$j];
 							}
 						}
-					}
+					} */
 					if(isset($reg_ambulance_temp))
 					{
 						foreach( $reg_ambulance_temp as $key=>$val)
@@ -3550,16 +3555,16 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							}
 						}
 					}
-
-					
+					$cat_id = 3;
 					$data2 = [
 						// 'grpid' =>  $grpid,
 						'aptid'				=> 'IC',
 						'apptypenew'		=> 'IC',
-						'appform_ambulance'		=> $appform_ambulance,
-						'reg_ambulance'			=> $reg_ambulance,
-						'isaddnew'				=> $isaddnew,
-						'isupdate'				=> $isupdate
+						'appform_ambulance'	=> $appform_ambulance,
+						'reg_ambulance'		=> $reg_ambulance,
+						'isaddnew'			=> $isaddnew,
+						'isupdate'			=> $isupdate,
+						'cat_id'			=> $cat_id
 					];
 					
 					$data = array_merge($data, $data2);
