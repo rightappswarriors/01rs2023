@@ -9757,6 +9757,7 @@ namespace App\Http\Controllers;
 			$origChoosen = $choosen;
 			$choosen = (strtoupper($choosen) !== 'OTHERS'? ['asmt2_loc.header_lvl1',$choosen] : ['asmt2_loc.asmt2l_id','<>',null]);
 			$firstLevel = array();
+
 			if ($request->isMethod('get')) 
 			{
 				if($this->agent){
@@ -10316,7 +10317,7 @@ namespace App\Http\Controllers;
 		////// RECOMMENDATION ONE
 		public function RecommendationOneProcessFlow(Request $request, $appid)
 		{
-			if(DB::table('appform')->where([['appid', $appid], ['isCashierApprove', 1], ['isPayEval',1], /*['isRecoForApproval', null]*/])->count() <= 0){
+			if(DB::table('appform')->where([['appid', $appid], ['isCashierApprove', 1], /*['isRecoForApproval', null]*/])->count() <= 0){
 				return back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Please finish all requirements first!.']);
 			}
 			//dd(back()->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Please finish all requirements first!.']));			
@@ -10452,8 +10453,7 @@ namespace App\Http\Controllers;
 				}
 				else {
 					return redirect()->route('employee');
-				}
-				
+				}				
 			} 
 			catch (Exception $e) 
 			{
@@ -10467,6 +10467,7 @@ namespace App\Http\Controllers;
 				}
 			}
 		}
+
 		public function RecommendationProcessFlowFDA(Request $request, $clientRequest = 'machines')
 		{
 			try 
@@ -10522,7 +10523,7 @@ namespace App\Http\Controllers;
 		////// APPROVAL ONE
 		public function ApprovalOneProcessFlow(Request $request, $appid)
 		{
-			if(DB::table('appform')->where([['appid', $appid],['isrecommended',1], ['isCashierApprove', 1], ['isPayEval',1],/* ['isRecoForApproval', 1],['isApprove',null]*/])->count() <= 0){
+			if(DB::table('appform')->where([['appid', $appid],['isRecoForApproval',1], /* ['isRecoForApproval', 1],['isApprove',null]*/])->count() <= 0){
 				return redirect('employee/dashboard/processflow/approval')->with('errRet', ['errAlt'=>'warning', 'errMsg'=>'Application does not qualify on this level.']);
 			}
 			if ($request->isMethod('get')) 
@@ -10738,19 +10739,11 @@ namespace App\Http\Controllers;
 		
 									if($verified_regfacid == false)
 									{
-										$cat_id = DB::table('appform_changeaction')->select('cat_id')->where('appid','=',$appform->appid)->first();
-										
-										if($appform->aptid == 'IC' && $cat_id==10)
-										{
-											$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')
-														->where(DB::raw('lower(facilityname_old)'), strtolower($facilityname))
-														->where('rgnid','=',$rgnid)
-														->where('provid','=',$provid)
-														->where('cmid','=',$cmid)
-														->where('brgyid','=',$brgyid)
+										$exists_regfac_id = DB::table('appform')->select('regfac_id')
+														->where('appid','=',$appid) 
 														->first();
-										}
-										else
+
+										if($appform->aptid != 'IC')
 										{
 											$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')
 														->where(DB::raw('lower(facilityname)'), strtolower($facilityname))
@@ -10792,11 +10785,18 @@ namespace App\Http\Controllers;
 								//update if existing
 								if($verified_regfacid)
 								{
-									$exists_regfac_id = $exists_regfac_id->regfac_id; 
-									DB::table('registered_facility')->where('regfac_id', $exists_regfac_id)->update($reg_HF);
-									SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
-									DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
-									$success = true;
+									if($appform->aptid != 'IC')
+									{
+										$exists_regfac_id = $exists_regfac_id->regfac_id; 
+										DB::table('registered_facility')->where('regfac_id', $exists_regfac_id)->update($reg_HF);
+										SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
+										DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
+										$success = true;
+									}
+									else{
+										//save registered_facility depends on cat_id
+
+									}
 								}
 							}
 							
@@ -10816,7 +10816,8 @@ namespace App\Http\Controllers;
 								else{
 									return 'DISAPPROVED';
 								}
-							} else 
+							}
+							else 
 							{
 								return 'Error';
 							}
