@@ -5884,6 +5884,7 @@ namespace App\Http\Controllers;
 										'remarks' => '',//$request->rmks[$i],
 								]);
 							}
+							DB::table('appform')->where('appid','=',$request->SelectedID)->update(array('isReadyForInspec' => '1'));
 							$selected = AjaxController::getUidFrom($request->SelectedID);
 							// AjaxController::notifyClient($request->SelectedID,$selected,37);
 							return 'DONE';	
