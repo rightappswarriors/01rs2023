@@ -47,7 +47,6 @@
                         <h3 class="text-uppercase font-weight-bold">List of {{$main_serv_desc}} to Apply</h3>
                     </div>                  
                     <div class="col-md-12">  
-                        <form id="mainForm">
                             {{csrf_field()}}
                             <input type="hidden" name="uid" id="uid" value="{{isset($user->uid) ? $user->uid : '' }}"/>
                             <input type="hidden" name="appid" id="appid" />      
@@ -75,20 +74,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @if (isset($mainservices_applied))
-                                    @foreach ($mainservices_applied as $d)
+                                @if (isset($appform_ambulance))
+                                    @foreach ($appform_ambulance as $d)
                                         <tr>
-                                            <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
-                                            <td class="text-center">{{$d->facname}}</td>
-                                            <td class="text-center">{{$d->facname}} {{$d->facname}} </td>
+                                            <td class="text-center">{{$d["typeamb"]}}</td>
+                                            <td class="text-center">{{$d["ambtyp"]}}</td>
+                                            <td class="text-center">{{$d["plate_number"]}}  {{$d["ambOwner"]}}</td>
 
                                             @if($isupdate == 1)   
-                                                <td class="text-center"><button class="btn-primary" onclick="showData(
-                                                    '{{$d->facid}}',
-                                                    '{{$d->facname}}'
-
-                                                )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button>
-                                                    <button class="btn btn-danger " onclick=""><i class="fa fa-minus-circle"></i></button></td>
+                                                <td class="text-center">
+                                                    
+                                                    <button class="btn btn-primary" onclick="showDataAmb(
+                                                    
+                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '0'
+                                                )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
+                                                    <button class="btn btn-danger " onclick="showDataDelAmb(
+                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '0'
+                                                    )" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
+                                                    </button>
+                                                    
                                             @endif 
                                         </tr>
                                     @endforeach	
@@ -99,7 +105,6 @@
                                 @endif
                                 </tbody>
                             </table>
-                        </form>
                     </div>
 
                 </div>
@@ -123,19 +128,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if (isset($mainservices_reg))
-                                @foreach ($mainservices_reg as $d)
-                                    <tr>
-                                        <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
-                                        <td class="text-center">{{$d->facname}}</td>
-                                        <td class="text-center">{{$d->facname}} {{$d->facname}} </td>
+                            @if (isset($reg_ambulance))
+                                    @foreach ($reg_ambulance as $d)
+                                        <tr>
+                                            <td class="text-center">{{$d["typeamb"]}}</td>
+                                            <td class="text-center">{{$d["ambtyp"]}}</td>
+                                            <td class="text-center">{{$d["plate_number"]}}  {{$d["ambOwner"]}}</td>
 
                                         @if($isupdate == 1)   
-                                            <td class="text-center"><button class="btn-primary" onclick="showData(
-                                                '{{$d->facid}}',
-                                                '{{$d->facname}}'
-
-                                            )" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i></button></td>
+                                            <td class="text-center">
+                                                
+                                            <button class="btn btn-primary" onclick="showDataAmb(
+                                                    
+                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '1'
+                                                )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
+                                                    <button class="btn btn-danger " onclick="showDataDelAmb(
+                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '1'
+                                                    )" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
+                                                    </button>
+                                            </td>
                                         @endif 
                                     </tr>
                                 @endforeach	
@@ -214,3 +227,27 @@
         </div>
     </div>
 </div>
+
+<div id="clickable"> </div>
+
+
+<script>
+
+    function showDataAmb(typeamb, ambtyp, plate_number, ambOwner, fromRegistered){
+
+        $("#typeamb").val(typeamb);
+        $("#ambtyp").val(ambtyp);
+        $("#plate_number").val(plate_number);
+        $("#ambOwner").val(ambOwner);
+    }
+    
+    function showDataDelAmb(typeamb, ambtyp, plate_number, ambOwner, fromRegistered){
+
+        $("#del_typeamb").val(typeamb);
+        $("#del_ambtyp").val(ambtyp);
+        $("#del_plate_number").val(plate_number);
+        $("#del_ambOwner").val(ambOwner);
+        $("#fromRegistered").val(fromRegistered);
+    }
+
+</script>

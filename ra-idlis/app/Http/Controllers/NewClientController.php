@@ -2930,7 +2930,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			{
 				$remarks = "Dialysis Clinic";
 				$chgapp_id = "261";
-				$amt = "3000.00";
+				$amt = "3000.00";    
 
 				$facid='H1-AO-DC';
 			}
@@ -3383,7 +3383,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$user_data 				= session()->get('uData');
 		$hgpid					= null;
 
-		try {
+		//try {
 			if(count($data) > 0 && $user_data) 
 			{
 				$locRet 	= "dashboard.client.forms.request-for-change";
@@ -3452,26 +3452,112 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$data = array_merge($data, $data2);
 				}
 				else if($functype == 'av')
-				{
+				{				
+					
+					$data_reg 	= DB::table('view_registered_facility_for_change')->WHERE('regfac_id','=',$reg_fac_id )->first();
+										
 					$isaddnew 		= 1;
 					$isupdate 		= 1;
-					$mainservicelist = FunctionsClientController::get_view_ServiceList($hgpid, 1);
-					$addonservicelist = FunctionsClientController::get_view_ServiceList(null, 2);
-					$mainservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 1);
-					$addOnservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 2);
-					$mainservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 1);
-					$addOnservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 2);
+					$reg_ambulance_temp = null;
+					$appform_ambulance_temp = null;
+
+					if (!is_null($appform)) { 
+						$appform_ambulance_temp = [
+							'typeamb' 		=> json_decode($appform->typeamb), 
+							'ambtyp'		=> json_decode($appform->ambtyp), 
+							'plate_number'	=> json_decode($appform->plate_number), 
+							'ambOwner'		=> json_decode($appform->ambOwner)
+						];
+					}	
+					if (!is_null($data_reg) && is_array($data_reg)){ 
+						$reg_ambulance_temp = [
+							'typeamb' 		=> json_decode($data_reg->typeamb), 
+							'ambtyp'		=> json_decode($data_reg->ambtyp), 
+							'plate_number'	=> json_decode($data_reg->plate_number), 
+							'ambOwner'		=> json_decode($data_reg->ambOwner)
+						];
+					}
+
+					$appform_ambulance = null;
+					$reg_ambulance = null;
+					
+					//dd($appform_ambulance_temp);
+					if(isset($appform_ambulance_temp))
+					{
+						foreach( $appform_ambulance_temp as $key=>$val)
+						{
+							if($key == "typeamb")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$appform_ambulance[$j]['typeamb'] = $d[$j];
+							}
+							if($key == "ambtyp")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$appform_ambulance[$j]['ambtyp'] = $d[$j];
+							}
+							if($key == "plate_number")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$appform_ambulance[$j]['plate_number'] = $d[$j];
+							}
+							if($key == "ambOwner")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$appform_ambulance[$j]['ambOwner'] = $d[$j];
+							}
+						}
+					}
+					if(isset($reg_ambulance_temp))
+					{
+						foreach( $reg_ambulance_temp as $key=>$val)
+						{
+							if($key == "typeamb")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$reg_ambulance_temp[$j]['typeamb'] = $d[$j];
+							}
+							if($key == "ambtyp")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$reg_ambulance_temp[$j]['ambtyp'] = $d[$j];
+							}
+							if($key == "plate_number")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$reg_ambulance_temp[$j]['plate_number'] = $d[$j];
+							}
+							if($key == "ambOwner")
+							{
+								$d = $val;
+		
+								for($j=count($d)-1; 0 <= $j; $j--)
+									$reg_ambulance_temp[$j]['ambOwner'] = $d[$j];
+							}
+						}
+					}
+
 					
 					$data2 = [
 						// 'grpid' =>  $grpid,
 						'aptid'				=> 'IC',
 						'apptypenew'		=> 'IC',
-						'mainservices_reg'		=> $mainservices_reg,
-						'addOnservices_reg'		=> $addOnservices_reg,
-						'mainservices_applied'	=> $mainservices_applied,
-						'addOnservices_applied'	=> $addOnservices_applied,
-						'mainservicelist'		=> $mainservicelist,
-						'addonservicelist'		=> $addonservicelist,
+						'appform_ambulance'		=> $appform_ambulance,
+						'reg_ambulance'			=> $reg_ambulance,
 						'isaddnew'				=> $isaddnew,
 						'isupdate'				=> $isupdate
 					];
@@ -3584,9 +3670,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			else{
 				return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'No Registered Facility Record found. Contact the admin']);
 			}
-		} catch (Exception $e) {
-			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
-		}
+		//} catch (Exception $e) {
+		//	return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Error on page Apply. Contact the admin']);
+		//}
 		return back()->with('errRet', ['system_error'=>'No registered facility on sight.']);		
 	}
 
