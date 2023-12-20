@@ -64,7 +64,8 @@
                                     <tr>
                                         <th class="text-center" style="width:  auto">Ambulance Service(Type 1, Type 2)</th>
                                         <th class="text-center" style="width:  auto">Ambulance Type(Owned, Outsoured)</th>
-                                        <th class="text-center" style="width:  auto">Details</th>
+                                        <th class="text-center" style="width:  auto">Plate Number</th>
+                                        <th class="text-center" style="width:  auto">Owner Name</th>
                                         
                                         @if($isupdate == 1)        
                                             <th class="text-center" style="width:  auto">
@@ -77,20 +78,21 @@
                                 @if (isset($appform_ambulance))
                                     @foreach ($appform_ambulance as $d)
                                         <tr>
-                                            <td class="text-center">{{$d["typeamb"]}}</td>
-                                            <td class="text-center">{{$d["ambtyp"]}}</td>
-                                            <td class="text-center">{{$d["plate_number"]}}  {{$d["ambOwner"]}}</td>
+                                            <td class="text-center">@if($d->typeamb == "1") Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
+                                            <td class="text-center">@if($d->ambtyp == "1") Outsourced @else Owned @endif</td>
+                                            <td class="text-center">{{$d->plate_number}}</td>
+                                            <td class="text-center">{{$d->ambOwner}}</td>
 
                                             @if($isupdate == 1)   
                                                 <td class="text-center">
                                                     
                                                     <button class="btn btn-primary" onclick="showDataAmb(
-                                                    
-                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '{{$d->id}}',
+                                                    '{{$d->typeamb}}','{{$d->ambtyp}}','{{$d->plate_number}}','{{$d->ambOwner}}',
                                                     '0'
                                                 )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
                                                     <button class="btn btn-danger " onclick="showDataDelAmb(
-                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                    '{{$d->id}}','{{$d->typeamb}}','{{$d->ambtyp}}','{{$d->plate_number}}','{{$d->ambOwner}}',
                                                     '0'
                                                     )" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
                                                     </button>
@@ -119,7 +121,8 @@
                                 <tr>
                                     <th class="text-center" style="width:  auto">Ambulance Service(Type 1, Type 2)</th>
                                     <th class="text-center" style="width:  auto">Ambulance Type(Owned, Outsoured)</th>
-                                    <th class="text-center" style="width:  auto">Details</th>
+                                        <th class="text-center" style="width:  auto">Plate Number</th>
+                                        <th class="text-center" style="width:  auto">Owner Name</th>
                                     @if($isupdate == 1)        
                                         <th class="text-center" style="width:  auto">
                                             <center>Options</center>
@@ -131,15 +134,16 @@
                             @if (isset($reg_ambulance))
                                     @foreach ($reg_ambulance as $d)
                                         <tr>
-                                            <td class="text-center">{{$d["typeamb"]}}</td>
-                                            <td class="text-center">{{$d["ambtyp"]}}</td>
-                                            <td class="text-center">{{$d["plate_number"]}}  {{$d["ambOwner"]}}</td>
+                                            <td class="text-center">@if($d["typeamb"] == "1") Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
+                                            <td class="text-center">@if($d["ambtyp"] == "1") Outsourced @else Owned @endif</td>
+                                            <td class="text-center">{{$d["plate_number"]}}</td>
+                                            <td class="text-center">{{$d["ambOwner"]}}</td>
 
                                         @if($isupdate == 1)   
                                             <td class="text-center">
                                                 
                                             <button class="btn btn-primary" onclick="showDataAmb(
-                                                    
+                                                    '',
                                                     '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
                                                     '1'
                                                 )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
@@ -180,8 +184,13 @@
                 <h5 class="modal-title text-center"><strong>Add New {{$main_serv_desc}}</strong></h5>
                 <hr>
                 <div class="container">
-                    <form id="frmMainService" class="row" data-parsley-validate="" novalidate="">
-                        <input type="hidden" name="_token" value="">
+                    <form id="frmMainService" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="cat_id"value="{{$cat_id}}">
+                        <input type="hidden" name="appid" value="{{$appid}}">         
+                        <input type="hidden" name="regfac_id" value="{{$regfac_id}}">   
+                        <input type="hidden" name="id" id="id" value="">  
+                        <input type="hidden" name="action" id="action" value="add">
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display:none" id="AddErrorAlert" role="alert">
                             <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
                             <button type="button" class="close" onclick="$('#AddErrorAlert').hide(1000);" aria-label="Close">
@@ -195,7 +204,6 @@
                                 <option value="" disabled="" readonly="" hidden="" selected="" data-select2-id="2">Please Select</option>
                                 <option value="1">Type 1 (Basic Life Support)</option>
                                 <option value="2">Type 2 (Advance Life Support)</option>
-
                             </select>
                         </div>			
                         <div class="col-sm-4">Ambulance Type (Owned, Outsoured):</div>
@@ -233,8 +241,9 @@
 
 <script>
 
-    function showDataAmb(typeamb, ambtyp, plate_number, ambOwner, fromRegistered){
+    function showDataAmb(id, typeamb, ambtyp, plate_number, ambOwner, fromRegistered){
 
+        $("#id").val(id);
         $("#typeamb").val(typeamb);
         $("#ambtyp").val(ambtyp);
         $("#plate_number").val(plate_number);
@@ -243,6 +252,7 @@
     
     function showDataDelAmb(typeamb, ambtyp, plate_number, ambOwner, fromRegistered){
 
+        $("#id").val(id);
         $("#del_typeamb").val(typeamb);
         $("#del_ambtyp").val(ambtyp);
         $("#del_plate_number").val(plate_number);
