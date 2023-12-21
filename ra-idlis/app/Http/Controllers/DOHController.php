@@ -10577,6 +10577,9 @@ namespace App\Http\Controllers;
 						//Get Branch Data by Authorization
 						$branchData = DB::table('branch')->where('regionid',$appform->assignedRgn)->select($appform->hfser_id, "directorInRegion", "pos", "directorInRegion2", "pos2")->first();
 						$hferID = $appform->hfser_id;
+						$aptid = $appform->aptid;
+						$status_before = $appform->status;
+
 
 						$signatoryname = $branchData->directorInRegion;
 						$signatorypos = $branchData->pos;
@@ -10618,23 +10621,39 @@ namespace App\Http\Controllers;
 	
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 						$status = ($request->isOk == '1') ? 'A' : 'RA';
-						$data = array(
-									'isApprove' => $request->isOk,
-									'approvedBy' => $Cur_useData['cur_user'],
-									'approvedDate' => $Cur_useData['date'],
-									'approvedTime' =>  $Cur_useData['time'],
-									'approvedIpAdd' => $Cur_useData['ip'],
-									'approvedRemark' => $request->desc,
-									'status' => $status,
-									'licenseNo' => $license,
-									'FDAstatus' => $status,
-									'requestReeval' => null,
-									'signatoryname' => $signatoryname,
-									'signatorypos' => $signatorypos
-						);
+						$data = array();
+
+						if($aptid == "IC")
+						{
+							$data = array(
+										'isApprove' => $request->isOk,
+										'approvedBy' => $Cur_useData['cur_user'],
+										'approvedDate' => $Cur_useData['date'],
+										'approvedTime' =>  $Cur_useData['time'],
+										'approvedIpAdd' => $Cur_useData['ip'],
+										'approvedRemark' => $request->desc,
+										'status' => $status
+							);
+						}
+						else
+						{							
+							$data = array(
+										'isApprove' => $request->isOk,
+										'approvedBy' => $Cur_useData['cur_user'],
+										'approvedDate' => $Cur_useData['date'],
+										'approvedTime' =>  $Cur_useData['time'],
+										'approvedIpAdd' => $Cur_useData['ip'],
+										'approvedRemark' => $request->desc,
+										'status' => $status,
+										'licenseNo' => $license,
+										'requestReeval' => null,
+										'signatoryname' => $signatoryname,
+										'signatorypos' => $signatorypos
+							);
+						}
 						
 						$facility = DB::table('hfaci_grp')->where([['hgpid', $appform->hgpid]])->first();
-
+						
 						$generatedvalidityyear = $facility->year_validity;
 						$approvedDate = $appform->approvedDate;
 						$carbonDate = Carbon::parse($approvedDate);
@@ -10646,7 +10665,7 @@ namespace App\Http\Controllers;
 						(!empty($request->validityDateFrom) ? $data['validDateFrom'] = Carbon::parse($request->validityDateFrom)->toDateString() : "");
 						
 						$success = DB::table('appform')->where('appid', '=', $appform->appid)->update($data);
-							
+						
 						if($status == 'A' && $success)
 						{							
 							$reg_facid = "";
@@ -10660,8 +10679,6 @@ namespace App\Http\Controllers;
 							$subclass = $appform->subClassid;
 							$exists_regfac_id = null;
 							
-							DB::table('branch')->where('regionid',$appform->assignedRgn)->update([strtoupper($hferID) => $next_code]);
-	
 							if($appform->subClassid == "Please select"){ $subclass = null;}							
 	
 							$appform_HF = array (
@@ -10679,43 +10696,50 @@ namespace App\Http\Controllers;
 								'ownerEmail' => $appform->ownerEmail, 'mailingAddress' => $appform->mailingAddress, 
 								'approvingauthoritypos' => $appform->approvingauthoritypos, 'approvingauthority' => $appform->approvingauthority, 
 								
-								'hfep_funded' => $appform->hfep_funded, 
+								'hfep_funded' => $appform->hfep_funded, 'HFERC_swork' => $appform->HFERC_swork, 
 								'uid' => $appform->uid, 'noofbed' => $appform->noofbed, 'noofstation' => $appform->noofstation, 
 								'noofsatellite' => $appform->noofsatellite, 'noofdialysis' => $appform->noofdialysis, 'noofmain' => $appform->noofmain, 
-								'cap_inv' => $appform->cap_inv, 'lot_area' => $appform->lot_area, 'typeamb' => $appform->typeamb, 'ambtyp' => $appform->ambtyp, 
-								'plate_number' => $appform->plate_number, 'ambOwner' => $appform->ambOwner, 'HFERC_swork' => $appform->HFERC_swork, 
+								'cap_inv' => $appform->cap_inv, 'lot_area' => $appform->lot_area, 
+								'typeamb' => $appform->typeamb, 'ambtyp' => $appform->ambtyp, 'plate_number' => $appform->plate_number, 'ambOwner' => $appform->ambOwner, 
 								'noofamb' => $appform->noofamb, 'pharCOC' => $appform->pharCOC, 'xrayCOC' => $appform->xrayCOC
 							);
-	
-							$license_arr = array();
 							
-							if($appform->hfser_id == 'CON')
+							if($aptid != "IC")
 							{
-								$license_arr = array('con_id' => $license, 'con_approveddate' => $Cur_useData['date'],'con_validityfrom' => $appform->validDateFrom, 'con_validityto' => $appform->validDate);
-							}
-							else if($appform->hfser_id == 'PTC')
-							{
-								$license_arr = array('ptc_id' => $license, 'ptc_approveddate' => $Cur_useData['date']);
-							}
-							else if($appform->hfser_id == 'LTO')
-							{
-								$license_arr = array('lto_id' => $license, 'lto_approveddate' => $Cur_useData['date'], 'lto_validityfrom' => $appform->validDateFrom, 'lto_validityto' => $appform->validDate);
-							}
-							else if($appform->hfser_id == 'ATO')
-							{
-								$license_arr = array('ato_id' => $license, 'ato_approveddate' => $Cur_useData['date'], 'ato_validityfrom' => $appform->validDateFrom, 'ato_validityto' => $appform->validDate);
-							}
-							else if($appform->hfser_id == 'COA')
-							{
-								$license_arr = array('coa_id' => $license, 'coa_approveddate' => $Cur_useData['date'], 'coa_validityfrom' => $appform->validDateFrom, 'coa_validityto' => $appform->validDate);
-							}
-							else if($appform->hfser_id == 'COR')
-							{
-								$license_arr = array('cor_id' => $license, 'cor_approveddate' => $Cur_useData['date'], 'cor_validityfrom' => $appform->validDateFrom, 'cor_validityto' => $appform->validDate);
-							}
+								$license_arr = array();
 								
-							$reg_HF = array_merge($appform_HF, $license_arr);
-							$cat_id = 0; // id of change_action_type
+								if($appform->hfser_id == 'CON')
+								{
+									$license_arr = array('con_id' => $license, 'con_approveddate' => $Cur_useData['date'],'con_validityfrom' => $appform->validDateFrom, 'con_validityto' => $appform->validDate);
+								}
+								else if($appform->hfser_id == 'PTC')
+								{
+									$license_arr = array('ptc_id' => $license, 'ptc_approveddate' => $Cur_useData['date']);
+								}
+								else if($appform->hfser_id == 'LTO')
+								{
+									$license_arr = array('lto_id' => $license, 'lto_approveddate' => $Cur_useData['date'], 'lto_validityfrom' => $appform->validDateFrom, 'lto_validityto' => $appform->validDate);
+								}
+								else if($appform->hfser_id == 'ATO')
+								{
+									$license_arr = array('ato_id' => $license, 'ato_approveddate' => $Cur_useData['date'], 'ato_validityfrom' => $appform->validDateFrom, 'ato_validityto' => $appform->validDate);
+								}
+								else if($appform->hfser_id == 'COA')
+								{
+									$license_arr = array('coa_id' => $license, 'coa_approveddate' => $Cur_useData['date'], 'coa_validityfrom' => $appform->validDateFrom, 'coa_validityto' => $appform->validDate);
+								}
+								else if($appform->hfser_id == 'COR')
+								{
+									$license_arr = array('cor_id' => $license, 'cor_approveddate' => $Cur_useData['date'], 'cor_validityfrom' => $appform->validDateFrom, 'cor_validityto' => $appform->validDate);
+								}
+									
+								$reg_HF = array_merge($appform_HF, $license_arr);
+								DB::table('branch')->where('regionid',$appform->assignedRgn)->update([strtoupper($hferID) => $next_code]);
+							}
+							else{
+								$reg_HF = $appform_HF;
+							}
+
 							/* Get regfac_id if existing */
 							if(!empty($nhfcode) && isset($nhfcode) && $nhfcode!=null && $nhfcode!="")
 							{
@@ -10751,28 +10775,24 @@ namespace App\Http\Controllers;
 								{
 									$verified_regfacid = count($exists_regfac_id);
 								}	
-								//insert if new
-								if($verified_regfacid == false)
-								{
-									$exists_regfac_id = DB::table('registered_facility')->insertGetId($reg_HF);
-									SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
-									DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
-									$success = true;
-								}
-								else
-								{
-									$verified_regfacid = true;
-								}
+								if($verified_regfacid == false){ }
+								else{	$verified_regfacid = true; }
 							}
-							else
-							{							
-								$verified_regfacid = true;
-							}
+							else {	$verified_regfacid = true;	}
+
 							//update if existing
 							if($verified_regfacid)
 							{
 								$exists_regfac_id = $exists_regfac_id->regfac_id; 
 								DB::table('registered_facility')->where('regfac_id', $exists_regfac_id)->update($reg_HF);
+								SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
+								DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
+								$success = true;
+							}
+							//insert new reg fac
+							else 
+							{
+								$exists_regfac_id = DB::table('registered_facility')->insertGetId($reg_HF);
 								SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
 								DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
 								$success = true;
@@ -10787,7 +10807,41 @@ namespace App\Http\Controllers;
 							if($status == 'A') {	return 'DONE';	}
 							else {	return 'DISAPPROVED';	}
 						}
-						else {	return 'Error';	}
+						else 
+						{	
+							if($aptid == "IC")
+							{
+								$data = array(
+											'isApprove' => 0,
+											'approvedBy' => null,
+											'approvedDate' => null,
+											'approvedTime' =>  null,
+											'approvedIpAdd' => null,
+											'approvedRemark' => null,
+											'status' => $status_before
+								);
+							}
+							else
+							{							
+								$data = array(
+											'isApprove' => 0,
+											'approvedBy' => null,
+											'approvedDate' => null,
+											'approvedTime' =>  null,
+											'approvedIpAdd' => null,
+											'approvedRemark' => null,
+											'status' => $status_before,
+											'licenseNo' => null,
+											'requestReeval' => null,
+											'signatoryname' => null,
+											'signatorypos' => null
+								);
+							}
+							
+							DB::table('appform')->where('appid', '=', $appform->appid)->update($data);
+							
+							return 'Error';	
+						}
 					}
 					else {	return 'WRONGPASSWORD';	}
 				}
