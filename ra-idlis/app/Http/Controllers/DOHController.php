@@ -10519,7 +10519,7 @@ namespace App\Http\Controllers;
 				return view('employee.FDA.pfapprovalFDA');
 			}
 		}
-		////// APPROVAL
+
 		////// APPROVAL ONE
 		public function ApprovalOneProcessFlow(Request $request, $appid)
 		{
@@ -10566,267 +10566,231 @@ namespace App\Http\Controllers;
 				$code = $license = $faci = $appform = $branchData = $hferID = $dateOnFormat = null;
 				$next_code = "0";
 				
-				try {
-						$ChckPassword = AjaxController::checkPassword($request->pass);
+				try 
+				{
+					$ChckPassword = AjaxController::checkPassword($request->pass);
 
-						if ($ChckPassword == true) 
+					if ($ChckPassword == true) 
+					{
+						$faci = DB::table('facilitytyp')->join('x08_ft','x08_ft.facid','facilitytyp.facid')->join('serv_type','serv_type.servtype_id','facilitytyp.servtype_id')->select('facilitytyp.facid')->where([['x08_ft.appid',$appid],['serv_type.servtype_id',1]])->get()->first()->facid;
+						$appform = DB::table('appform')->where('appid',$appid)->select('*')->first();						
+						//Get Branch Data by Authorization
+						$branchData = DB::table('branch')->where('regionid',$appform->assignedRgn)->select($appform->hfser_id, "directorInRegion", "pos", "directorInRegion2", "pos2")->first();
+						$hferID = $appform->hfser_id;
+
+						$signatoryname = $branchData->directorInRegion;
+						$signatorypos = $branchData->pos;
+	
+						for ($i=strlen($branchData->$hferID); $i < (5 - strlen($branchData->$hferID)) ; $i++) 
+						{ 
+							$next_code = $code;
+							$code = $code."00";
+						}
+						$code = $code.($branchData->$hferID+1);
+						$next_code = $branchData->$hferID +1;
+						
+						if($appform->hfser_id == 'LTO' || $appform->hfser_id == 'COA' || $appform->hfser_id == 'ATO' || $appform->hfser_id == 'COR')
 						{
-							$faci = DB::table('facilitytyp')->join('x08_ft','x08_ft.facid','facilitytyp.facid')->join('serv_type','serv_type.servtype_id','facilitytyp.servtype_id')->select('facilitytyp.facid')->where([['x08_ft.appid',$appid],['serv_type.servtype_id',1]])->get()->first()->facid;
-							$appform = DB::table('appform')->where('appid',$appid)->select('*')->first();
-							
-							//Get Branch Data by Authorization
-							$branchData = DB::table('branch')->where('regionid',$appform->assignedRgn)->select($appform->hfser_id, "directorInRegion", "pos", "directorInRegion2", "pos2")->first();
-							$hferID = $appform->hfser_id;
+							$dateOnFormat = (substr(Date('Y',strtotime($request->validity)),-2) != substr(Date('Y',strtotime($request->validityDateFrom)),-2) ? substr(Date('Y',strtotime($request->validityDateFrom)),-2).substr(Date('Y',strtotime($request->validity)),-2) : substr(Date('Y',strtotime($request->validity)),-2));
+							$license =  $appform->rgnid.'-'.$code.'-'.$dateOnFormat.'-'.$faci.'-'.($appform->ocid == 'G' ? 1 : 2);
+						} 
+						else if($appform->hfser_id == 'CON' || $appform->hfser_id == 'PTC')
+						{
+							$license = Date('Y',strtotime('now')).'-'.$code;
+						}	
+	
+						if($appform->hfser_id == 'PTC' )
+						{		
+							//Default Director 3 for PTC					
+							$signatoryname = $branchData->directorInRegion2;
+							$signatorypos = $branchData->pos2;
 
-							$signatoryname = $branchData->directorInRegion;
-							$signatorypos = $branchData->pos;
-		
-							for ($i=strlen($branchData->$hferID); $i < (5 - strlen($branchData->$hferID)) ; $i++) 
-							{ 
-								$next_code = $code;
-								$code = $code."00";
-							}
-							$code = $code.($branchData->$hferID+1);
-							$next_code = $branchData->$hferID +1;
-							
-							if($appform->hfser_id == 'LTO' || $appform->hfser_id == 'COA' || $appform->hfser_id == 'ATO' || $appform->hfser_id == 'COR')
-							{
-								$dateOnFormat = (substr(Date('Y',strtotime($request->validity)),-2) != substr(Date('Y',strtotime($request->validityDateFrom)),-2) ? substr(Date('Y',strtotime($request->validityDateFrom)),-2).substr(Date('Y',strtotime($request->validity)),-2) : substr(Date('Y',strtotime($request->validity)),-2));
-								$license =  $appform->rgnid.'-'.$code.'-'.$dateOnFormat.'-'.$faci.'-'.($appform->ocid == 'G' ? 1 : 2);
-							} 
-							else if($appform->hfser_id == 'CON' || $appform->hfser_id == 'PTC')
-							{
-
-								$license = Date('Y',strtotime('now')).'-'.$code;
-							}	
-		
-							if($appform->hfser_id == 'PTC' )
-							{		
-								//Default Director 3	for PTC					
-								$signatoryname = $branchData->directorInRegion2;
-								$signatorypos = $branchData->pos2;
-
-								if(isset($appform->noofbed)) 
-								{						
-									//If more than 100, then, assigned to director 4			
-									if($appform->noofbed > 100 ) 
-									{
-										$signatoryname = $branchData->directorInRegion;
-										$signatorypos = $branchData->pos;
-									}
+							if(isset($appform->noofbed)) 
+							{						
+								//If more than 100, then, assigned to director 4			
+								if($appform->noofbed > 100 ) 
+								{
+									$signatoryname = $branchData->directorInRegion;
+									$signatorypos = $branchData->pos;
 								}
 							}
-		
-							$Cur_useData = AjaxController::getCurrentUserAllData();
-							$status = ($request->isOk == '1') ? 'A' : 'RA';
-							$data = array(
-									 'isApprove' => $request->isOk,
-									 'approvedBy' => $Cur_useData['cur_user'],
-									 'approvedDate' => $Cur_useData['date'],
-									 'approvedTime' =>  $Cur_useData['time'],
-									 'approvedIpAdd' => $Cur_useData['ip'],
-									 'approvedRemark' => $request->desc,
-									 'status' => $status,
-									 'licenseNo' => $license,
-									 'FDAstatus' => $status,
-									 'requestReeval' => null,
-									 'signatoryname' => $signatoryname,
-									 'signatorypos' => $signatorypos
+						}
+	
+						$Cur_useData = AjaxController::getCurrentUserAllData();
+						$status = ($request->isOk == '1') ? 'A' : 'RA';
+						$data = array(
+									'isApprove' => $request->isOk,
+									'approvedBy' => $Cur_useData['cur_user'],
+									'approvedDate' => $Cur_useData['date'],
+									'approvedTime' =>  $Cur_useData['time'],
+									'approvedIpAdd' => $Cur_useData['ip'],
+									'approvedRemark' => $request->desc,
+									'status' => $status,
+									'licenseNo' => $license,
+									'FDAstatus' => $status,
+									'requestReeval' => null,
+									'signatoryname' => $signatoryname,
+									'signatorypos' => $signatorypos
+						);
+						
+						$facility = DB::table('hfaci_grp')->where([['hgpid', $appform->hgpid]])->first();
+
+						$generatedvalidityyear = $facility->year_validity;
+						$approvedDate = $appform->approvedDate;
+						$carbonDate = Carbon::parse($approvedDate);
+						$nextYear = $carbonDate->addYear($generatedvalidityyear);
+						$lastDayOfYear = $nextYear->endOfYear();
+						$result = $lastDayOfYear->toDateString();
+
+						(!empty($request->validity) ? $data['validDate'] = Carbon::parse($request->validity)->toDateString() :  $data['validDate'] = $result);
+						(!empty($request->validityDateFrom) ? $data['validDateFrom'] = Carbon::parse($request->validityDateFrom)->toDateString() : "");
+						
+						$success = DB::table('appform')->where('appid', '=', $appform->appid)->update($data);
+							
+						if($status == 'A' && $success)
+						{							
+							$reg_facid = "";
+							$facilitype = AjaxController::getHgpdescByFacid($appform->hgpid);
+							$nhfcode = $appform->nhfcode;
+							$facilityname = $appform->facilityname;
+							$rgnid = $appform->rgnid;
+							$provid = $appform->provid;
+							$cmid = $appform->cmid;
+							$brgyid = $appform->brgyid;
+							$subclass = $appform->subClassid;
+							$exists_regfac_id = null;
+							
+							DB::table('branch')->where('regionid',$appform->assignedRgn)->update([strtoupper($hferID) => $next_code]);
+	
+							if($appform->subClassid == "Please select"){ $subclass = null;}							
+	
+							$appform_HF = array (
+								'old_pk' => $appform->appid, 'facid' => $appform->hgpid, 'nhfcode' => $appform->nhfcode, 
+								'facilityname' => $appform->facilityname, 'facilitytype' => $facilitype, 'assignedRgn' => $appform->assignedRgn, 
+	
+								'rgnid' => $appform->rgnid, 'provid' => $appform->provid, 'cmid' => $appform->cmid, 'brgyid' => $appform->brgyid, 
+								'street_number' => $appform->street_number, 'street_name' => $appform->street_name, 'zipcode' => $appform->zipcode, 
+								'contact' => $appform->contact, 'areacode' => $appform->areacode, 'landline' => $appform->landline, 'faxnumber' => $appform->faxnumber, 
+								'email' => $appform->email, 	
+								'ocid' => $appform->ocid, 'classid' => $appform->classid, 'subClassid' => $subclass, 'facmode' => $appform->facmode, 
+								'funcid' => $appform->funcid, 
+	
+								'owner' => $appform->owner, 'ownerMobile' => $appform->ownerMobile, 'ownerLandline' => $appform->ownerLandline, 
+								'ownerEmail' => $appform->ownerEmail, 'mailingAddress' => $appform->mailingAddress, 
+								'approvingauthoritypos' => $appform->approvingauthoritypos, 'approvingauthority' => $appform->approvingauthority, 
+								
+								'hfep_funded' => $appform->hfep_funded, 
+								'uid' => $appform->uid, 'noofbed' => $appform->noofbed, 'noofstation' => $appform->noofstation, 
+								'noofsatellite' => $appform->noofsatellite, 'noofdialysis' => $appform->noofdialysis, 'noofmain' => $appform->noofmain, 
+								'cap_inv' => $appform->cap_inv, 'lot_area' => $appform->lot_area, 'typeamb' => $appform->typeamb, 'ambtyp' => $appform->ambtyp, 
+								'plate_number' => $appform->plate_number, 'ambOwner' => $appform->ambOwner, 'HFERC_swork' => $appform->HFERC_swork, 
+								'noofamb' => $appform->noofamb, 'pharCOC' => $appform->pharCOC, 'xrayCOC' => $appform->xrayCOC
 							);
+	
+							$license_arr = array();
 							
-							$facility =DB::table('hfaci_grp')->where([['hgpid', $appform->hgpid]])->first();
-
-							$generatedvalidityyear = $facility->year_validity;
-
-							$approvedDate = $appform->approvedDate;
-
-							$carbonDate = Carbon::parse($approvedDate);
-
-							$nextYear = $carbonDate->addYear($generatedvalidityyear);
-
-							$lastDayOfYear = $nextYear->endOfYear();
-
-							$result = $lastDayOfYear->toDateString();
-
-							(!empty($request->validity) ? $data['validDate'] = Carbon::parse($request->validity)->toDateString() :  $data['validDate'] = $result);
-							(!empty($request->validityDateFrom) ? $data['validDateFrom'] = Carbon::parse($request->validityDateFrom)->toDateString() : "");
-							
-							$success = DB::table('appform')->where('appid', '=', $appform->appid)->update($data);
-							 
-							if($status == 'A' && $success)
-							{							
-								$reg_facid = "";
-								$facilitype = AjaxController::getHgpdescByFacid($appform->hgpid);
-								$nhfcode = $appform->nhfcode;
-								$facilityname = $appform->facilityname;
-								$rgnid = $appform->rgnid;
-								$provid = $appform->provid;
-								$cmid = $appform->cmid;
-								$brgyid = $appform->brgyid;
-								$subclass = $appform->subClassid;
-								$exists_regfac_id = null;
+							if($appform->hfser_id == 'CON')
+							{
+								$license_arr = array('con_id' => $license, 'con_approveddate' => $Cur_useData['date'],'con_validityfrom' => $appform->validDateFrom, 'con_validityto' => $appform->validDate);
+							}
+							else if($appform->hfser_id == 'PTC')
+							{
+								$license_arr = array('ptc_id' => $license, 'ptc_approveddate' => $Cur_useData['date']);
+							}
+							else if($appform->hfser_id == 'LTO')
+							{
+								$license_arr = array('lto_id' => $license, 'lto_approveddate' => $Cur_useData['date'], 'lto_validityfrom' => $appform->validDateFrom, 'lto_validityto' => $appform->validDate);
+							}
+							else if($appform->hfser_id == 'ATO')
+							{
+								$license_arr = array('ato_id' => $license, 'ato_approveddate' => $Cur_useData['date'], 'ato_validityfrom' => $appform->validDateFrom, 'ato_validityto' => $appform->validDate);
+							}
+							else if($appform->hfser_id == 'COA')
+							{
+								$license_arr = array('coa_id' => $license, 'coa_approveddate' => $Cur_useData['date'], 'coa_validityfrom' => $appform->validDateFrom, 'coa_validityto' => $appform->validDate);
+							}
+							else if($appform->hfser_id == 'COR')
+							{
+								$license_arr = array('cor_id' => $license, 'cor_approveddate' => $Cur_useData['date'], 'cor_validityfrom' => $appform->validDateFrom, 'cor_validityto' => $appform->validDate);
+							}
 								
-								DB::table('branch')->where('regionid',$appform->assignedRgn)->update([strtoupper($hferID) => $next_code]);
-		
-								if($appform->subClassid == "Please select"){ $subclass = null;}							
-		
-								$appform_HF = array (
-									'old_pk' => $appform->appid, 'facid' => $appform->hgpid, 'nhfcode' => $appform->nhfcode, 
-									'facilityname' => $appform->facilityname, 'facilitytype' => $facilitype, 'assignedRgn' => $appform->assignedRgn, 
-		
-									'rgnid' => $appform->rgnid, 'provid' => $appform->provid, 'cmid' => $appform->cmid, 'brgyid' => $appform->brgyid, 
-									'street_number' => $appform->street_number, 'street_name' => $appform->street_name, 'zipcode' => $appform->zipcode, 
-									'contact' => $appform->contact, 'areacode' => $appform->areacode, 'landline' => $appform->landline, 'faxnumber' => $appform->faxnumber, 
-									'email' => $appform->email, 
-		
-									'ocid' => $appform->ocid, 'classid' => $appform->classid, 'subClassid' => $subclass, 'facmode' => $appform->facmode, 
-									'funcid' => $appform->funcid, 
-		
-									'owner' => $appform->owner, 'ownerMobile' => $appform->ownerMobile, 'ownerLandline' => $appform->ownerLandline, 'ownerEmail' => $appform->ownerEmail, 'mailingAddress' => $appform->mailingAddress, 'approvingauthoritypos' => $appform->approvingauthoritypos, 'approvingauthority' => $appform->approvingauthority, 
-		
-									'hfep_funded' => $appform->hfep_funded, 
-		
-									'uid' => $appform->uid, 'noofbed' => $appform->noofbed, 'noofstation' => $appform->noofstation, 
-									'noofsatellite' => $appform->noofsatellite, 'noofdialysis' => $appform->noofdialysis, 'noofmain' => $appform->noofmain, 
-									'cap_inv' => $appform->cap_inv, 'lot_area' => $appform->lot_area, 'typeamb' => $appform->typeamb, 'ambtyp' => $appform->ambtyp, 
-									'plate_number' => $appform->plate_number, 'ambOwner' => $appform->ambOwner, 'HFERC_swork' => $appform->HFERC_swork, 
-									'noofamb' => $appform->noofamb, 'pharCOC' => $appform->pharCOC, 'xrayCOC' => $appform->xrayCOC
-								);
-		
-								$license_arr = array();
-		
-								if($appform->hfser_id == 'CON')
-								{
-									$license_arr = array('con_id' => $license, 'con_approveddate' => $Cur_useData['date'],'con_validityfrom' => $appform->validDateFrom, 'con_validityto' => $appform->validDate);
-								}
-								else if($appform->hfser_id == 'PTC')
-								{
-									$license_arr = array('ptc_id' => $license, 'ptc_approveddate' => $Cur_useData['date']);
-								}
-								else if($appform->hfser_id == 'LTO')
-								{
-									$license_arr = array('lto_id' => $license, 'lto_approveddate' => $Cur_useData['date'], 'lto_validityfrom' => $appform->validDateFrom, 'lto_validityto' => $appform->validDate);
-								}
-								else if($appform->hfser_id == 'ATO')
-								{
-									$license_arr = array('ato_id' => $license, 'ato_approveddate' => $Cur_useData['date'], 'ato_validityfrom' => $appform->validDateFrom, 'ato_validityto' => $appform->validDate);
-								}
-								else if($appform->hfser_id == 'COA')
-								{
-									$license_arr = array('coa_id' => $license, 'coa_approveddate' => $Cur_useData['date'], 'coa_validityfrom' => $appform->validDateFrom, 'coa_validityto' => $appform->validDate);
-								}
-								else if($appform->hfser_id == 'COR')
-								{
-									$license_arr = array('cor_id' => $license, 'cor_approveddate' => $Cur_useData['date'], 'cor_validityfrom' => $appform->validDateFrom, 'cor_validityto' => $appform->validDate);
-								}
-									
-								$reg_HF = array_merge($appform_HF, $license_arr);
-								$cat_id = 0; // id of change_action_type
-								/* Get regfac_id if existing */
-								if(!empty($nhfcode) && isset($nhfcode) && $nhfcode!=null && $nhfcode!="")
-								{
-									$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')->where('nhfcode','=',$nhfcode)->first();
-								}
-								
-								if(empty($exists_regfac_id) || !isset($exists_regfac_id) )
-								{
-									$verified_regfacid = false;
-									
-									if(is_array($exists_regfac_id) || is_object($exists_regfac_id))
-									{
-										$verified_regfacid = count($exists_regfac_id);
-									}	
-		
-									if($verified_regfacid == false)
-									{
-										$exists_regfac_id = DB::table('appform')->select('regfac_id')
-														->where('appid','=',$appid) 
-														->first();
-
-										if($appform->aptid != 'IC')
-										{
-											$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')
-														->where(DB::raw('lower(facilityname)'), strtolower($facilityname))
-														->where('rgnid','=',$rgnid)
-														->where('provid','=',$provid)
-														->where('cmid','=',$cmid)
-														->where('brgyid','=',$brgyid)
-														->first();
-										}									
-									}
-								}
-								
+							$reg_HF = array_merge($appform_HF, $license_arr);
+							$cat_id = 0; // id of change_action_type
+							/* Get regfac_id if existing */
+							if(!empty($nhfcode) && isset($nhfcode) && $nhfcode!=null && $nhfcode!="")
+							{
+								$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')->where('nhfcode','=',$nhfcode)->first();
+							}								
+							if(empty($exists_regfac_id) || !isset($exists_regfac_id) )
+							{
 								$verified_regfacid = false;
-								//INSERT INTO registered_facility
-								if(empty($exists_regfac_id) || !isset($exists_regfac_id) )
-								{							
-									if(is_array($exists_regfac_id) || is_object($exists_regfac_id))
-									{
-										$verified_regfacid = count($exists_regfac_id);
-									}	
-		
-									//insert if new
-									if($verified_regfacid == false)
-									{
-										$exists_regfac_id = DB::table('registered_facility')->insertGetId($reg_HF);
-										SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
-										DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
-										$success = true;
-									}
-									else
-									{
-										$verified_regfacid = true;
-									}
-								}
-								else
-								{							
-									$verified_regfacid = true;
-								}
-								//update if existing
-								if($verified_regfacid)
+								
+								if(is_array($exists_regfac_id) || is_object($exists_regfac_id))
 								{
+									$verified_regfacid = count($exists_regfac_id);
+								}	
+								if($verified_regfacid == false)
+								{
+									$exists_regfac_id = DB::table('appform')->select('regfac_id')->where('appid','=',$appid)->first();
+
 									if($appform->aptid != 'IC')
 									{
-										$exists_regfac_id = $exists_regfac_id->regfac_id; 
-										DB::table('registered_facility')->where('regfac_id', $exists_regfac_id)->update($reg_HF);
-										SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
-										DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
-										$success = true;
-									}
-									else{
-										//save registered_facility depends on cat_id
-
+										$exists_regfac_id = DB::table('registered_facility')->select('regfac_id')
+															->where(DB::raw('lower(facilityname)'), strtolower($facilityname))
+															->where('rgnid','=',$rgnid)->where('provid','=',$provid)->where('cmid','=',$cmid)->where('brgyid','=',$brgyid)
+															->first();
 									}
 								}
 							}
 							
-							//dd($exists_regfac_id);
-
-							if ($success) 
-							{
-								//Increment Sequential Number for Certificate
-								$selected = AjaxController::getUidFrom( $appform->appid);
-								AjaxController::notifyClient( $appform->appid,$selected,($request->isOk == 1 ? 21 : 22));
-								
-								if($status == 'A')
+							$verified_regfacid = false;
+							//INSERT INTO registered_facility
+							if(empty($exists_regfac_id) || !isset($exists_regfac_id) )
+							{							
+								if(is_array($exists_regfac_id) || is_object($exists_regfac_id))
 								{
-
-									return 'DONE';
+									$verified_regfacid = count($exists_regfac_id);
+								}	
+								//insert if new
+								if($verified_regfacid == false)
+								{
+									$exists_regfac_id = DB::table('registered_facility')->insertGetId($reg_HF);
+									SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
+									DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
+									$success = true;
 								}
-								else{
-									return 'DISAPPROVED';
+								else
+								{
+									$verified_regfacid = true;
 								}
 							}
-							else 
+							else
+							{							
+								$verified_regfacid = true;
+							}
+							//update if existing
+							if($verified_regfacid)
 							{
-								return 'Error';
+								$exists_regfac_id = $exists_regfac_id->regfac_id; 
+								DB::table('registered_facility')->where('regfac_id', $exists_regfac_id)->update($reg_HF);
+								SELF::set_reg_tables_from_appid($exists_regfac_id, $appform->appid);
+								DB::table('appform')->where('appid',$appform->appid)->update(['regfac_id' => $exists_regfac_id]);
+								$success = true;
 							}
-						}
-						else
+						}						
+						if ($success) 
 						{
-							return 'WRONGPASSWORD';
+							//Increment Sequential Number for Certificate
+							$selected = AjaxController::getUidFrom( $appform->appid);
+							AjaxController::notifyClient( $appform->appid,$selected,($request->isOk == 1 ? 21 : 22));
+							
+							if($status == 'A') {	return 'DONE';	}
+							else {	return 'DISAPPROVED';	}
 						}
-				} 
+						else {	return 'Error';	}
+					}
+					else {	return 'WRONGPASSWORD';	}
+				}
 				catch (Exception $e) 
 				{
 					return $e;
@@ -10838,21 +10802,22 @@ namespace App\Http\Controllers;
 
 		public function set_reg_tables_from_appid($regfac_id, $appid)
 		{
-			DB::statement("INSERT INTO reg_cdrrattachment  (attachmentdetails, attachment, evaluation, remarks, regfac_id) SELECT attachmentdetails, attachment, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM cdrrattachment WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_cdrrhrotherattachment (attachmentdetails, attachment, evaluation, remarks, reqID, regfac_id) SELECT attachmentdetails, attachment, evaluation, remarks, reqID, '".$regfac_id."' AS regfac_id FROM cdrrhrotherattachment WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_cdrrhrpersonnel (name, designation, faciassign, qualification, prcno, validity, certificate, prc, bc, coe, hfsrbannexaID, evaluation, remarks,regfac_id ) SELECT name, designation, faciassign, qualification, prcno, validity, certificate, prc, bc, coe, hfsrbannexaID, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM cdrrhrpersonnel WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_cdrrhrxraylist (machinetype, brandtubehead, brandtubeconsole, modeltubehead, modeltubeconsole, serialtubehead, serialconsole, maxma, maxkvp, photonmv, electronsmev, location, evaluation, remarks, appuse, regfac_id) SELECT machinetype, brandtubehead, brandtubeconsole, modeltubehead, modeltubeconsole, serialtubehead, serialconsole, maxma, maxkvp, photonmv, electronsmev, location, evaluation, remarks, appuse, '".$regfac_id."' AS regfac_id FROM cdrrhrxraylist WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_cdrrhrxrayservcat (selected, regfac_id, evaluation, remarks) SELECT selected, '".$regfac_id."' AS regfac_id, evaluation, remarks FROM cdrrhrxrayservcat WHERE appid='".$appid."'");								
-			DB::statement("INSERT INTO reg_cdrrpersonnel (name, designation, area, tin, email, governmentid, prc, coe, hfsrbannexaID, evaluation, remarks, isTag, tagBy, regfac_id) SELECT name, designation, area, tin, email, governmentid, prc, coe, hfsrbannexaID, evaluation, remarks, isTag, tagBy, '".$regfac_id."' AS regfac_id FROM cdrrpersonnel WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexa (prefix, surname, firstname, middlename, suffix, prof, prcno, validityPeriodTo, speciality, dob, sex, employement, pos, designation, area, qual, email, tin, prc, bc, coe, isMainRadio, ismainpo, isMainRadioPharma, isChiefRadTech, isXrayTech, status, cert, evaluation, remarks, regfac_id, profession) SELECT prefix, surname, firstname, middlename, suffix, prof, prcno, validityPeriodTo, speciality, dob, sex, employement, pos, designation, area, qual, email, tin, prc, bc, coe, isMainRadio, ismainpo, isMainRadioPharma, isChiefRadTech, isXrayTech, status, cert, evaluation, remarks, '".$regfac_id."' AS regfac_id, profession FROM hfsrbannexa WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexb (equipment,brandname,serial,quantity,model,manDate,dop,evaluation,remarks,regfac_id) SELECT equipment,brandname,serial,quantity,model,manDate,dop,evaluation,remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexb WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexc ( testmethod, equipment, reagent, materials, evaluation, remarks, regfac_id) SELECT testmethod, equipment, reagent, materials, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexc WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexd  (testmethod, equipment, reagent, materials, evaluation, remarks, regfac_id) SELECT testmethod, equipment, reagent, materials, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexd WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexf  (name, position, rad, radonco, fpcr, dpbr, dohcert, fpccp, trained, fpros, rxt, rrt, rso, others, prcno, validity, evaluation, remarks, regfac_id) SELECT name, position, rad, radonco, fpcr, dpbr, dohcert, fpccp, trained, fpros, rxt, rrt, rso, others, prcno, validity, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexf WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_hfsrbannexi (test, kittype, kit, lotno, evaluation, remarks, regfac_id ) SELECT test, kittype, kit, lotno, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexi WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_personnel (lastname, firstname, middlename, gender, bod, regfac_id) SELECT lastname, firstname, middlename, gender, bod, '".$regfac_id."' AS regfac_id FROM personnel WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_ptc (regfac_id, type, others, propbedcap, conCode, ltoCode, propstation, incbedcapfrom, incbedcapto, incstationfrom, incstationto, construction_description, renoOption, singlebed, doubledeck) SELECT '".$regfac_id."' AS regfac_id, type, others, propbedcap, conCode, ltoCode, propstation, incbedcapfrom, incbedcapto, incstationfrom, incstationto, construction_description, renoOption, singlebed, doubledeck FROM ptc WHERE appid='".$appid."'");
-			DB::statement("INSERT INTO reg_x08_ft (id, uid, reg_facid, facid) SELECT id, uid, '".$regfac_id."' AS reg_facid, facid FROM x08_ft WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_cdrrattachment  (attachmentdetails, attachment, evaluation, remarks, regfac_id) SELECT attachmentdetails, attachment, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM cdrrattachment WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_cdrrhrotherattachment (attachmentdetails, attachment, evaluation, remarks, reqID, regfac_id) SELECT attachmentdetails, attachment, evaluation, remarks, reqID, '".$regfac_id."' AS regfac_id FROM cdrrhrotherattachment WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_cdrrhrpersonnel (name, designation, faciassign, qualification, prcno, validity, certificate, prc, bc, coe, hfsrbannexaID, evaluation, remarks,regfac_id ) SELECT name, designation, faciassign, qualification, prcno, validity, certificate, prc, bc, coe, hfsrbannexaID, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM cdrrhrpersonnel WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_cdrrhrxraylist (machinetype, brandtubehead, brandtubeconsole, modeltubehead, modeltubeconsole, serialtubehead, serialconsole, maxma, maxkvp, photonmv, electronsmev, location, evaluation, remarks, appuse, regfac_id) SELECT machinetype, brandtubehead, brandtubeconsole, modeltubehead, modeltubeconsole, serialtubehead, serialconsole, maxma, maxkvp, photonmv, electronsmev, location, evaluation, remarks, appuse, '".$regfac_id."' AS regfac_id FROM cdrrhrxraylist WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_cdrrhrxrayservcat (selected, regfac_id, evaluation, remarks) SELECT selected, '".$regfac_id."' AS regfac_id, evaluation, remarks FROM cdrrhrxrayservcat WHERE appid='".$appid."'");								
+			DB::statement("REPLACE INTO reg_cdrrpersonnel (name, designation, area, tin, email, governmentid, prc, coe, hfsrbannexaID, evaluation, remarks, isTag, tagBy, regfac_id) SELECT name, designation, area, tin, email, governmentid, prc, coe, hfsrbannexaID, evaluation, remarks, isTag, tagBy, '".$regfac_id."' AS regfac_id FROM cdrrpersonnel WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexa (prefix, surname, firstname, middlename, suffix, prof, prcno, validityPeriodTo, speciality, dob, sex, employement, pos, designation, area, qual, email, tin, prc, bc, coe, isMainRadio, ismainpo, isMainRadioPharma, isChiefRadTech, isXrayTech, status, cert, evaluation, remarks, regfac_id, profession) SELECT prefix, surname, firstname, middlename, suffix, prof, prcno, validityPeriodTo, speciality, dob, sex, employement, pos, designation, area, qual, email, tin, prc, bc, coe, isMainRadio, ismainpo, isMainRadioPharma, isChiefRadTech, isXrayTech, status, cert, evaluation, remarks, '".$regfac_id."' AS regfac_id, profession FROM hfsrbannexa WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexb (equipment,brandname,serial,quantity,model,manDate,dop,evaluation,remarks,regfac_id) SELECT equipment,brandname,serial,quantity,model,manDate,dop,evaluation,remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexb WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexc ( testmethod, equipment, reagent, materials, evaluation, remarks, regfac_id) SELECT testmethod, equipment, reagent, materials, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexc WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexd  (testmethod, equipment, reagent, materials, evaluation, remarks, regfac_id) SELECT testmethod, equipment, reagent, materials, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexd WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexf  (name, position, rad, radonco, fpcr, dpbr, dohcert, fpccp, trained, fpros, rxt, rrt, rso, others, prcno, validity, evaluation, remarks, regfac_id) SELECT name, position, rad, radonco, fpcr, dpbr, dohcert, fpccp, trained, fpros, rxt, rrt, rso, others, prcno, validity, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexf WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_hfsrbannexi (test, kittype, kit, lotno, evaluation, remarks, regfac_id ) SELECT test, kittype, kit, lotno, evaluation, remarks, '".$regfac_id."' AS regfac_id FROM hfsrbannexi WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_personnel (lastname, firstname, middlename, gender, bod, regfac_id) SELECT lastname, firstname, middlename, gender, bod, '".$regfac_id."' AS regfac_id FROM personnel WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_ptc (regfac_id, type, others, propbedcap, conCode, ltoCode, propstation, incbedcapfrom, incbedcapto, incstationfrom, incstationto, construction_description, renoOption, singlebed, doubledeck) SELECT '".$regfac_id."' AS regfac_id, type, others, propbedcap, conCode, ltoCode, propstation, incbedcapfrom, incbedcapto, incstationfrom, incstationto, construction_description, renoOption, singlebed, doubledeck FROM ptc WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_x08_ft (id, uid, reg_facid, facid, fee_type, servowner, servtyp) SELECT id, uid, '".$regfac_id."' AS reg_facid, facid, fee_type, servowner, servtyp FROM x08_ft WHERE appid='".$appid."'");
+			DB::statement("REPLACE INTO reg_ambulance (id, regfac_id, typeamb, ambtyp, plate_number, ambOwner) SELECT id, '".$regfac_id."' AS regfac_id, typeamb, ambtyp, plate_number, ambOwner FROM appform_ambulance WHERE appid='".$appid."'");
 
 			//DB::statement("UPDATE appform SET regfac_id='".$regfac_id."' WHERE appid='".$appid."';");
 		}

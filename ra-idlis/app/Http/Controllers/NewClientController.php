@@ -4410,7 +4410,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$pos = DB::table('position')->get();
 			$professions = DB::table('profession')->get();
 
-			if(isset($appid))
+			if($appid <= 0) {$appid=null;}
+
+			if((isset($appid) && !empty($appid) && $appid!=null))
 			{
 				$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
 			}
@@ -4634,8 +4636,10 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$hgpid = null;
 			$pos = DB::table('position')->get();
 			$professions = DB::table('profession')->get();
+			
+			if($appid <= 0) {$appid=null;}
 
-			if(isset($appid))
+			if((isset($appid) && !empty($appid) && $appid!=null))
 			{
 				$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
 			}
@@ -5089,6 +5093,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexb(Request $request, $appid){
+
 		if(FunctionsClientController::isUserApplication($appid)){
 			if($request->isMethod('get')){
 				$arrRet = [
@@ -5122,6 +5127,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexc(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexcd' => DB::table('hfsrbannexc')->where('appid',$appid)->get(),
@@ -5147,6 +5153,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexd(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexcd' => DB::table('hfsrbannexd')->where('appid',$appid)->get(),
@@ -5172,6 +5179,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexf(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexf' => DB::table('hfsrbannexf')->where('appid',$appid)->get(),
@@ -5212,6 +5220,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexh(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexh' => DB::table('hfsrbannexh')->where('appid',$appid)->get(),
@@ -5246,6 +5255,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function annexi(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexi' => DB::table('hfsrbannexi')->where('appid',$appid)->get(),
@@ -5277,7 +5287,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	}
 
 	public function monitoringCompliance($actid){
-
 
 
 	}
@@ -5432,6 +5441,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	// end hfsrb requirements
 	//hfsrb view requirements
 	public function viewannexa(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexa' => DB::table('hfsrbannexa')->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')->leftJoin('position','position.posid','hfsrbannexa.prof')->where('appid',$appid)->get(),
@@ -5445,6 +5455,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexb(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexb' => DB::table('hfsrbannexb')->where('appid',$appid)->get()
@@ -5458,6 +5469,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexd(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexcd' => DB::table('hfsrbannexd')->where('appid',$appid)->get()
@@ -5466,6 +5478,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexc(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexcd' => DB::table('hfsrbannexc')->where('appid',$appid)->get()
@@ -5474,6 +5487,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexf(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexf' => DB::table('hfsrbannexf')->where('appid',$appid)->get()
@@ -5482,6 +5496,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexh(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexh' => DB::table('hfsrbannexh')->where('appid',$appid)->get()
@@ -5490,6 +5505,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 	public function viewannexi(Request $request, $appid){
+
 		if($request->isMethod('get')){
 			$arrRet = [
 				'hfsrbannexi' => DB::table('hfsrbannexi')->where('appid',$appid)->get()
@@ -5590,11 +5606,13 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 	}
 
-	public function assessmentRegister(Request $request){
+	public function assessmentRegister(Request $request)
+	{
 		return json_encode(AjaxController::logAssessed($request->level,$request->appid,$request->id,null,1)); 
 	}
 
-	public function GenerateReportAssessment(Request $request, $appid){
+	public function GenerateReportAssessment(Request $request, $appid)
+	{
 		try {
 			$dohC = new DOHController();
 			$toViewArr = $dohC->GenerateReportAssessment($request,$appid,null,1);
@@ -5639,7 +5657,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			} 
 			try 
 			{
-
 				$asmt2_col = $asmt2_loc = $levelFirst = array();
 				$joinedData = null;
 				$allAccess = $filenames = array();
@@ -5755,6 +5772,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	public function AssessmentSend(Request $request, $appid, $apptype, $otherApplication = false)
 	{
 		$dataToView = $charCompiled = $toDir = $jsonToArray = $noCharCompiled = $selfAssessmentCheck = $jsonToDB = $appform = $table = $selectFromDB = $whereClause = $recordsToCheck = $tableToUpdate = $slug = $fieldsOnUpdate = $allUserDetails = $checkExistMon = $currentAssessment = $storedAssessment = $merged = $checkForStatus = $urlToRedirect = $tableNames = null;
+		
 		try 
 		{
 			($request->isMobile === "true" && $this->agent ? self::sessionForMobile($request->uid) : null);
@@ -5876,6 +5894,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 		$selectFromDBRaw = $selectFromDB[0];
 		$isEmptyAssess = empty(DB::table($table)->where($whereClause,$charCompiled)->get()->first()->$selectFromDBRaw);
+		
 		if(!$isEmptyAssess){
 			$compliedToString = $selectFromDB[0];
 			$checkForStatus = (is_null(DB::table($table)->where($whereClause,$charCompiled)->select($selectFromDB)->get()->first()) ? null : DB::table($table)->where($whereClause,$charCompiled)->select($selectFromDB)->get()->first()->$compliedToString);
@@ -6056,6 +6075,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			return json_encode($e);
 		}
 	}
+	
 	public function __customQuery(Request $request, $custom) {
 		// try {
 			$notify = false;
