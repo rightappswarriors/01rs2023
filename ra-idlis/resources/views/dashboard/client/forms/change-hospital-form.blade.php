@@ -34,21 +34,21 @@
                         <h3 class="text-uppercase font-weight-bold">List of {{$main_serv_desc}} to Apply</h3>
                     </div>                  
                     <div class="col-md-12">    
-                             @if($isaddnew == 1)        
+                             @if($isaddnew == 1)   
+                             {{-- 
                                 <div class="row">
                                     <div class="text-center">
                                         <a class="btn btn-success action-btn" href="#" title="Add New {{$main_serv_desc}}" data-toggle="modal" data-target="#mainService">
                                             <i class="fa fa-plus-circle"></i>&nbsp;Add New {{$main_serv_desc}}
                                         </a>
                                     </div>
-                                </div>
+                                </div>--}}     
                             @endif 
                             <table class="table display" id="example" style="overflow-x: scroll;">
                                 <thead>
                                     <tr>   
                                         <th class="text-center" style="width:  auto">Action</th>
-                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
-                                        <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
+                                        <th colspan="2" class="text-center" style="width:  auto">To New {{$main_serv_desc}}</th>
                                         
                                         @if($isupdate == 1)        
                                             <th class="text-center" style="width:  auto">
@@ -62,8 +62,6 @@
                                     @foreach ($mainservices_applied as $d)
                                         <tr>
                                             <td class="text-center"> @if (isset($d->facid_old) && !empty($d->facid_old)) Update  @else Add New  @endif</td>
-                                            <td class="text-center">{{$d->anc_name_old}}<br/><small style="color:#ccc">[{{$d->facid_old}}]</small> </td>
-                                            <td class="text-center">{{$d->facname_old}}</td>
                                             <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
                                             <td class="text-center">{{$d->facname}}</td>
 
@@ -112,7 +110,6 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width:  auto">Action</th>
-                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
                                         <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
                                         {{-- <th class="text-center" style="width: auto;text-align: center">Type</th>
                                         <th class="text-center" style="width: auto;text-align: center">Details</th>  --}}
@@ -130,8 +127,6 @@
                                         @php $proceed_addon = 1; @endphp
                                         <tr>
                                             <td class="text-center"> @if (isset($d->facid_old) && !empty($d->facid_old)) Update  @else Add New  @endif</td>
-                                            <td class="text-center">{{$d->anc_name_old}}<br/><small style="color:#ccc">[{{$d->facid_old}}]</small> </td>
-                                            <td class="text-center">{{$d->facname_old}}</td>
                                             <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
                                             <td class="text-center">{{$d->facname}}</td>
                                             {{-- <td class="text-center">Owned</td>
@@ -299,7 +294,7 @@
                         <input type="hidden" name="cat_id"value="{{$cat_id}}">
                         <input type="hidden" name="appid" value="{{$appid}}">         
                         <input type="hidden" name="regfac_id" value="{{$regfac_id}}">     
-                        <input type="hidden" name="action" id="ms_action" value="add">
+                        <input type="hidden" name="action" id="ms_action" value="main">
                         <input type="hidden" name="facid_old" id="ms_facid_old" >
                         <input type="hidden" name="servowner" id="ms_servowner" >
                         <input type="hidden" name="servtyp" id="ms_servowner" >
@@ -518,7 +513,7 @@
         $("#mainServiceActLabel").empty().html('Change to New {{$addon_serv_desc}}');
         $("#ms_facid").val(facid);
         $("#ms_facid_old").val(facid);
-        $("#ms_action").val(action);
+        //$("#ms_action").val(action);
     }
 
     function showDataAddOnServ(facid, servtyp, servowner, oldfacid, action){

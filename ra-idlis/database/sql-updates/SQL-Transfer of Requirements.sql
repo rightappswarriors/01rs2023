@@ -1,18 +1,18 @@
-UPDATE cdrrattachment SET appid='8237' WHERE appid='8059';
-UPDATE cdrrhrotherattachment SET appid='8237' WHERE appid='8059';
-UPDATE cdrrhrpersonnel SET appid='8237' WHERE appid='8059';
-UPDATE cdrrhrreceipt SET appid='8237' WHERE appid='8059';
-UPDATE cdrrhrxraylist SET appid='8237' WHERE appid='8059';
-UPDATE cdrrhrxrayservcat SET appid='8237' WHERE appid='8059';
-UPDATE cdrrpersonnel SET appid='8237' WHERE appid='8059';
-UPDATE cdrrreceipt SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexa SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexb SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexc SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexd SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexf SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexh SET appid='8237' WHERE appid='8059';
-UPDATE hfsrbannexi SET appid='8237' WHERE appid='8059';
+UPDATE cdrrattachment SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrhrotherattachment SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrhrpersonnel SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrhrreceipt SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrhrxraylist SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrhrxrayservcat SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrpersonnel SET appid='NEWID' WHERE appid='PASTID';
+UPDATE cdrrreceipt SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexa SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexb SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexc SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexd SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexf SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexh SET appid='NEWID' WHERE appid='PASTID';
+UPDATE hfsrbannexi SET appid='NEWID' WHERE appid='PASTID';
 
 
 ---------------------------

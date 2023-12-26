@@ -34,7 +34,9 @@
                         <h3 class="text-uppercase font-weight-bold">List of {{$main_serv_desc}} to Apply</h3>
                     </div>                  
                     <div class="col-md-12">    
-                             @if($isaddnew == 1)        
+                             @if($isaddnew == 1)       
+                             @if( $registered_facility->ambulSurgCli =="1" )
+     
                                 <div class="row">
                                     <div class="text-center">
                                         <a class="btn btn-success action-btn" href="#" title="Add New {{$main_serv_desc}}" data-toggle="modal" data-target="#mainService">
@@ -42,6 +44,7 @@
                                         </a>
                                     </div>
                                 </div>
+                            @endif 
                             @endif 
                             <table class="table display" id="example" style="overflow-x: scroll;">
                                 <thead>
