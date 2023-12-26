@@ -6610,8 +6610,10 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						case 'getGoAncillary':
 							$retArr = [];
 							if(isset($request->facid)) {
+								
 								$retArr = FunctionsClientController::getGoAncillary($request->facid);
 							}
+							                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 							return json_encode($retArr);
 							break;
 						default:
