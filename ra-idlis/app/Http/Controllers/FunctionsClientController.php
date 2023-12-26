@@ -1083,6 +1083,7 @@ class FunctionsClientController extends Controller {
 	// Reflected at the client side registration
 	public static function getChargesPerApplication($hgpid = [], $aptid = "", $hfser_id = "") {
 		$retArr = []; $hgpidIn = "";
+		$sql = "";
 		if(!empty($hgpid) || !empty($aptid)) {
 			foreach($hgpid AS $hgpidEach) { $hgpidIn .= ((! empty($hgpidIn)) ? ", '$hgpidEach'" : "'$hgpidEach'"); }
 			
@@ -1091,13 +1092,14 @@ class FunctionsClientController extends Controller {
 			if($aptid == "IN" || $aptid == "IC")
 			{
 				//$retArr = DB::select(DB::raw("SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `initial_new_amount` AS amt, charges.hgpid FROM `sice_fees` LEFT ervJOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'"));
-				
-				$retArr = DB::select(DB::raw("SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `initial_new_amount` AS amt, charges.hgpid FROM `service_fees` LEFT JOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.service_id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'"));
+				$sql = "SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `initial_new_amount` AS amt, charges.hgpid FROM `service_fees` LEFT JOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.service_id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'";
 			}
 			else
 			{
-				$retArr = DB::select(DB::raw("SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `renewal_amount` AS amt, charges.hgpid FROM `service_fees` LEFT JOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'"));
+				$sql = "SELECT id AS chgapp_id, `service_id` AS chg_code, charges.chg_desc, `renewal_amount` AS amt, charges.hgpid FROM `service_fees` LEFT JOIN charges ON charges.chg_code=service_fees.service_id WHERE service_fees.id IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn)) AND service_fees.hfser_id='$hfser_id'";
 			}
+			
+			$retArr = DB::select(DB::raw($sql));
 		}
 		// else{
 		// 	 $retArr = DB::select(DB::raw("SELECT chg_app.chgapp_id, charges.chg_desc, chg_app.amt FROM chg_app INNER JOIN charges ON chg_app.chg_code = charges.chg_code WHERE chg_app.chg_code IN (SELECT chg_code FROM charges WHERE hgpid IN ($hgpidIn))  AND chg_app.hfser_id = '$hfser_id'"));

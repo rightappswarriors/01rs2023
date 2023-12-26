@@ -154,17 +154,14 @@ var mserv_cap = JSON.parse('{!!addslashes($serv_cap)!!}')
    
     //display subfacilities/services/add ons
     function type_of_fac(selected) {
-        var nm = document.getElementById("noofmain")
-
-    
+        var nm = document.getElementById("noofmain")   
 
         if(selected == 34 || selected == 7){
             setTimeout(function(){
                 jQuery('.ambuDetails').removeAttr('hidden');
             }, 200);
             
-        }
-		
+        }		
 		
         if( $('input[name="hgpid"]:checked').val() == 6 ){
                 if(nm.value == null || nm.value == undefined  || nm.value == " "|| !nm.value){
@@ -245,11 +242,7 @@ var mserv_cap = JSON.parse('{!!addslashes($serv_cap)!!}')
             document.getElementsByClassName("addOnServe")[0].removeAttribute("hidden");
             renewAddOnSelect("ASC-LTO");
         }
-         
-         
     }
-
-
 
 
     function getChargesPerApplication() {
@@ -821,6 +814,7 @@ function getFacServCharge (val = null){
     }
 
     function clinicServAndLabAmbu(specs, selected) {
+        
         const data = ["otherClinicService", "clinicLab", "ambuDetails"];
         if (specs == "show") {
             data.map((h) => {
@@ -1484,6 +1478,7 @@ function getFacServCharge (val = null){
         let sArr = ['_token='+document.getElementsByName('_token')[0].value, 'facid[]=H', 'facid[]=H2', 'facid[]=H3'];
         let resp = []
         var nas;
+
         sendRequestRetArr(sArr, "{{asset('client1/request/customQuery/getGoAncillary')}}", "POST", true, {
 					functionProcess: function(arr) {  
                         show_hosplevel_anx(selected, arr, hgpid)
