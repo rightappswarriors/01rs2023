@@ -112,7 +112,7 @@
 <!-- Authorization Number -->
 <div class="col-md-6">
     <label>Latest LTO/COA/COR/ATO Number: </label>
-    <label><strong class="text-xl">{{$registered_facility->con_id}} {{$registered_facility->ptc_id}} {{$registered_facility->lto_id}} {{$registered_facility->ato_id}} {{$registered_facility->coa_id}} {{$registered_facility->cor_id}}</strong></label>
+    <label><strong class="text-xl">{{$registered_facility->con_id}} {{$registered_facility->lto_id}} {{$registered_facility->ato_id}} {{$registered_facility->coa_id}} {{$registered_facility->cor_id}}</strong></label>
 </div>
 
 <div class="col-md-6">
@@ -122,12 +122,12 @@
 
 <div class="col-md-6">
     <label>Permit to Construct No. (if applicable): </label>
-    <label><strong class="text-xl">{{$registered_facility->con_id}} {{$registered_facility->ptc_id}} {{$registered_facility->lto_id}} {{$registered_facility->ato_id}} {{$registered_facility->coa_id}} {{$registered_facility->cor_id}}</strong></label>
+    <label><strong class="text-xl">{{$registered_facility->ptc_id}}</strong></label>
 </div>
 
 <div class="col-md-6">
     <label>Date Issued: </label>
-    <label><strong>@isset($validity){{$validity}}@endisset</strong></label>
+    <label><strong>@isset($issued_date){{$issued_date}}@endisset</strong></label>
 </div>
 
 <div class="col-md-12"><hr/></div>                                    

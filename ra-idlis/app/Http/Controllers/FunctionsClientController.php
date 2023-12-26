@@ -891,30 +891,52 @@ class FunctionsClientController extends Controller {
 	//2023-12-17
 	//almost the same with AjaxController:getAllServices()
 	//get all master list of services of add ons, otherwise services of hospital levels if Request has selected value.
-	public static function get_view_ServiceList($hgpid=null, $servtype_id = 0){
+	public static function get_view_ServiceList($hgpid=null, $servtype_id = 0, $specific_servtype = false){
 		try {
-			$retArr = [];
+			$retArr = [];			
+
 			$retArr = DB::table('view_ServiceList')->where('facid','not like','%-REGIS');
 
 			if(isset($hgpid)){
 
 				if($hgpid == "6")
 				{
-					$retArr = $retArr->where(function ($query) {
+					/*$retArr = $retArr->where(function ($query) {
 						$query->where('view_ServiceList.hgpid','=','6')
 							->orWhere('view_ServiceList.hgpid','=','34');
-					});
-				}
-				else{
-					$retArr = $retArr->where('hgpid','=',$hgpid);
-				}				
-			}
+					});*/					
+					if($servtype_id == 1 ){
+						$retArr = $retArr->whereIn('facid',['H', 'H2', 'H3']);
+						$retArr = $retArr->where('servtype_id','=',$servtype_id);
+					} elseif($specific_servtype){
+												
+						$retArr = DB::table('view_hospital_services')->where('facid','not like','%-REGIS');
+						$retArr = $retArr->where('servtype_id', $servtype_id);
 
-			if($servtype_id == 1 ){
-				$retArr = $retArr->where('servtype_id','=',$servtype_id);
-			} elseif($servtype_id > 1 ) {
-				$retArr = $retArr->where('servtype_id','>=',$servtype_id);
-			} 
+					} elseif($servtype_id > 1){
+						$retArr = DB::table('view_hospital_services')->where('facid','not like','%-REGIS');
+						$retArr = $retArr->whereIn('servtype_id',['2', '3', '4', '5']);
+					}
+
+					$retArr = $retArr->orderBy('servtype_id','asc');
+				}else{
+				
+					$retArr = $retArr->where('hgpid','=',$hgpid);
+				}	
+								
+				if($hgpid != "6")
+				{
+					if($servtype_id == 1 ){
+						$retArr = $retArr->where('servtype_id','=',$servtype_id);
+					} elseif($servtype_id > 1 ) {
+						$retArr = $retArr->where('servtype_id','>=',$servtype_id);
+					} 
+					$retArr = $retArr->orderBy('servtype_id','asc');
+				}
+			} else {
+
+				$retArr = $retArr->orderBy('servtype_id','asc');
+			}
 
 			$retArr = $retArr->get();
 			

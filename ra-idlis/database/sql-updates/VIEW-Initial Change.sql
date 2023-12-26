@@ -51,7 +51,7 @@ CREATE VIEW view_facility_services_per_appform AS
 
 SELECT x08_ft.appid, hfaci_grp_a.hgpdesc AS appform_hgpdesc, facilitytyp.assignrgn,  x08_ft.fee_type, 
 x08_ft.facid, facilitytyp.facname, facilitytyp.forSpecialty, facilitytyp.facmid,  facmode.facmdesc, 
- facilitytyp.hgpid, hfaci_grp.hgpdesc AS facilitytyp_hgpdesc, hfaci_grp.status, hfaci_grp.year_validity, facilitytyp.servtype_id,  serv_type.anc_name, serv_type.seq, serv_type.facid AS serv_type_facid, serv_type.grp_name, x08_ft.servowner, x08_ft.servtyp, x08_ft.facid_old, fac_old.facname AS facname_old, serv_type_old.anc_name AS anc_name_old
+ facilitytyp.hgpid, hfaci_grp.hgpdesc AS facilitytyp_hgpdesc, hfaci_grp.status, hfaci_grp.year_validity, facilitytyp.servtype_id,  serv_type.anc_name, serv_type.seq, serv_type.facid AS serv_type_facid, serv_type.grp_name, x08_ft.servowner, x08_ft.servtyp, x08_ft.facid_old
 FROM appform 
 LEFT JOIN x08_ft ON appform.appid=x08_ft.appid 
 LEFT JOIN facilitytyp ON facilitytyp.facid=x08_ft.facid 
@@ -60,8 +60,7 @@ LEFT JOIN hfaci_grp ON hfaci_grp.hgpid=facilitytyp.hgpid
 LEFT JOIN hfaci_grp AS hfaci_grp_a ON hfaci_grp_a.hgpid=appform.hgpid
 LEFT JOIN facmode ON facmode.facmid=facilitytyp.facmid
 LEFT JOIN serv_type ON serv_type.servtype_id=facilitytyp.servtype_id
-LEFT JOIN serv_type serv_type_old ON serv_type.servtype_id=fac_old.servtype_id
-WHERE x08_ft.appid IS NOT NULL
+WHERE x08_ft.appid IS NOT NULL 
 ORDER BY x08_ft.appid, serv_type.seq;
 
 
@@ -125,3 +124,40 @@ CREATE TABLE reg_ambulance
 	regfac_id bigint,
     typeamb TEXT, ambtyp TEXT, plate_number TEXT, ambOwner TEXT
 );
+
+
+/************ sql updates 12-27-2023 ***********/
+
+ALTER TABLE hfaci_grp
+ADD COLUMN isHospital tinyint DEFAULT 0,
+ADD COLUMN otherClinicService tinyint DEFAULT 0,
+ADD COLUMN clinicLab tinyint DEFAULT 0,
+ADD COLUMN dialysisClinic tinyint DEFAULT 0,
+ADD COLUMN ambulSurgCli tinyint DEFAULT 0,
+ADD COLUMN ambuDetails tinyint DEFAULT 0,
+ADD COLUMN addOnServe tinyint DEFAULT 0;
+
+
+/********** View Hospital Services *********/
+
+DROP VIEW IF EXISTS view_hospital_services;
+
+CREATE VIEW view_hospital_services AS
+
+SELECT facilitytyp.facid, facilitytyp.facname,  facilitytyp.facmid,  facilitytyp.hgpid,  hfaci_grp.hgpdesc, facilitytyp.specified,  
+facilitytyp.grphrz_name,  facilitytyp.servtype_id, serv_type.anc_name, serv_type.seq, serv_type.facid AS serv_type_facid, serv_type.grp_name, 
+facilitytyp.old_factype_code,  facilitytyp.assignrgn,  facilitytyp.forSpecialty,  facilitytyp.status FROM
+(SELECT facilitytyp.facid, facilitytyp.facname, facilitytyp.facmid, facilitytyp.hgpid, facilitytyp.specified, facilitytyp.grphrz_name, facilitytyp.servtype_id,
+facilitytyp.old_factype_code, facilitytyp.assignrgn, facilitytyp.forSpecialty, facilitytyp.status FROM facilitytyp WHERE servtype_id IN 
+(
+	SELECT servtype_id FROM serv_type, 
+	(
+		SELECT grp_name, seq FROM serv_type 
+		WHERE facid IN (SELECT facid FROM facilitytyp WHERE facid IN ('H','H2','H3') AND servtype_id = 1)
+	) grpseq 
+	WHERE serv_type.grp_name IN (grpseq.grp_name) AND serv_type.seq > (grpseq.seq - 1)
+) 
+ORDER BY grphrz_name, facname ASC) facilitytyp
+LEFT JOIN serv_type ON facilitytyp.servtype_id=serv_type.servtype_id
+LEFT JOIN hfaci_grp ON hfaci_grp.hgpid=facilitytyp.hgpid
+ORDER BY facilitytyp.hgpid, facilitytyp.servtype_id;

@@ -35,7 +35,8 @@ CREATE VIEW view_registered_facility_for_change AS
 	rf.con_approveddate, rf.ptc_approveddate, rf.lto_approveddate, rf.ato_approveddate, rf.coa_approveddate, rf.cor_approveddate, 
 	rf.con_validityfrom, rf.lto_validityfrom, rf.ato_validityfrom, rf.coa_validityfrom, rf.cor_validityfrom, rf.con_validityto, rf.lto_validityto, rf.ato_validityto, rf.coa_validityto, rf.cor_validityto, 
 
-	rf.uid, rf.noofbed, rf.noofstation, rf.noofsatellite, rf.noofdialysis, rf.noofmain, rf.cap_inv, rf.lot_area, rf.typeamb, rf.ambtyp, rf.plate_number, rf.ambOwner, rf.HFERC_swork, rf.noofamb, rf.pharCOC, rf.xrayCOC 
+	rf.uid, rf.noofbed, rf.noofstation, rf.noofsatellite, rf.noofdialysis, rf.noofmain, rf.cap_inv, rf.lot_area, rf.typeamb, rf.ambtyp, rf.plate_number, rf.ambOwner, rf.HFERC_swork, rf.noofamb, rf.pharCOC, rf.xrayCOC,
+	hfaci_grp.isHospital, hfaci_grp.otherClinicService, hfaci_grp.clinicLab, hfaci_grp.dialysisClinic, hfaci_grp.ambulSurgCli, hfaci_grp.ambuDetails, hfaci_grp.addOnServe 
 
 	FROM registered_facility rf 
 	LEFT JOIN hfaci_grp ON rf.facid=hfaci_grp.hgpid

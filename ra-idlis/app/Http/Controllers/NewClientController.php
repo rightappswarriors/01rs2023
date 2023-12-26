@@ -3104,6 +3104,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+
+			return redirect('client1/changerequest/'.$request->regfac_id.'/annexa')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Equipment successfully saved.']);
 		}
 		//Update in Equipment
 		else if($cat_id == 7)
@@ -3119,6 +3121,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
+			
+			return redirect('client1/changerequest/'.$request->regfac_id.'/annexb')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Equipment successfully saved.']);
 		}
 		//Update in Classification/Function/Institutional Character
 		else if($cat_id == 8)
@@ -3159,7 +3163,62 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 				}
 			}
-			else{
+			else if($action == "main"){
+				$servtype_id = 3;
+				$rfacid = $request->facid;
+				if($rfacid == "H2") { $servtype_id = 4; } elseif($rfacid == "H3") { $servtype_id = 5; } 
+
+				DB::table('chgfil')->where(array('appform_id'=>$appid))->delete();
+				DB::table('x08_ft')->where(array('appid' => $appid))->delete();
+
+				$chgapp_id = "";					
+				$fees = FunctionsClientController::get_view_ServiceCharge([$rfacid], "","", "","", TRUE);
+
+				foreach ($fees as $d)
+				{
+					$chgapp_id = $d->chgapp_id;
+					$facname	= $d->facname;
+					$amt	= $d->amt;
+					
+						DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+						$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+						$appcharge = json_encode($arr);
+						NewGeneralController::appCharge($appcharge, $appid, $uid);
+				}
+				//added to service for assessment tool
+				DB::table('x08_ft')->where(array('facid' => $rfacid, 'appid' => $appid))->delete();
+				DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $rfacid, 'servowner' => null, 'servtyp' => null, 'facid_old' => null]);
+
+				/////////////ADD ON SERVICES
+				$addonservicelist = FunctionsClientController::get_view_ServiceList($hgpid, $servtype_id, true);
+
+				foreach ($addonservicelist AS $d)
+				{
+					$chgapp_id = "";
+					$facid = $d->facid;						
+					$fees = FunctionsClientController::get_view_ServiceCharge([$facid], "","", "","", TRUE);
+	
+						foreach ($fees as $d)
+						{
+							$chgapp_id = $d->chgapp_id;
+							$facname	= $d->facname;
+							$amt	= $d->amt;
+							
+							if(($rfacid == "H" && $facid != "H2" && $facid != "H3" ) || ($rfacid == "H2" && $facid != "H" && $facid != "H3" ) 
+									|| ($rfacid == "H3" && $facid != "H2" && $facid != "H" ))
+							{
+								DB::table('chgfil')->where(array('appform_id'=>$appid, 'chgapp_id'=> $chgapp_id))->delete();
+								$arr = array(array('chgapp_id'=> $chgapp_id,   'reference'=> $facname, 'amount'=>$amt));
+								$appcharge = json_encode($arr);
+								NewGeneralController::appCharge($appcharge, $appid, $uid);
+							}
+						}
+					//added to service for assessment tool
+					DB::table('x08_ft')->where(array('facid' => $facid, 'appid' => $appid))->delete();
+					DB::table('x08_ft')->insert(['uid' => $uid, 'appid' => $appid, 'reg_facid' => $regfac_id, 'facid' => $facid, 'servowner' => null, 'servtyp' => null, 'facid_old' => null]);
+				}
+			}else{
+
 				$chgapp_id = "";
 				$fees = FunctionsClientController::get_view_ServiceCharge([$request->facid], "","", "","", TRUE);
 	
@@ -3182,6 +3241,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 				//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
 			}
+
+			
+			return redirect('client1/changerequest/'.$request->regfac_id.'/hospital')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Hospital Service successfully saved.']);
 		}
 		//Rename Facility
 		else if($cat_id == 10)
@@ -3419,12 +3481,30 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					}
 				}
 
-				try {
+				//try {
 					$validto 	= ($hfser_id == 'PTC') ? "" : strtolower($hfser_id).'_validityto';
 					$validfrom 	= ($hfser_id == 'PTC') ? "" : strtolower($hfser_id).'_validityfrom';
-					$validity 	= ($hfser_id == 'PTC') ? date_format(date_create($data[0]->ptc_approveddate),"F d, Y") : 
-								date_format(date_create($validfrom),"F d, Y").' to  '.date_format(date_create($validto),"F d, Y");
-				} catch (Exception $e) { }
+					$validity 	= "";
+					$issued_date = "";
+
+					if($hfser_id == 'PTC') {
+						$validity = 'Starting '.date_format(date_create($data[0]->ptc_approveddate),"F d, Y"); 
+						$issued_date = date_format(date_create($data[0]->ptc_approveddate),"F d, Y");
+					}
+					elseif($hfser_id == 'LTO') {
+						$validity = 'Until '.date_format(date_create($data[0]->lto_validityto),"F d, Y");
+						$issued_date = date_format(date_create($data[0]->lto_approveddate),"F d, Y");
+					}
+					elseif($hfser_id == 'COA') {
+						$validity = 'Until '.date_format(date_create($data[0]->coa_validityto),"F d, Y"); 
+						$issued_date = date_format(date_create($data[0]->coa_approveddate),"F d, Y");
+					}
+					elseif($hfser_id == 'ATO') {
+						$validity = 'Until '.date_format(date_create($data[0]->ato_validityto),"F d, Y"); 
+						$issued_date = date_format(date_create($data[0]->ato_approveddate),"F d, Y");
+					}
+					
+				//} catch (Exception $e) { }
 				
 				if($appid > 0) 
 				{
@@ -3440,6 +3520,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'functype'				=> $functype,
 					'registered_facility'	=> (count($data) > 0) ? $data[0] : null,
 					'validity'				=> $validity,
+					'issued_date'			=> $issued_date,
 					'uid'					=> $user_data->uid,
 					'appform_changeaction'	=> $appform_changeaction,					
 					'regservices'			=> $regservices,
@@ -3583,7 +3664,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$isaddnew 		= 0;
 					$isupdate 		= 0;
 					$mainservicelist = FunctionsClientController::get_view_ServiceList($hgpid, 1);
-					$addonservicelist = FunctionsClientController::get_view_ServiceList(null, 2);
+					$addonservicelist = FunctionsClientController::get_view_ServiceList($hgpid, 2);
 					$mainservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 1);
 					$addOnservices_reg	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 2);
 					$mainservices_applied	= FunctionsClientController::get_view_facility_services_per_appform($appid, 1);
