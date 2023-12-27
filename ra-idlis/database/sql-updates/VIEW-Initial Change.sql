@@ -137,6 +137,12 @@ ADD COLUMN ambulSurgCli tinyint DEFAULT 0,
 ADD COLUMN ambuDetails tinyint DEFAULT 0,
 ADD COLUMN addOnServe tinyint DEFAULT 0;
 
+UPDATE hfaci_grp SET isHospital='1', ambuDetails='1', dialysisClinic='1', addOnServe='1' WHERE hgpid='6';
+UPDATE hfaci_grp SET otherClinicService='1', clinicLab='1' WHERE hgpid='2' OR hgpid='7' OR hgpid='4' OR hgpid='28';
+UPDATE hfaci_grp SET otherClinicService='1', clinicLab='1', ambuDetails='1' WHERE hgpid='17' OR hgpid='18';
+UPDATE hfaci_grp SET ambulSurgCli='1', ambuDetails='1', clinicLab='1' WHERE hgpid='1';
+UPDATE hfaci_grp SET dialysisClinic='1', addOnServe='1', clinicLab='1' WHERE hgpid='5';
+
 
 /********** View Hospital Services *********/
 

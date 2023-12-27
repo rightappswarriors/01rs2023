@@ -49,8 +49,6 @@
                             <table class="table display" id="example" style="overflow-x: scroll;">
                                 <thead>
                                     <tr>   
-                                        <th class="text-center" style="width:  auto">Action</th>
-                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
                                         <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
                                         
                                         @if($isupdate == 1)        
@@ -64,9 +62,6 @@
                                 @if (isset($mainservices_applied))
                                     @foreach ($mainservices_applied as $d)
                                         <tr>
-                                            <td class="text-center"> @if (isset($d->facid_old) && !empty($d->facid_old)) Update  @else Add New  @endif</td>
-                                            <td class="text-center">{{$d->anc_name_old}}<br/><small style="color:#ccc">[{{$d->facid_old}}]</small> </td>
-                                            <td class="text-center">{{$d->facname_old}}</td>
                                             <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
                                             <td class="text-center">{{$d->facname}}</td>
 
@@ -114,8 +109,6 @@
                             <table class="table display" id="example" style="overflow-x: scroll;">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" style="width:  auto">Action</th>
-                                        <th colspan="2" class="text-center" style="width:  auto">From Service</th>
                                         <th colspan="2" class="text-center" style="width:  auto">To New Service</th>
                                         {{-- <th class="text-center" style="width: auto;text-align: center">Type</th>
                                         <th class="text-center" style="width: auto;text-align: center">Details</th>  --}}
@@ -132,9 +125,6 @@
                                     @foreach ($addOnservices_applied as $d)
                                         @php $proceed_addon = 1; @endphp
                                         <tr>
-                                            <td class="text-center"> @if (isset($d->facid_old) && !empty($d->facid_old)) Update  @else Add New  @endif</td>
-                                            <td class="text-center">{{$d->anc_name_old}}<br/><small style="color:#ccc">[{{$d->facid_old}}]</small> </td>
-                                            <td class="text-center">{{$d->facname_old}}</td>
                                             <td class="text-center">{{$d->anc_name}}<br/><small style="color:#ccc">[{{$d->facid}}]</small> </td>
                                             <td class="text-center">{{$d->facname}}</td>
                                             {{-- <td class="text-center">Owned</td>
@@ -145,7 +135,6 @@
                                                     '{{$d->facid}}',
                                                     '{{$d->servtyp}}',
                                                     '{{$d->servowner}}',
-                                                    '{{$d->facid_old}}',
                                                     'edit'
                                                     )" data-toggle="modal" data-target="#addOnService"><i class="fa fa-edit"></i></button>
                                                     <button class="btn btn-danger " onclick="showDataDelServ('{{$d->facid}}', '{{$d->facname}}', '0')" 
@@ -252,7 +241,6 @@
                                                     '{{$d->facid}}',
                                                     '{{$d->servtyp}}',
                                                     '{{$d->servowner}}',
-                                                    '{{$d->facid_old}}',
                                                     'edit'
                                                     )" data-toggle="modal" data-target="#addOnService"><i class="fa fa-edit"></i></button>
                                                 <button class="btn btn-danger " onclick="showDataDelServ('{{$d->facid}}', '{{$d->facname}}', '1')" 
@@ -377,11 +365,11 @@
                         <input type="hidden" name="servtyp" id="ms_servowner" >
                         
                         @if(!$isupdate)
-                        <input type="hidden" name="facid_old" value="">  
                         @endif
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display:none" id="AddErrorAlert" role="alert">
                             <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
                         </div>
+                        {{-- 
                         @if($isupdate)
                             <div class="col-sm-4" style="display:none;">Current:</div>
                             <div class="col-sm-8" style="margin:0 0 .8em 0;">
@@ -409,7 +397,7 @@
                                 </select>
                             </div>	
                         @endif
-
+                        --}}
                         <div class="col-sm-4">New:</div>
                         <div class="col-sm-8" style="margin:0 0 .8em 0;">
                             <select name="facid" id="ao_facid" class="form-control select2-hidden-accessible" style="width: 100%:">
@@ -517,19 +505,17 @@
 
 <script>
 
-    function showDataMainServ(anc_name, facid, oldfacid, oldfacname, action){
+    function showDataMainServ(anc_name, facid, action){
         
         $("#mainServiceActLabel").empty().html('Change to New {{$addon_serv_desc}}');
         $("#ms_facid").val(facid);
-        $("#ms_facid_old").val(facid);
         $("#ms_action").val(action);
     }
 
-    function showDataAddOnServ(facid, servtyp, servowner, oldfacid, action){
+    function showDataAddOnServ(facid, servtyp, servowner, action){
 
         $("#addOnServiceActLabel").empty().html('Change to New {{$addon_serv_desc}}');
         $("#ao_action").val(action);
-        $("#ao_facid_current").val(oldfacid);
         $("#ao_facid").val(facid);
         $("#ao_ownedtype").val(servtyp);
         $("#ao_servowner").val(servowner);
