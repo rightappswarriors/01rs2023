@@ -48,7 +48,7 @@
                       <td style="text-align:center">{{$data->nhfcode}}</td>
                       <td style="text-align:center">{{$data->regfac_id}}</td>
                       <td style="text-align:left"><strong>{{$data->facilityname}}</strong></td>
-                      <td style="text-align:left">{{( $data->hgpdesc ?? 'NOT FOUND')}} </td>
+                      <td style="text-align:left">{{( $data->facilitytype ?? 'NOT FOUND')}} </td>
                       <td style="text-align:left">{{$data->ocdesc}}</td>
                       <td style="text-align:left">{{$data->email}}</td>  
                       <td style="text-align:center">{{$data->uid}}</td>                    
