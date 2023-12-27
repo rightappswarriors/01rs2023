@@ -41,14 +41,14 @@
         </a>
     </div>
     @endif
-    @if($registered_facility->isHospital =="1" || $registered_facility->otherClinicService =="1" || $registered_facility->clinicLab =="1" || $registered_facility->ambulSurgCli =="1" )
+    @if($registered_facility->isHospital =="1" || $registered_facility->otherClinicService =="1" || $registered_facility->clinicLab =="1" || $registered_facility->ambulSurgCli =="1"  || $registered_facility->addOnServe =="1" )
     <div class="form-group col-md-3" id="addonservice_div">
         <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/as">
             <i class="fa fa-plus" aria-hidden="true"></i> Add On Service
         </a>
     </div>  
     @endif
-    @if($registered_facility->isHospital =="1" || $registered_facility->otherClinicService =="1" || $registered_facility->clinicLab =="1" || $registered_facility->ambulSurgCli =="1" )
+    @if($registered_facility->isHospital =="1" || $registered_facility->otherClinicService =="1" || $registered_facility->clinicLab =="1" || $registered_facility->ambulSurgCli =="1"  || $registered_facility->addOnServe =="1" )
     <div class="form-group col-md-3" id="changeinservice_div">
         <a class="btn btn-block btn-info btn-flat" type="button" href="{{asset('/client1/changerequest/')}}/{{$registered_facility->regfac_id}}/cs">
             <i class="fa fa-edit" aria-hidden="true"></i> Change in Service
