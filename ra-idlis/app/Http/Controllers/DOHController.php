@@ -4323,7 +4323,10 @@ namespace App\Http\Controllers;
 					try 
 					{
 						$table = 'reg_facility_archive';
-						$archive_loc = 'public/archive/';
+						$employeeData = session('employee_login');
+						$archive_loc = DB::table('branch')->where('regionid','=',$employeeData->rgnid)->SELECT('archive_loc')->first();
+						$archive_loc = $archive_loc->archive_loc . "\\";
+						
 						$employeeData = AjaxController::getCurrentUserAllData();
 						$updated_at = $employeeData['date'].' '.$employeeData['time'];
 						$updated_by = $employeeData['cur_user'];
@@ -4334,7 +4337,6 @@ namespace App\Http\Controllers;
 						switch ($request->action) {
 							case 'add':
 								if($request->hasFile('upload')){
-
 									$uploadFILE = FunctionsClientController::uploadFileArchive($request->upload, $archive_loc.$request->regfac_id);
 
 									$uploadName = $uploadFILE['fileNameToStore'];
@@ -4388,7 +4390,6 @@ namespace App\Http\Controllers;
 
 							case 'settings':
 								
-								$employeeData = session('employee_login');
 								//dd($request);
 								$returnToUser = DB::table('branch')->where('regionid',$employeeData->rgnid)->update([
 									'archive_loc' => $request->archive_loc

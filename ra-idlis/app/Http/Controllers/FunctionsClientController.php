@@ -1446,17 +1446,27 @@ class FunctionsClientController extends Controller {
         return $retArr;
 	}
 
-	public static function uploadFileArchive($dFile, $locationpath="public/archive") {
+	public static function uploadFileArchive($dFile, $locationpath="") {
 		$retArr = [];
 		if(isset($dFile)) {
+
 			$_file = $dFile;
+			
+			if(!file_exists($locationpath))
+			{ mkdir($locationpath); }
+
+
 			$filename = $_file->getClientOriginalName(); 
 	        $filenameOnly = pathinfo($filename,PATHINFO_FILENAME); 
 	        $fileExtension = $_file->getClientOriginalExtension();
 	        $fileNameToStore = $filenameOnly.'_'.(session()->has('employee_login') ? self::getSessionParamObj("employee_login", "uid") : self::getSessionParamObj("uData", "uid")).'_'.Str::random(3).'_'.date('Y_m_d_i_s').'.'.$fileExtension;
 	        $filemMIME = $_file->getMimeType();
-	        $path = $_file->storeAs($locationpath, $fileNameToStore);
+			//$path_realtemp = $_file->getRealPath();
+			//dd($_file->getFileInfo()."");
 	        $fileSize = $_file->getClientSize();
+			$path = $locationpath."\\". $fileNameToStore;
+			File::copy($_file->getFileInfo()."", $path);
+			
 	        $retArr = ['fileExtension'=>$fileExtension, 'fileNameToStore'=>$fileNameToStore, 'fileSize'=>$fileSize, 'mime'=> $filemMIME, 'path'=>$path ];
 	    }
         return $retArr;
