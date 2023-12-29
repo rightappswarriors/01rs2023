@@ -21,11 +21,7 @@
                       <button type="button" class="btn btn-default  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold"><i class="fas fa-fw fa-cog"></i>&nbsp;Archive Settings</button>
                   </a>
               </div>
-
-              <div class="row">
-                <div class="col-sm-12">Archive Path: @isset($archive_loc){{$archive_loc}}@endisset</div>
-              </div>
-
+          
           </div>
           <div class="card-body">
                  <table class="table display" id="example" style="overflow-x: scroll;" >
@@ -49,9 +45,8 @@
                         {{$key->description}}
                       </td>
                       <td>
-                        <a target="_blank" href="file://{{$key->savelocation}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>{{$key->filename}}</a>
+                        <a target="_blank" href="{{ route('OpenFile', $key->filename)}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>{{$key->filename}}</a>
                         <small>
-                        {{ $key->savelocation }}
                           <br/>Created On {{$key->created_at}} By {{$key->created_by}}
                           <br/>Updated On {{$key->updated_at}} By {{$key->updated_by}}
                           <br/>IP Address: {{$key->ipaddress}} 
@@ -93,8 +88,9 @@
                           </button>
                         </div> 
 
-                        <div class="col-sm-3">Archive Path:</div>
+                        <div class="col-sm-3">Diretory Path:</div>
                         <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <input type="file" webkitdirectory = "true"  directory/>
                           <input name="archive_loc" value="@isset($archive_loc){{$archive_loc}}@endisset" required class="form-control" data-parsley-required-message="*<strong>Display Name</strong> required">
                         </div>
 
@@ -107,6 +103,7 @@
             </div>
           </div>
         </div>
+        
   </div>
 
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -117,7 +114,7 @@
               <h5 class="modal-title text-center"><strong>Add New File Upload</strong></h5>
               <hr>
               <div class="container">
-                  <form id="addRgn"  data-parsley-validate  enctype="multipart/form-data">
+                  <form id="addRgn"  data-parsley-validate>
                     <div class="row">
                         {{ csrf_field() }}
                         <input type="hidden" name="action" value="add">
