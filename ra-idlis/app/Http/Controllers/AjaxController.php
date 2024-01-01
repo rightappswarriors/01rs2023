@@ -10854,7 +10854,7 @@ public static function forDoneHeadersNew($appid,$monid,$selfAssess,$isPtc = fals
 		$data = DB::table('branch')->select('archive_loc')->where('regionid',$employeeData->rgnid)->first();
 		$archive_loc = ($data->archive_loc ?? null);
 
-		return $archive_loc;
+		return str_replace("\\\\", "\\", $archive_loc);
 	}
 
 } // end of class

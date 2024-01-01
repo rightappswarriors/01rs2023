@@ -49,7 +49,8 @@
                         {{$key->description}}
                       </td>
                       <td>
-                        <a target="_blank" href="file://{{$key->savelocation}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>{{$key->filename}}</a>
+                        <a target="_blank" href="file:///D:/olrs-archive/14/SAMPLE%20DOCUMENT_ADMIN_baB_2023_12_29_01_44.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>Test</a>
+                        <br/><!-- a target="_blank" href="file://{{$key->savelocation}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>{{$key->filename}}</a -->
                         <small>
                         {{ $key->savelocation }}
                           <br/>Created On {{$key->created_at}} By {{$key->created_by}}
@@ -86,6 +87,7 @@
                     <div class="row">
                         {{ csrf_field() }}
                         <input type="hidden" name="action" value="settings">
+                        <input type="hidden" name="settings_facility_rgnid" value="{{$user->rgnid}}">
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display: none" id="AddErrorAlert" role="alert">
                           <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
                           <button type="button" class="close" onclick="$('#AddErrorAlert').hide(1000);" aria-label="Close">
@@ -263,7 +265,7 @@
               data: data,
               success: function(data) {
                 if (data == 'DONE') {
-                    alert('Successfully Added New Archive Upload');
+                    alert('Settings successfully saved.');
                     location.reload();
                 } else if (data == 'ERROR'){
                     $('#AddErrorAlert').show(100);
