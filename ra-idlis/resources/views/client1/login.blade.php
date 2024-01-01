@@ -645,6 +645,7 @@
         }
         getCurInd(curDispTabs, cnName);
       }
+      
       function procAfter(tName) {
         if(tName in _arrName) {
           let curDom = document.getElementsByName(_arrName[tName])[0], curInOf = _allObj.indexOf(tName);

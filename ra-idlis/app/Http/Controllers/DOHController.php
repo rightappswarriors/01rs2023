@@ -4389,12 +4389,21 @@ namespace App\Http\Controllers;
 								break;
 
 							case 'settings':
-								
-								//dd($request);
-								$returnToUser = DB::table('branch')->where('regionid',$employeeData->rgnid)->update([
-									'archive_loc' => $request->archive_loc
-								]);
 
+								$regionid = $employeeData['rgnid'];
+								$grpid = $employeeData['grpid'];
+
+								if($grpid == "" OR $grpid == "NA")
+								{
+									$regionid = $request->settings_facility_rgnid;
+								}
+								$returnToUser = DB::table('branch')
+											->where('regionid',$regionid)
+											->update([
+									'archive_loc' => str_replace("\\", "\\\\",$request->archive_loc)
+									]);
+
+								$returnToUser=1;
 								break;
 						}
 						
