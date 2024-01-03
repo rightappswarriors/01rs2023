@@ -1756,7 +1756,20 @@ class NewClientController extends Controller {
 					return redirect('client1/apply/app/'.$retTable[0]->hfser_id.'/'.$appid.'');
 				}
 
-				$x08_ft = DB::table('x08_ft')->where('appid',$appid)->join('facilitytyp','facilitytyp.facid','x08_ft.facid')->where('facilitytyp.servtype_id',2)->get();
+				/*$x08_ft = DB::table('x08_ft')
+						->where('appid',$appid)->join('facilitytyp','facilitytyp.facid','x08_ft.facid')
+						->where('facilitytyp.servtype_id',2)->get();*/
+
+				$x08_ft = DB::table('x08_ft')->select('x08_ft.*', 'facilitytyp.*')
+						->join('facilitytyp','facilitytyp.facid','=','x08_ft.facid')
+						->leftJoin('appform','appform.appid','=','x08_ft.appid')
+						->where('x08_ft.appid','=',$appid)
+						->where(function ($query) {
+							$query->where('servtype_id','=','2')
+								->orWhere('appform.hgpid','=','1+
+								');
+						})->get();
+				
 				if(count($x08_ft) > 0){
 					foreach($x08_ft as $table){
 						if(!in_array($table->facname, $arrayFaci)){
@@ -3526,7 +3539,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'regservices'			=> $regservices,
 					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee", TRUE),
 					'chgfil_sf'				=> FunctionsClientController::getChargesByAppID($appid, "Service Fee", TRUE),
-					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee", TRUE)					
+					'chgfil_af'				=> FunctionsClientController::getChargesByAppID($appid, "Ambulance Fee", TRUE),
+					'savingStat'			=> $savingStat				
 					//DB::table('chgfil')->where([['appform_id', $appid]])->get()
 				];
 				if($functype == 'annexa')
@@ -3756,7 +3770,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					];
 					
 					$data = array_merge($data, $data2);
-
 				}
 				
 				return view($locRet, $data);

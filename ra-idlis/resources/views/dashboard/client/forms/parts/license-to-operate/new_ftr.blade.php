@@ -1780,21 +1780,24 @@ if('{!!isset($fAddress)&&(count($fAddress) > 0)!!}'){
     });
 
     var apptypenew = '{!! $apptypenew !!}';
+    var aptid = '{!! $fAddress[0]->aptid !!}';
 
     console.log(apptypenew);
 
-    if(apptypenew == "renewal"){
+    if(aptid == "R"){
 
     document.getElementById("aptidnew").value = 'R';
     document.getElementById("appid").value = null;
+    document.getElementById("div_license_number").removeAttribute("hidden");
+    document.getElementById("div_license_validity").removeAttribute("hidden");
     document.getElementById("renewal").removeAttribute("hidden");
-    document.getElementById("license_number").removeAttribute("hidden");
-    document.getElementById("valididty").removeAttribute("hidden");
     
 
 
     }else{
-    document.getElementById("appid").value = appid;
+        document.getElementById("appid").value = appid;
+        document.getElementById("div_license_number").setAttribute("hidden", "hidden");
+        document.getElementById("div_license_validity").setAttribute("hidden", "hidden");
     }
 
    
@@ -2180,8 +2183,13 @@ jQuery(document).ready(function(){
     });
 
     if(jQuery('#aptidnew').val() == 'R'){
-        jQuery('#license_number').removeAttr('hidden');
-        jQuery('#validity').removeAttr('hidden');
+        jQuery('#div_license_number').removeAttr('hidden');
+        jQuery('#div_license_validity').removeAttr('hidden');
+    }
+    else{
+        
+        document.getElementById("div_license_number").setAttribute("hidden", "hidden");
+        document.getElementById("div_license_validity").setAttribute("hidden", "hidden");
     }
 
 
