@@ -178,6 +178,10 @@ class LtoAppController extends Controller
         $appform->aptid                 = $request->aptid;
         $appform->hgpid                 = $request->hgpid;//6-22-2021
         $appform->appComment            = $request->remarks;
+        $appform->license_number        = $request->license_number;
+        $appform->license_validity      = $request->license_validity;
+        
+        $appform->head_of_facility_name = $request->head_of_facility_name;
   
         if($request->saveas == 'final'){
             $appform->draft = null;

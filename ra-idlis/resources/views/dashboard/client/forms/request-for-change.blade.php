@@ -90,7 +90,17 @@
                                 <!---  Main Form  -->
 
                                 <!---  Main Form Submit -->
-                                @if($functype == 'main' || $functype == '')
+                                @if($savingStat =='final')
+                                    
+                                    <div class="row">
+                                        <div class="text-center" style="margin:auto; margin-top:10px;">
+                                            <a class="btn btn-secondary action-btn btn-block"  href="{{asset('client1/apply')}}">
+                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Application Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                @elseif(($functype == 'main' || $functype == '') && $savingStat !='final')
                                 
                                     @isset($appid)
                                         @if($appid > 0)
@@ -108,13 +118,12 @@
                                             @include('dashboard.client.forms.parts-change.modal-submission-confirmation')
                                         @endif
                                     @endisset
-
-
+                                
                                 @else
                                     
                                     <div class="row">
                                         <div class="text-center" style="margin:auto; margin-top:10px;">
-                                            <a class="btn btn-secondary action-btn btn-block" href="{{asset('client1/changerequest')}}/{{$registered_facility->regfac_id}}/main">
+                                            <a class="btn btn-secondary action-btn btn-block"  href="{{asset('client1/changerequest')}}/{{$registered_facility->regfac_id}}/main">
                                                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Main Form
                                             </a>
                                         </div>

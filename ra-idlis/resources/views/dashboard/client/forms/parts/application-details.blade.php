@@ -11,7 +11,7 @@
 
 <div class="form-group col-md-6 change-div">
     <label for="approving_authority_pos">Application Type<span class="text-danger">*</span></label>
-    <select class="form-control" id="aptidnew" name="aptidnew" disabled >
+    <select class="form-control" id="aptidnew" name="aptidnew"  onchange="aptidnewOnChange()" disabled>
     
         <option value="IN" selected="selected" >Initial New</option>
         <option value="R">Renewal</option>
@@ -54,20 +54,29 @@
         @endif
     </div>
 
-    <div class="input-group">
+    <div class="input-group">        
         <input class="form-control" id="typeApp" type="text" value="{{ $value }}" readonly>
     </div>
 </div>
 
-<div class="form-group col-md-6 change-div">
-    <label for="approving_authority_pos">License/Accreditation Number </label>
-    <input class="form-control" id="license_number" type="text" hidden value="">
+@php $hiddenfield_renewal = "hidden"; @endphp
+
+@if(array_key_exists('type', $_GET))  
+    @if($_GET['type'] == "r")
+    @php $hiddenfield_renewal = ""; @endphp 
+    @endif 
+@endif
+
+<div id="div_license_number" class="form-group col-md-6 change-div">
+    <label for="approving_authority_pos">Previous License/Accreditation Number   <span class="text-danger">*</span></label>
+    <input class="form-control" name="license_number"  id="license_number"   type="text" value="{{isset($fAddress) && count($fAddress) > 0 ? $fAddress[0]->license_number : null}}"  required>
 </div>
 
-<div class="form-group col-md-6 change-div">
-    <label for="approving_authority_pos">Validity</label>
-    <input class="form-control" id="validity" type="text" hidden value="">
+<div id="div_license_validity" class="form-group col-md-6 change-div"  >
+    <label for="approving_authority_pos">Previous Validity Date  <span class="text-danger">*</span></label>
+    <input class="form-control"  name="license_validity" id="license_validity"   type="date" value="{{isset($fAddress) && count($fAddress) > 0 ? $fAddress[0]->license_validity : null}}" required>
 </div>
+
 
 @if(app('request')->input('type') == 'rxr')
     <div class="form-group col-md-6 change-div">
@@ -116,5 +125,22 @@
         //      $("#noofbed").attr("disabled", true);
         // });
     @endif
+</script>
+
+
+
+<script>
+    function aptidnewOnChange() {
+        var x = document.getElementById("aptidnew").value;
+        document.getElementById("div_license_number").setAttribute("hidden", "hidden");
+        document.getElementById("div_license_validity").setAttribute("hidden", "hidden");
+        
+        if(x == 'R')
+        {
+            document.getElementById("div_license_number").removeAttribute("hidden");
+            document.getElementById("div_license_validity").removeAttribute("hidden");
+        }
+
+    }
 </script>
 

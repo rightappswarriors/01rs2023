@@ -291,6 +291,7 @@
 								console.log('{{$retTable[0]->addonDesc}}')
 							</script>
 							<div class="col-md-5 pl-5 mt-3 contr" >
+								
 								@if($disercap != 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
 									{{((isset($retTable[0]->noofdialysis)) ? "Dialysis Clinic (".$retTable[0]->noofdialysis."), " : "")}} 	
 								@endif
