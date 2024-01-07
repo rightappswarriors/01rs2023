@@ -1647,12 +1647,12 @@
                                     <li><a href="{{ asset('/employee/dashboard/manage/client_users') }}"><i class="fa fa-user-circle"></i> Client Users</a></li>
 
                                 </span>
-
+                                {{-- 
                                 <span class="MG003_allow">
 
                                     <li><a href="{{ asset('employee/dashboard/manage/applicants') }}"><i class="fa fa-users"></i> Applicant Accounts</a></li>
 
-                                </span>
+                                </span> --}}
 
                                 <span class="MG004_allow">
 

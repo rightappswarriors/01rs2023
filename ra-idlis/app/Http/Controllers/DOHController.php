@@ -4614,7 +4614,7 @@ namespace App\Http\Controllers;
 				$coaFlag = '';
 				$data = AjaxController::getAllDataEvaluateOne($appid);
 				$coaFlag = ($forhfsrb && strtolower($data->hfser_id) == 'coa');
-				
+
 				if ($request->isMethod('get')) 
 				{ 
 					$Cur_useData  = AjaxController::getCurrentUserAllData();
@@ -4716,7 +4716,12 @@ namespace App\Http\Controllers;
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 						$checdata = DB::table('appform')->where('appid', '=', $appid)->first();
 
-						if(is_null($checdata->isrecommended)){
+
+						if(strtolower($office)  == 'xray' || strtolower($office)  == 'pharma')
+						{
+							//check the AjaxController:JudgeApplication
+						}
+						else if(is_null($checdata->isrecommended)){
 								$updateData = array(
 									'isrecommended'=>1,
 									'recommendedby' => $Cur_useData['cur_user'],
@@ -4774,8 +4779,9 @@ namespace App\Http\Controllers;
 							AjaxController::setAppForm_UpdatedDate($appid);
 							
 							return ($test ? 'DONE' : 'ERROR');
-						} else 
-						{
+
+						} else {
+
 							$test = DB::table('appform')->where('appid',$appid)->update(['documentSent' => Carbon::now()->toDateString()]);
 
 							if($test){
@@ -4999,6 +5005,7 @@ namespace App\Http\Controllers;
 		public function evaluateLTOReq(Request $request){
 			try {
 				$ret = DB::table($request->table)->where('appid',$request->appid)->where('id',$request->id)->update(['evaluation' => $request->eval, 'remarks' => $request->remarks]);
+
 				if($ret){
 					return 'done';
 				} 

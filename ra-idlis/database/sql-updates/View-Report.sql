@@ -8,7 +8,7 @@ appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.statu
 appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos, 
 
 
-appform.documentSent, appform.isrecommended, appform.recommendedippaddr,  appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.documentSent, appform.isrecommended, appform.recommendedippaddr,  CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.t_date, CASE WHEN appform.t_date IS NOT NULL THEN DATE_FORMAT(appform.t_date, "%M %d, %Y") ELSE 'Not officially applied yet.' END AS formattedDate, 
@@ -54,7 +54,7 @@ appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.statu
 appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos, 
 
 
-appform.documentSent, appform.isrecommended, appform.recommendedippaddr,  appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.documentSent, appform.isrecommended, appform.recommendedippaddr,  CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.t_date, CASE WHEN appform.t_date IS NOT NULL THEN DATE_FORMAT(appform.t_date, "%M %d, %Y") ELSE 'Not officially applied yet.' END AS formattedDate, 
@@ -95,7 +95,7 @@ SELECT
 appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname,  appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid, appform.facmode, facmode.facmdesc, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos, 
 
-appform.isrecommended, appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.isrecommended, CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.t_date, CASE WHEN appform.t_date IS NOT NULL THEN DATE_FORMAT(appform.t_date, "%M %d, %Y") ELSE 'Not officially applied yet.' END AS formattedDate,
 
@@ -144,7 +144,7 @@ SELECT
 appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname,  appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, subclass.classname AS subclassname, appform.funcid, appform.facmode, facmode.facmdesc, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos, 
 
-appform.isrecommended, appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.isrecommended, CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.t_date, CASE WHEN appform.t_date IS NOT NULL THEN DATE_FORMAT(appform.t_date, "%M %d, %Y") ELSE 'Not officially applied yet.' END AS formattedDate,
 
@@ -193,7 +193,7 @@ SELECT
 appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname,  appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, subclass.classname AS subclassname, appform.funcid, appform.facmode, facmode.facmdesc, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, barangay.brgyname, city_muni.cmname, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos, 
 
-appform.isrecommended, appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.isrecommended, CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.t_date, CASE WHEN appform.t_date IS NOT NULL THEN DATE_FORMAT(appform.t_date, "%M %d, %Y") ELSE 'Not officially applied yet.' END AS formattedDate,
 

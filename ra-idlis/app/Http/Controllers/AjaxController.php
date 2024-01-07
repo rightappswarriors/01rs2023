@@ -70,6 +70,7 @@ use ZipStream\Option\Archive;
 				return 'ERROR';
 			}
 		}
+
 		//set created date of appform upon first insert
 		public static function setAppForm_CreatedDate(String $appid)
 		{
