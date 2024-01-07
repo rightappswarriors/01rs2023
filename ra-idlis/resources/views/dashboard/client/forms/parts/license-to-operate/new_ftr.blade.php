@@ -1780,19 +1780,23 @@ if('{!!isset($fAddress)&&(count($fAddress) > 0)!!}'){
     });
 
     var apptypenew = '{!! $apptypenew !!}';
-    var aptid = '{!! $fAddress[0]->aptid !!}';
+    var aptid = '{!!((count($fAddress) > 0) ? $fAddress[0]->aptid: "")!!}';
 
-    console.log(apptypenew);
+    @if(array_key_exists('type', $_GET))  
+        @if($_GET['type'] == "r")
+        aptid = 'R';
+        @endif 
+    @endif
+
+    console.log(aptid);
 
     if(aptid == "R"){
 
-    document.getElementById("aptidnew").value = 'R';
-    document.getElementById("appid").value = null;
-    document.getElementById("div_license_number").removeAttribute("hidden");
-    document.getElementById("div_license_validity").removeAttribute("hidden");
-    document.getElementById("renewal").removeAttribute("hidden");
-    
-
+        document.getElementById("aptidnew").value = 'R';
+        document.getElementById("appid").value = null;
+        document.getElementById("div_license_number").removeAttribute("hidden");
+        document.getElementById("div_license_validity").removeAttribute("hidden");
+        document.getElementById("renewal").removeAttribute("hidden");    
 
     }else{
         document.getElementById("appid").value = appid;
