@@ -494,7 +494,7 @@
           </div>
 
           <div>
-       
+            
           @if($office != 'pharma' && $office != 'xray')
             @if($AppData->aptid == 'R')
               <div class="col mt-3" style="width: 300px">

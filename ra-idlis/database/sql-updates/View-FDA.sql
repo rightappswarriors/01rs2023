@@ -31,7 +31,7 @@ appform.isInspected, appform.inspectedby,
 appform.inspecteddate, CASE WHEN appform.inspecteddate IS NOT NULL THEN DATE_FORMAT(appform.inspecteddate, "%M %d, %Y") ELSE NULL END AS formattedInspectedDate,
 appform.inspectedtime, CASE WHEN appform.inspectedtime IS NOT NULL THEN DATE_FORMAT(appform.inspectedtime, "%M %d, %Y") ELSE NULL END AS formattedInspectedTime,
 
-appform.isrecommended, appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.isrecommended, appform.recommendedby, CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.recommendedtime, CASE WHEN appform.recommendedtime IS NOT NULL THEN DATE_FORMAT(appform.recommendedtime, "%h:%i %p") ELSE NULL END AS formattedTimeEval,
 
@@ -156,7 +156,7 @@ appform.isInspected, appform.inspectedby,
 appform.inspecteddate, CASE WHEN appform.inspecteddate IS NOT NULL THEN DATE_FORMAT(appform.inspecteddate, "%M %d, %Y") ELSE NULL END AS formattedInspectedDate,
 appform.inspectedtime, CASE WHEN appform.inspectedtime IS NOT NULL THEN DATE_FORMAT(appform.inspectedtime, "%M %d, %Y") ELSE NULL END AS formattedInspectedTime,
 
-appform.isrecommended, appform.recommendedby, evaluator.fname||' ' || evaluator.mname ||' ' || evaluator.lname AS recommendedbyName, 
+appform.isrecommended, appform.recommendedby, CONCAT(evaluator.fname, ' ', evaluator.mname, ' ', evaluator.lname) AS recommendedbyName, 
 appform.recommendeddate, CASE WHEN appform.recommendeddate IS NOT NULL THEN DATE_FORMAT(appform.recommendeddate, "%M %d, %Y") ELSE NULL END AS formattedDateEval, 
 appform.recommendedtime, CASE WHEN appform.recommendedtime IS NOT NULL THEN DATE_FORMAT(appform.recommendedtime, "%h:%i %p") ELSE NULL END AS formattedTimeEval,
 
