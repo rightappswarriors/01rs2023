@@ -1416,6 +1416,7 @@
                                 <li class="#"><a href="{{ asset('/employee/dashboard/facilityrecords') }}"><i class="fa fa-fw fa-bank"></i>  Registered Facilities</a></li>
                             </span>
                             <li><a href="{{asset('/employee/dashboard/facilityrecords/archive')}}"><i class="fa fa-fw fa-folder"></i> Archive of Files</a></li>
+                            <li><a href="{{asset('/employee/dashboard/facilityrecords/archiveall')}}"><i class="fa fa-fw fa-folder"></i> All Remaining Archive</a></li>
                         </ul>
                     
                     </li>

@@ -296,8 +296,8 @@ use ZipStream\Option\Archive;
 		public static function getAllFrom($table,$select = '*'){
 			return DB::table($table)->select($select)->get();
 		}
-		public static function getAllFromWhere($table,$cond = array()){
-			return DB::table($table)->where($cond)->get();
+		public static function getAllFromWhere($table,$cond = array(), $select = '*'){
+			return DB::table($table)->select($select)->where($cond)->get();
 		}
 		public static function checkTokenforChangePassword($token)
 		{
