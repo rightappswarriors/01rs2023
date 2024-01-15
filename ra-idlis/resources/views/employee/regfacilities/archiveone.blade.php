@@ -13,8 +13,8 @@
                 <input type="" id="token" value="{{ Session::token() }}" hidden>
                   <a class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold" href="{{asset('/employee/dashboard/facilityrecords/archive')}}">Back</a>&nbsp;
                 
-                  <a href="#" title="Add New Services Upload" data-toggle="modal" data-target="#myModal">
-                      <button type="button" class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold"><i class="fa fa-plus-circle"></i>&nbsp;Add Files</button>
+                  <a href="#" title="Add New Services Upload" onclick="clearDataForAdd('add', '{{$user->regfac_id}}')" data-toggle="modal" data-target="#myModal">
+                      <button type="button" class="btn btn-primary  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold"><i class="fa fa-plus-circle"></i>&nbsp;Add Facility Record</button>
                   </a>
 
                   <a href="#" title="Archive Settings" data-toggle="modal" data-target="#myModalSettings">
@@ -23,53 +23,57 @@
               </div>
 
               <div class="row">
-                <div class="col-sm-12">Archive Path: @isset($archive_loc){{$archive_loc}}@endisset</div>
+                <div class="col-sm-12">Archive Path: @isset($archive_loc){{$archive_loc}}@endisset 
+                  <button type="button" class="btn btn-outline-default" onClick="parent.location='file:///C:/'"><i class="fa fa-fw fa-folder"></i></button>
+                </div>
               </div>
 
           </div>
-          <div class="card-body">
-                 <table class="table display" id="example" style="overflow-x: scroll;" >
+          <div class="card-body table-responsive  backoffice-list">
+              <table class="table table-hover" style="font-size:12px;" id="1example">
                 <thead>
-                  <tr>
-                    <th>Line No.</th>
-                    <th>Record Type</th>
-                    <th>Description</th>
-                    <th>Uploaded File</th>
-                    <th style="width: 25%"><center>Options</center></th>
+                  <tr class="text-center">
+                    <th scope="col" nowrap style="width: 35px;">Line No.<br/>[ID No.]</th>
+                    <th scope="col" nowrap >Issuance Type/<br/>Year/<br/>Region</th>
+                    <th scope="col" >Temp Facility Code</th>
+                    <th scope="col">NHFR Facility Code</th>
+                    <th scope="col" nowrap>Facility Name<br/>[Type of Facility]</th>
+                    <th scope="col">Directory Path</th>
+                    <th scope="col">D-Track No.<br/><br/>[Last Updated]</th>
+                    <th scope="col">PTC No.<br/><br/>LTO/ATO/ COA/COR No.</th>
+                    <th scope="col">Options</th>
                   </tr>
+
                 </thead>
                 <tbody>
                   @if (isset($data ))
-                  @php $i=0; @endphp
-                  @foreach ($data as $key)
-                    <tr>
-                      <td>{{++$i}}</td>
-                      <td>{{$key->rectype_desc}}<br/><br/><small>[Archive ID {{$key->rfa_id}}]</small></td>
-                      <td>
-                        {{$key->description}}
-                      </td>
-                      <td>
-                        <a target="_blank" href="file:///D:/olrs-archive/14/SAMPLE%20DOCUMENT_ADMIN_baB_2023_12_29_01_44.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>Test</a>
-                        <br/><!-- a target="_blank" href="file://{{$key->savelocation}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>{{$key->filename}}</a -->
-                        <small>
-                        {{ $key->savelocation }}
-                          <br/>Created On {{$key->created_at}} By {{$key->created_by}}
-                          <br/>Updated On {{$key->updated_at}} By {{$key->updated_by}}
-                          <br/>IP Address: {{$key->ipaddress}} 
-                        </small>                        
-                      </td>
-                      <td>
-                        <center>
-                          <span class="FD007_update">
-                            <button type="button" class="btn btn-outline-warning" onclick="showData('{{$key->rfa_id}}', '{{$key->regfac_id}}', '{{$key->rectype_id}}', '{{$key->description}}','{{$key->savelocation}}','{{$key->filename}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-edit"></i></button>
-                          </span>
-                          <span class="FD007_cancel">
-                            <button type="button" class="btn btn-outline-danger" onclick="showDelete('{{$key->rfa_id}}');" data-toggle="modal" data-target="#DelGodModal"><i class="fa fa-fw fa-trash"></i></button>
-                          </span>
-                        </center>
-                      </td>
-                    </tr>
-                  @endforeach
+                    @php $i=0; @endphp
+                    @foreach ($data as $key)
+                      <tr class="text-center">
+                        <td>{{++$i}}<br/>[{{$key->rfa_id}}]</td>
+                        <td>{{$key->hfser_id}}<br/>{{$key->year}}<br/>{{$key->rgnid}}</td>
+                        <td>{{$key->nhfcode_temp}}</td>
+                        <td>{{$key->nhfcode}}</td>
+                        <td>{{$key->facilityname}}<br/>[{{$key->hgpid}}]</td>
+                        <td><a href="file:///{{$key->savelocation}}">{{$key->savelocation}}</a></td>
+                        <td>{{$key->dtrackno}}<br/>[On {{$key->updated_at}} By: {{$key->updated_by}}]</td>
+                        <td>{{$key->ptcid}}<br/><br/>{{$key->ltoid}}{{$key->coaid}}{{$key->atoid}}{{$key->corid}}</td>
+                        <td>
+                          <center>
+                            <span class="FD007_opendir">
+                              <button type="button" class="btn btn-outline-warning" onClick="parent.location='file:///{{$key->savelocation}}' "><i class="fa fa-fw fa-folder"></i></button>
+                            </span>
+                            @php $savelocation =$key->savelocation;  @endphp
+                            <span class="FD007_update">
+                              <button type="button" class="btn btn-outline-warning" onclick="showData('edit','{{$key->rfa_id}}', '{{$key->regfac_id}}', '{{$savelocation}}', '{{$key->hfser_id}}', '{{$key->nhfcode}}', '{{$key->nhfcode_temp}}', '{{$key->year}}', '{{$key->rgnid}}', '{{$key->facilityname}}', '{{$key->dtrackno}}', '{{$key->conid}}', '{{$key->ltoid}}', '{{$key->coaid}}', '{{$key->atoid}}', '{{$key->corid}}', '{{$key->hgpid}}', '{{$key->ptcid}}');" data-toggle="modal" data-target="#myModal"><i class="fa fa-fw fa-edit"></i></button>
+                            </span>
+                            <span class="FD007_cancel">
+                              <button type="button" class="btn btn-outline-danger" onclick="showDelete('{{$key->rfa_id}}');" data-toggle="modal" data-target="#DelGodModal"><i class="fa fa-fw fa-trash"></i></button>
+                            </span>
+                          </center>
+                        </td>
+                      </tr>
+                    @endforeach
                   @endif
                 </tbody>
               </table>
@@ -116,14 +120,15 @@
           <div class="modal-content" style="border-radius: 0px;border: none;">
             <div class="modal-body text-justify" style=" background-color: #272b30;
           color: white;">
-              <h5 class="modal-title text-center"><strong>Add New File Upload</strong></h5>
+              <h5 class="modal-title text-center"><strong>Add Health Facility Record</strong></h5>
               <hr>
               <div class="container">
                   <form id="addRgn"  data-parsley-validate  enctype="multipart/form-data">
                     <div class="row">
                         {{ csrf_field() }}
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="regfac_id" value="{{$user->regfac_id}}">
+                        <input type="hidden" name="action" id="action" value="add">
+                        <input type="hidden" name="regfac_id" id="regfac_id" value="{{$user->regfac_id}}">
+	                  	  <input type="hidden" name="id" id="id">
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display: none" id="AddErrorAlert" role="alert">
                           <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
                           <button type="button" class="close" onclick="$('#AddErrorAlert').hide(1000);" aria-label="Close">
@@ -131,24 +136,94 @@
                           </button>
                         </div> 
 
-                        <div class="col-sm-5">File Type:</div>
-                        <div class="col-sm-7" style="margin:0 0 .8em 0;">
-                          <select name="rec" class="form-control" data-parsley-required-message="*<strong>Facility Service Type</strong> required" required>
+                        <div class="col-sm-3">Region:</div>
+                        <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <select name="rgnid" id="rgnid" class="form-control" data-parsley-required-message="*<strong>Region Name</strong> required" required>
                             <option value="" selected="" disabled="" hidden readonly>Please Select</option>
-                            @foreach($recordtype as $fa)
-                              <option value="{{$fa->rectype_id}}">{{$fa->rectype_desc}}</option>
+                            @foreach($a_regions as $fa)
+                              <option value="{{$fa->rgnid}}">{{$fa->rgn_desc}}</option>
                             @endforeach
                           </select>
                         </div>
 
-                        <div class="col-sm-5">Description:</div>
-                        <div class="col-sm-7" style="margin:0 0 .8em 0;">
-                          <input name="dname" required class="form-control" data-parsley-required-message="*<strong>Display Name</strong> required">
+                        <div class="col-sm-3">Authorization Type:</div>
+                        <div class="col-sm-5" style="margin:0 0 .8em 0;">
+                          <select name="hfser_id" id="hfser_id" class="form-control" data-parsley-required-message="*<strong>Authorization Type</strong> required" required>
+                            <option value="" selected="" disabled="" hidden readonly>Please Select</option>
+                            @foreach($a_hfaci_service_type as $fa)
+                              <option value="{{$fa->hfser_id}}">{{$fa->hfser_desc}}</option>
+                            @endforeach
+                          </select>
                         </div>
 
-                        <div class="col-sm-5">Upload file:</div>
-                        <div class="col-sm-7" style="margin:0 0 .8em 0;">
-                          <input type="file" required class="form-control" name="upload" data-parsley-required-message="*<strong>Display Name</strong> required">
+                        <div class="col-sm-2">Year:</div>
+                        <div class="col-sm-2" style="margin:0 0 .8em 0;">
+                          <input name="year" id="year" type="text" required class="form-control" data-parsley-required-message="*<strong>Year Name</strong> required">
+                        </div>
+                        
+                        <div class="col-sm-3">NHFR Code:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="nhfcode" id="nhfcode" class="form-control" data-parsley-required-message="*<strong>NHFR Code</strong> required">
+                        </div>
+                        
+                        <div class="col-sm-3">Temp Facility Code:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="nhfcode_temp" id="nhfcode_temp" class="form-control" data-parsley-required-message="*<strong>Temp Facility Code</strong> required">
+                        </div>
+
+                        <div class="col-sm-3">Facility Name:</div>
+                        <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <input name="facilityname" id="facilityname" required class="form-control" data-parsley-required-message="*<strong>Facility Name</strong> required">
+                        </div>
+
+                        
+                        <div class="col-sm-3">Facility Type:</div>
+                        <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <select name="hgpid" id="hgpid" class="form-control" data-parsley-required-message="*<strong>Facility Type</strong> required" required>
+                            <option value="" selected="" disabled="" hidden readonly>Please Select</option>
+                            @foreach($a_factype as $fa)
+                              <option value="{{$fa->hgpid}}">{{$fa->hgpdesc}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        
+                        <div class="col-sm-3">Directory Path:</div>
+                        <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <input name="savelocation" id="savelocation" required class="form-control" data-parsley-required-message="*<strong>Directory Path</strong> required">
+                        </div>
+                        
+                        <div class="col-sm-3">D-Track No.:</div>
+                        <div class="col-sm-9" style="margin:0 0 .8em 0;">
+                          <input name="dtrackno" id="dtrackno" required class="form-control" data-parsley-required-message="*<strong>D-Track No.</strong> required">
+                        </div>
+
+                        <div class="col-sm-12">
+                          <hr/>
+                        </div>
+
+                        <div class="col-sm-3">PTC No.:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="ptcid" id="ptcid" class="form-control" data-parsley-required-message="*<strong>PTC No.</strong> required">
+                        </div>
+                        
+                        <div class="col-sm-3">LTO No.:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="ltoid" id="ltoid" class="form-control" data-parsley-required-message="*<strong>LTO No.</strong> required">
+                        </div>
+                        
+                        <div class="col-sm-3">COA No.:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="coaid" id="coaid" class="form-control" data-parsley-required-message="*<strong>COA No.</strong> required">
+                        </div>
+
+                        <div class="col-sm-3">ATO No.:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="atoid" id="atoid" class="form-control" data-parsley-required-message="*<strong>ATO No.</strong> required">
+                        </div>
+
+                        <div class="col-sm-3">COR No.:</div>
+                        <div class="col-sm-3" style="margin:0 0 .8em 0;">
+                          <input name="corid" id="corid" class="form-control" data-parsley-required-message="*<strong>COR No.</strong> required">
                         </div>
 
                         <div class="col-sm-12">
@@ -161,63 +236,7 @@
           </div>
         </div>
   </div>
-  <div class="modal fade" id="GodModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 0px;border: none;">
-          <div class="modal-body" style=" background-color: #272b30;color: white;">
-            <h5 class="modal-title text-center"><strong>Edit File Upload</strong></h5>
-            <hr>
-            <div class="container">
-                <form id="EditNow" data-parsley-validate>
-                    {{@csrf_field()}}
-                    <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display: none" id="EditErrorAlert" role="alert">
-                        <strong><i class="fas fa-exclamation"></i></strong>&nbsp;An <strong>error</strong> occurred. Please contact the system administrator.
-                        <button type="button" class="close" onclick="$('#EditErrorAlert').hide(1000);" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                  <span id="EditBody">
 
-                  	<div class="col-sm-12">File Type:</div>
-	                  <div class="col-sm-12" style="margin:0 0 .8em 0;">
-                      <select name="editrec" class="form-control" data-parsley-required-message="*<strong>Facility Service Type</strong> required" required>
-                        <option value="" selected="" disabled="" hidden readonly>Please Select</option>
-                        @foreach($recordtype as $fa)
-                          <option value="{{$fa->rectype_id}}">{{$fa->rectype_desc}}</option>
-                        @endforeach
-                      </select>
-	                  </div>
-
-	                  <div class="col-sm-12">Description:</div>
-	                  <div class="col-sm-12" style="margin:0 0 .8em 0;">
-	                 	  <input name="editdname" required class="form-control" data-parsley-required-message="*<strong>Display Name</strong> required">
-	                  </div>
-
-	                  <div class="col-sm-12">Upload file:</div>
-	                  <div class="col-sm-12" style="margin:0 0 .8em 0;">
-	                  	<input type="hidden" name="action" value="edit">
-	                  	<input type="hidden" name="editregfac_id">
-	                  	<input type="text" name="editoldfileloc">
-	                  	<input type="text" name="editoldfilename">
-	                  	<input type="hidden" name="id">
-	                  	<input type="file" class="form-control" name="upload">
-	                  </div>
-                    
-                  </span>
-                  <div class="row">
-                    <div class="col-sm-6">
-                    <button type="submit" class="btn btn-success form-control" style="border-radius:0;"><span class="fa fa-sign-up"></span>Save</button>
-                  </div> 
-                  <div class="col-sm-6">
-                    <button type="button" data-dismiss="modal" class="btn btn-outline-danger form-control" style="border-radius:0;"><span class="fa fa-sign-up"></span>Cancel</button>
-                  </div>
-                  </div>
-                </form>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>
   <div class="modal fade" id="DelGodModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 0px;border: none;">
@@ -333,15 +352,32 @@
         }
       });     
 
-      function showData(id,rec,dname,oldfileloc,oldfilename){
-        let arrDom = ['input[name=id]','input[name=editregfac_id]','select[name=editrec]','input[name=editdname]','input[name=editoldfileloc]','input[name=editoldfilename]'];
-        let arrValue = [id,rec,dname,oldfileloc,oldfilename];
+      function clearDataForAdd(action, regfac_id ){
+        let arrDom = ['input[name=id]','input[name=regfac_id]','input[name=savelocation]','select[name=hfser_id]','input[name=nhfcode]','input[name=nhfcode_temp]', 'input[name=year]','select[name=rgnid]','input[name=facilityname]','input[name=dtrackno]','input[name=conid]','input[name=ltoid]', 'input[name=coaid]','input[name=atoid]','input[name=corid]','select[name=hgpid]','input[name=ptcid]'];      
 
-          arrDom.forEach(function(index, el) {
-            if($(index).length > 0){
-              $(index).val(arrValue[el]);
-            }
-          });            
+        arrDom.forEach(function(index, el) {
+
+          if($(index).length > 0){
+            $(index).val('');
+          }
+        });       
+        
+        document.getElementById("action").value = action;
+        document.getElementById("regfac_id").value = regfac_id;     
+      }
+
+      function showData(action, id, regfac_id, savelocation, hfser_id, nhfcode, nhfcode_temp, year, rgnid, facilityname, dtrackno, conid, ltoid, coaid, atoid, corid, hgpid, ptcid){
+        let arrDom = ['input[name=id]','input[name=regfac_id]','input[name=savelocation]','select[name=hfser_id]','input[name=nhfcode]','input[name=nhfcode_temp]', 'input[name=year]','select[name=rgnid]','input[name=facilityname]','input[name=dtrackno]','input[name=conid]','input[name=ltoid]', 'input[name=coaid]','input[name=atoid]','input[name=corid]','select[name=hgpid]','input[name=ptcid]'];
+        let arrValue = [id, regfac_id, savelocation, hfser_id, nhfcode, nhfcode_temp, year, rgnid, facilityname, dtrackno, conid, ltoid, coaid, atoid, corid, hgpid, ptcid];
+
+        arrDom.forEach(function(index, el) {
+
+          if($(index).length > 0){
+            $(index).val(arrValue[el]);
+          }
+        });
+
+        document.getElementById("action").value = action;
       }
       
       function showDelete (id){
