@@ -3,12 +3,6 @@
         <strong class="text-primary "> Ambulance Details:</strong>
     </div>
     <!-- <div class="showifHospital ambuDetails" style="width: 100%;" hidden> -->
-
-    <div class="col-md-12">
-        <span class="text-danger">NOTE: For Owned ambulance, Payments are as follows:</span> <br>
-        Ambulance Service Provider = ₱ 5,000
-        Ambulance Unit (Per Unit) = ₱ 1,000
-    </div>
 </div>
 
 @php 

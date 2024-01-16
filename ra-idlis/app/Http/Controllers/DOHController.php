@@ -4475,7 +4475,19 @@ namespace App\Http\Controllers;
 					{
 						AjaxController::SystemLogs($e);
 						session()->flash('system_error','ERROR');
-						return view('employee.regfacilities	.archive');
+
+						return view('employee.regfacilities.archive',  [
+							'LotsOfDatas' =>null,
+							'arr_fo'=>null, 
+							'recordtype' => AjaxController::getAllFrom('recordtype'),								
+							'a_factype' => AjaxController::getAllFrom('hfaci_grp'),
+							'a_regions' => AjaxController::getAllFrom('region'),
+							'a_hfaci_service_type' => AjaxController::getAllFrom('hfaci_serv_type'),
+							'factype' => null,
+							'regions' => null,
+							'hfaci_service_type' => null,
+							'serv_cap' => null,
+							'_aptid' => null]);
 					}
 				} else 	{
 					//try 
