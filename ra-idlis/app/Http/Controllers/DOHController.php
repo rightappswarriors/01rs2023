@@ -4382,7 +4382,7 @@ namespace App\Http\Controllers;
 								$savelocation =  str_replace("\\", "\\\\",$request->savelocation);
 
 								$returnToUser = DB::table($table)->where('rfa_id',$request->id)->update([
-										'rectype_id' => $request->regfac_id, 
+										'regfac_id' => $request->regfac_id, 
 										'savelocation' => $savelocation, 
 										'computername' => $computername, 
 										'localip' => $localip,  
@@ -4455,11 +4455,15 @@ namespace App\Http\Controllers;
 					try 
 					{
 						$arrType = array();
-						$data = SELF::application_filter($request, 'view_registered_facility');
+						$data = SELF::application_filter($request, 'view_archive_files');
 						
 						return view('employee.regfacilities.archive_all', [
 										'LotsOfDatas' => $data['data'],
 										'arr_fo'=>$data['arr_fo'], 
+										'recordtype' => AjaxController::getAllFrom('recordtype'),								
+										'a_factype' => AjaxController::getAllFrom('hfaci_grp'),
+										'a_regions' => AjaxController::getAllFrom('region'),
+										'a_hfaci_service_type' => AjaxController::getAllFrom('hfaci_serv_type'),
 										'factype' => null,
 										'regions' => null,
 										'hfaci_service_type' => null,
@@ -4473,7 +4477,136 @@ namespace App\Http\Controllers;
 						session()->flash('system_error','ERROR');
 						return view('employee.regfacilities	.archive');
 					}
+				} else 	{
+					//try 
+					//{
+						$table = 'reg_facility_archive';
+						$employeeData = session('employee_login');
+						$archive_loc = DB::table('branch')->where('regionid','=',$employeeData->rgnid)->SELECT('archive_loc')->first();
+						$archive_loc = $archive_loc->archive_loc . "\\";
+						
+						$employeeData = AjaxController::getCurrentUserAllData();
+						$updated_at = $employeeData['date'].' '.$employeeData['time'];
+						$updated_by = $employeeData['cur_user'];
+						$ipaddress = $employeeData['ip'];
+						$localip =  $employeeData['ip'];
+						$computername = "...";
+
+						switch ($request->action) {
+							case 'add':
+									$created_at = $employeeData['date'].' '.$employeeData['time'];
+									$created_by = $employeeData['cur_user'];
+									$regfac_id = $request->regfac_id;
+									
+									if( $regfac_id == "" || $regfac_id == "undefined")
+									{
+										$reg_facid = NULL;
+									}
+
+									$returnToUser = DB::table($table)->insert([
+										'regfac_id' => $regfac_id, 
+										'savelocation' => str_replace("\\", "\\\\",$request->savelocation),
+										'computername' => $computername, 
+										'localip' => $localip, 
+										'ipaddress' => $ipaddress, 
+										'created_at' => $created_at, 
+										'created_by' => $created_by, 
+										'updated_at' => $updated_at, 
+										'updated_by' => $updated_by,
+										'hfser_id' => $request->hfser_id,
+										'nhfcode' => $request->nhfcode,
+										'nhfcode_temp' => $request->nhfcode_temp,
+										'year' => $request->year,
+										'rgnid' => $request->rgnid,
+										'facilityname' => $request->facilityname,
+										'dtrackno' => $request->dtrackno,
+										'conid' => $request->conid,
+										'ltoid' => $request->ltoid,
+										'coaid' => $request->coaid,
+										'atoid' => $request->atoid,
+										'corid' => $request->corid,
+										'hgpid' => $request->hgpid,
+										'ptcid' => $request->ptcid
+									]);
+								break;
+							case 'edit':
+								/*if($request->hasFile('upload')){
+									// AjaxController::deleteUploadedOnPublic($request->oldFilename);
+									$uploadFILE = FunctionsClientController::uploadFileArchive($request->upload, $archive_loc.$request->editregfac_id);
+									$uploadName = $uploadFILE['fileNameToStore'];
+									$savelocation = $uploadFILE['path'];									
+								} else {
+									$uploadName = $request->editoldfilename;
+									$savelocation =  $request->editoldfileloc;
+								}*/
+								
+								$savelocation =  str_replace("\\", "\\\\",$request->savelocation);
+								$regfac_id = $request->regfac_id;
+		
+								if( $regfac_id == "" || $regfac_id == "undefined")
+								{
+									$reg_facid = NULL;
+								}
+
+								$returnToUser = DB::table($table)->where('rfa_id',$request->id)->update([
+										'regfac_id' => $reg_facid, 
+										'savelocation' => $savelocation, 
+										'computername' => $computername, 
+										'localip' => $localip,  
+										'ipaddress' => $ipaddress, 
+										'updated_at' => $updated_at, 
+										'updated_by' => $updated_by,
+
+										'hfser_id' => $request->hfser_id,
+										'nhfcode' => $request->nhfcode,
+										'nhfcode_temp' => $request->nhfcode_temp,
+										'year' => $request->year,
+										'rgnid' => $request->rgnid,
+										'facilityname' => $request->facilityname,
+										'dtrackno' => $request->dtrackno,
+										'conid' => $request->conid,
+										'ltoid' => $request->ltoid,
+										'coaid' => $request->coaid,
+										'atoid' => $request->atoid,
+										'corid' => $request->corid,
+										'hgpid' => $request->hgpid,
+										'ptcid' => $request->ptcid
+									]);
+								break;
+							case 'delete':
+								// AjaxController::deleteUploadedOnPublic($request->oldFilename);
+								$returnToUser = DB::table($table)->where('rfa_id', $request->id)->delete();
+								break;
+
+							case 'settings':
+
+								$regionid = $employeeData['rgnid'];
+								$grpid = $employeeData['grpid'];
+
+								if($grpid == "" OR $grpid == "NA")
+								{
+									$regionid = $request->settings_facility_rgnid;
+								}
+								$returnToUser = DB::table('branch')
+											->where('regionid',$regionid)
+											->update([
+									'archive_loc' => str_replace("\\", "\\\\",$request->archive_loc)
+									]);
+
+								$returnToUser=1;
+								break;
+						}
+						
+						return ($returnToUser >=1 ? 'DONE' : 'ERROR');
+					//} 
+					//catch (Exception $e) 
+					//{
+					//	return $e;
+					//	AjaxController::SystemLogs($e);
+					//	return 'ERROR';
+					//}
 				}
+				
 			}
 			else 
 			{
@@ -14075,6 +14208,67 @@ namespace App\Http\Controllers;
 
 			
 			$data = AjaxController::getAllRegisteredFacilityWithFilter($table, $arr_fo, $fo_rows, $fo_pgno-1); 
+
+			$arr_fo['fo_rowscnt']=$data['rowcount'];
+
+			return array('data'=>$data['data'], 'arr_fo'=>$arr_fo);
+		}
+
+		public static function archive_filter (Request $request, $table)
+		{
+			if(empty($request->fo_submit) == false)
+			{
+				$fo_rows = $request->fo_rows;
+				$fo_pgno = 	$request->fo_pgno;
+				$fo_submit = $request->fo_submit;
+				
+				if($request->fo_submit == "prev")
+				{
+					if($fo_pgno > 1){  	$fo_pgno--;  }
+				}
+				else if($request->fo_submit == "next")
+				{
+					$fo_pgno++;
+				}
+				
+				$arr_fo = array(
+					'hfser_id' => $request->fo_hfser_id,
+					'dtrackno' => $request->fo_dtrackno,
+					'nhfcode' => $request->fo_nhfr,
+					'nhfcode_temp' => $request->fo_nhfr_temp,
+					'facilityname' => $request->fo_facilityname,
+					'hgpid' => $request->fo_hgpid,
+					'rgnid' => $request->fo_rgnid,
+					'fo_rows' => $request->fo_rows,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $request->fo_submit,
+					'fo_rowscnt' => '0'
+				);
+			}
+			else
+			{
+				$fo_rows = "10";
+				$fo_pgno = "1";
+				$fo_submit = "submit";
+
+				$arr_fo = array(
+					'aptid' => NULL, 
+					'hfser_id' =>  NULL,
+					'ocid' => NULL,
+					'hgpid' =>  NULL,
+					'status' =>  NULL,
+					'uid' => NULL,
+					'rgnid' => NULL,
+					'assignedRgn' =>  NULL,
+					'appid' => NULL,
+					'facilityname' => NULL,
+					'fo_rows' => $fo_rows ,
+					'fo_pgno' => $fo_pgno,
+					'fo_submit' => $fo_submit,
+					'fo_rowscnt' => '0'
+				);						
+			}				
+			$data = AjaxController::getAllApplicantionWithFilter($table, $arr_fo, $fo_rows, $fo_pgno-1); 
 
 			$arr_fo['fo_rowscnt']=$data['rowcount'];
 

@@ -1072,9 +1072,9 @@ Route::prefix('employee/reports')->group(function() {
 });
 
 // View All
+Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archiveall', 'DOHController@ArchiveAll');
 Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archive', 'DOHController@Archive'); 
 Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archive/{regfac_id}', 'DOHController@ArchiveOne'); 
-Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/archiveall', 'DOHController@Archive');
 
 Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/annexa', 'DOHController@Archive'); 
 Route::match(['get', 'post'],  'employee/dashboard/facilityrecords/annexa/{regfac_id}', 'ReportsController@annexa_list'); 
