@@ -11,7 +11,7 @@
   	<div class="card" >
    
   		<div class="card-header bg-white font-weight-bold">
-             <h3>Archive of Files</h3> 
+             <h3>Registered Facilities of Archive of Files</h3> 
       </div>
       <form class="filter-options-form">
         @include('employee.regfacilities.arcFilter') 
