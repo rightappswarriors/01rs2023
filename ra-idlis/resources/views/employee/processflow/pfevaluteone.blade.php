@@ -229,9 +229,15 @@
                   <a data-toggle="modal" data-target="#floorplan" class="font-weight-bold text-white btn btn-success btn btn-primary ml-3 pb-2 pt-2 mt-2 mb-2"><i class="fa fa-files-o" aria-hidden="true"></i> Receive Floorplan</a>
                 </div>
                 @endif
-                <div class="col-md-2 d-flex justify-content-end">
-                  <a href="{{$linkToEdit}}?grplo=rlo{{$AppData->aptid == 'R' ? '&type=r': ''}}" target="_blank" class="font-weight-bold text-white btn btn-block btn-info btn-flat ml-3 pb-2 pt-2 mt-2 mb-2"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp; View Application</a>
-                </div>
+                  @if($AppData->aptid == 'IC')
+                    <div class="col-md-2 d-flex justify-content-end">
+                      <a href="{{asset('client1/changerequest')}}/{{$AppData->regfac_id}}/main" target="_blank" class="font-weight-bold text-white btn btn-block btn-info btn-flat ml-3 pb-2 pt-2 mt-2 mb-2"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp; View Change Application</a>
+                    </div>
+                  @else
+                    <div class="col-md-2 d-flex justify-content-end">
+                      <a href="{{$linkToEdit}}?grplo=rlo{{$AppData->aptid == 'R' ? '&type=r': ''}}" target="_blank" class="font-weight-bold text-white btn btn-block btn-info btn-flat ml-3 pb-2 pt-2 mt-2 mb-2"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp; View Application</a>
+                    </div>
+                  @endif
                 @endif
                  
               </div>

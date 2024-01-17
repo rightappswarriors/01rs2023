@@ -152,7 +152,7 @@
 
 									<tr>
 										<td class="text-center">
-											<strong>@if ($each[0]->aptid == 'IN') Initial New @elseif ($each[0]->aptid == 'R') Renewal @else Initial Change @endif</strong>
+											<strong>@if ($each[0]->aptid == 'IN') Initial New @elseif ($each[0]->aptid == 'R') Renewal @elseif ($each[0]->aptid == 'IC') Initial Change    @else Undefined @endif</strong>
 											<br/>{{$each[0]->hfser_desc}}
 										</td>
 										<td class="text-center">
@@ -368,9 +368,15 @@
 														@endif		
 
 														<div class="dropdown-divider"></div>
-														<div style="margin-left: 10px;margin-right: 10px;">
-															<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">License to Operate Details</a>
-														</div>	
+														@if ($each[0]->aptid == 'IC')
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main">View Application Details</a>
+															</div>
+														@else
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">License to Operate Details</a>
+															</div>	
+														@endif
 
 														@if($each[0]->savingStat == "final")
 															<div class="dropdown-divider"></div>
@@ -403,9 +409,15 @@
 													@break
 													@case('COA')
 
-														<div style="margin-left: 10px;margin-right: 10px;">
-															<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
-														</div>	
+														@if ($each[0]->aptid == 'IC')
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main">View Application Details</a>
+															</div>
+														@else
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
+															</div>	
+														@endif
 
 														@if($each[0]->savingStat == "final")
 															<div class="dropdown-divider"></div>
@@ -438,9 +450,16 @@
 													@break
 													@case('COR')
 
-														<div style="margin-left: 10px;margin-right: 10px;">
-															<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
-														</div>	
+														@if ($each[0]->aptid == 'IC')
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main">View Application Details</a>
+															</div>
+														@else
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
+															</div>	
+														@endif
+														
 														@if($each[0]->savingStat == "final")								    
 															<div class="dropdown-divider"></div>
 															<div style="margin-left: 10px;margin-right: 10px;">
@@ -462,9 +481,15 @@
 													@break
 													@case('ATO')
 
-														<div style="margin-left: 10px;margin-right: 10px;">
-														<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
-														</div>		
+														@if ($each[0]->aptid == 'IC')
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main">View Application Details</a>
+															</div>
+														@else
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
+															</div>		
+														@endif
 
 														@if($each[0]->savingStat == "final")							    
 															<div class="dropdown-divider"></div>
@@ -488,9 +513,15 @@
 													@break
 													@default
 
-														<div style="margin-left: 10px;margin-right: 10px;">
-															<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
-														</div>	
+														@if ($each[0]->aptid == 'IC')
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi {{$_payment}}" style="border-radius: 3px;" href="{{asset('client1/changerequest')}}/{{$each[0]->regfac_id}}/main">View Application Details</a>
+															</div>
+														@else
+															<div style="margin-left: 10px;margin-right: 10px;">
+																<a class="dropdown-item ddi bg-{{$_tColor}}" style="border-radius: 3px;" href="{{asset('client1/apply/app')}}/{{$each[0]->hfser_id}}/{{$each[0]->appid}}?grp=c">Continue Application</a>
+															</div>	
+														@endif
 
 														@if($each[0]->savingStat == "final")
 															<div class="dropdown-divider"></div>

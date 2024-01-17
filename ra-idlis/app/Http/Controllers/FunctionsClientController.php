@@ -309,7 +309,7 @@ class FunctionsClientController extends Controller {
 				trans_status.allowedlegend, trans_status.canapply, trans_status.isapproved, 
 				rgnid, DATE_FORMAT(validDate, '%b %d, %Y') AS validDate, DATE_FORMAT(documentSent, '%b %d, %Y') AS documentSent, 
 				aptid, isNotified, noofsatellite, isPayEval, noofsatellite, pharCOC, xrayCOC, pharValidity, xrayVal, noofmain, 
-				hfaci_grp.hgpdesc,  appform.nhfcode, appform.isRecoForApproval, appform.iscancel, appform.cancelledby, appform.cancelled_datetime, appform.cancelled_ip, appform.cancelled_reason   
+				hfaci_grp.hgpdesc,  appform.nhfcode, appform.isRecoForApproval, appform.iscancel, appform.cancelledby, appform.cancelled_datetime, appform.cancelled_ip, appform.cancelled_reason, appform.regfac_id   
 				
 				FROM appform 
 				LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid
