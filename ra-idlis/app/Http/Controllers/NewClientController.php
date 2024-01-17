@@ -217,7 +217,7 @@ class NewClientController extends Controller {
 
 			$appform = FunctionsClientController::getApplicationDetailsWithTransactions(FunctionsClientController::getSessionParamObj("uData", "uid"), 'NOT IN', false, true);
 			$appGet = FunctionsClientController::getApplicationDetailsWithTransactions(FunctionsClientController::getSessionParamObj("uData", "uid"), "IN", true);
-
+			//dd($appform );
 			$arrRet = [
 				'appDet'=> $appform ,
 				'appDet1'=> $appGet ,

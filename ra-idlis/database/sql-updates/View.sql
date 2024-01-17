@@ -3,7 +3,7 @@ CREATE VIEW applist_details AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.status, trans_status.trns_desc, appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, hfaci_serv_type.old_appcode, hfaci_serv_type.terms_condi, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid, funcapf.funcdesc, appform.facmode, facmode.facmdesc,
 
 /*Contact Details */
@@ -113,7 +113,7 @@ CREATE VIEW view_app_status_summary AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, subclass.classname AS subclassname, appform.subClassid, appform.funcid, appform.facmode, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, appform.brgyid, barangay.brgyname, appform.cmid, city_muni.cmname, appform.provid, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos,  x08.authorizedsignature, 
 
@@ -188,7 +188,7 @@ CREATE VIEW app_documentary_evaluation_list AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid, appform.facmode, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, appform.brgyid, barangay.brgyname, appform.cmid, city_muni.cmname, appform.provid, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos,  x08.authorizedsignature, 
 appform.documentSent,  appform.recommendedippaddr,  
@@ -259,7 +259,7 @@ CREATE VIEW app_technical_evaluation_list AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid, appform.facmode, appform.owner, appform.mailingAddress, 
 appform.street_number, appform.street_name, appform.brgyid, barangay.brgyname, appform.cmid, city_muni.cmname, appform.provid, province.provname, appform.zipcode, appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, appform.areacode, appform.email, appform.contact, appform.landline, appform.faxnumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.approvingauthority, appform.approvingauthoritypos,  x08.authorizedsignature, 
 appform.documentSent, appform.recommendedippaddr, 
@@ -330,7 +330,7 @@ CREATE VIEW app_assignmentofhferc AS
 (
 SELECT DISTINCT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc,  appform.rgnid, region.rgn_desc, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
 
 /*********** Important Dates ***************/
@@ -409,7 +409,7 @@ CREATE VIEW app_assignment_of_team AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid, appform.facmode,
 
 /*Contact Details */
@@ -478,7 +478,7 @@ CREATE VIEW app_inspection_schedule AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */
@@ -552,7 +552,7 @@ CREATE VIEW app_facility_for_assessment AS
 (
 SELECT DISTINCT
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc,appform.status AS status, trans_status.trns_desc, appform.nhfcode, aptm.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc,appform.status AS status, trans_status.trns_desc,  aptm.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */
@@ -610,7 +610,7 @@ DROP VIEW IF EXISTS app_recommendation_for_approval_old;
 CREATE VIEW app_recommendation_for_approval_old AS
 (
 SELECT 
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 appform.owner, appform.mailingAddress, 
@@ -694,7 +694,7 @@ DROP VIEW IF EXISTS app_recommendation_for_approval;
 CREATE VIEW app_recommendation_for_approval AS
 (
 SELECT 
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 appform.owner, appform.mailingAddress, 
@@ -776,7 +776,7 @@ CREATE VIEW app_for_approval AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -833,7 +833,7 @@ CREATE VIEW app_evaluation_tool AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -889,7 +889,7 @@ CREATE VIEW app_evaluation_tool_admin AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -945,7 +945,7 @@ CREATE VIEW app_doh_cashier AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ 
@@ -993,7 +993,7 @@ CREATE VIEW app_doh_cashier_listonly AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ 
@@ -1040,7 +1040,7 @@ CREATE VIEW app_committee_assignment AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -1096,7 +1096,7 @@ CREATE VIEW app_committee_assignment_admin AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -1152,7 +1152,7 @@ CREATE VIEW app_con_evaluation AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -1208,7 +1208,7 @@ CREATE VIEW app_con_evaluation_admin AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
@@ -1264,7 +1264,7 @@ CREATE VIEW app_failed AS
 (
 SELECT 
 /* Application Details */
-appform.appid, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc, appform.nhfcode, appform.uid, appform.facilityname, 
+appform.appid, appform.regfac_id, appform.nhfcode, appform.aptid, apptype.aptdesc, appform.savingStat, appform.status AS status, trans_status.trns_desc,  appform.uid, appform.facilityname, 
 seq_num, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.hgpid, hfaci_grp.hgpdesc, appform.ocid, ownership.ocdesc, appform.classid, class.classname, appform.subClassid, appform.funcid,  appform.facmode, facmode.facmdesc,
 
 /*Contact Details */ appform.rgnid, region.rgn_desc, appform.zipcode, appform.assignedRgn, asrgn.rgn_desc AS asrgn_desc, 
