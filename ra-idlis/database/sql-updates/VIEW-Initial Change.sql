@@ -2,10 +2,10 @@ CREATE TABLE `personnel_pre` (
   `prefix` varchar(20) NOT NULL,
   PRIMARY KEY (`prefix`)
 );
-
+/*
 INSERT INTO personnel_pre 
 SELECT DISTINCT REPLACE(REPLACE(prefix, '.',''), '\'','') AS prefix FROM hfsrbannexa WHERE prefix IS NOT NULL;
-
+*/
 
 
 
