@@ -5,7 +5,7 @@
   @extends('mainEmployee')
   @section('title', 'Archiving')
   @section('content')
-  <input type="text" id="CurrentPage" hidden="" value="PF001">
+  {{-- <input type="text" id="CurrentPage" hidden="" value="PF001">  --}}
 
   <div class="content p-4" style="font-size:13px; margin-left:0px;" >
   	<div class="card" >
@@ -26,8 +26,8 @@
                   <i class="fa fa-plus-circle"></i>&nbsp;Add Record of Registered Facility
               </a>
 
-              <a href="#" title="Archive Settings" data-toggle="modal" data-target="#myModalSettings">
-                  <button type="button" class="btn btn-default  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold"><i class="fas fa-fw fa-cog"></i>&nbsp;Archive Settings</button>
+              <a href="#" title="Archive Info" data-toggle="modal" data-target="#myModalInfo">
+                  <button type="button" class="btn btn-default  ml-3 pb-2 pt-2 mt-2 mb-2 font-weight-bold"><i class="fas fa-fw fa-cog"></i>&nbsp;Open Directory Instruction</button>
               </a>
           </div>
 
@@ -126,6 +126,41 @@
   	</div>
   </div>
   
+<div class="modal fade" id="myModalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="border-radius: 0px;border: none;">
+            <div class="modal-body text-justify" style=" background-color: #272b30;
+          color: white;">
+              <h5 class="modal-title text-center"><strong>Open Directory Instruction</strong></h5>
+              <hr>
+              <div class="container">
+                  <div class="row">
+                    <h1>Accessing Local Directories with Chrome Extension</h1><br/>
+                    <div class="row text-center"><img src="{{asset('ra-idlis/public/img/archive')}}/enable-local-file-links.png" style="width: 50%; margin:auto;"></div>
+                    <ol>
+                        <li style="word-wrap: break-word;">
+                          Visit the Chrome Web Store and search for the "<b>Enable local file links</b>" extension or just click this link <a href="https://chromewebstore.google.com/detail/nikfmfgobenbhmocjaaboihbeocackld" target="_blank">https://chromewebstore.google.com/detail/nikfmfgobenbhmocjaaboihbeocackld</a>
+                        </li>
+                        <li>Click on "Add to Chrome" to install the extension.</li>
+                        <li>Once successfully installed, click the button Open Folder</li>
+                    </ol>
+                </div>
+                <div class="row">
+
+                    <h1>Enabling the feature</h1><br/>
+                    <div class="row text-center"><img src="{{asset('ra-idlis/public/img/archive')}}/extension-enable.png" style="width: 50%; margin:auto;"></div>
+                    
+                    <ol>
+                        <li style="word-wrap: break-word;">Open <a href="chrome://extensions/?id=nikfmfgobenbhmocjaaboihbeocackld" target="_blank">chrome://extensions/?id=nikfmfgobenbhmocjaaboihbeocackld</a></li>
+                        <li>Enable "Allow access to file URLs"</li>
+                    </ol>
+                </div>
+             </div>
+            </div>
+          </div>
+        </div>
+  </div>
+
 <div class="modal fade" id="myModalSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content" style="border-radius: 0px;border: none;">
