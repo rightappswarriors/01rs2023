@@ -93,8 +93,19 @@
 						Location
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family: Arial; font-size: 13pt">
-						 :&nbsp;&nbsp;&nbsp;
-						 {{((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : "CURRENT_LOCATION")}}
+						 
+						 {{-- ((isset($retTable[0])) ? ($retTable[0]->rgn_desc.', '.$retTable[0]->provname.', '.$retTable[0]->cmname.', '.$retTable[0]->brgyname.', '.$retTable[0]->street_name.' '.$retTable[0]->street_number) : "No Location") ---}}
+
+						 @php								
+								$loc =( ($retTable[0]->street_number ?  ucwords(strtolower($retTable[0]->street_number)).', ' : '' )
+										.($retTable[0]->street_name  ? ucwords(mb_strtolower($retTable[0]->street_name, "UTF-8")).', ' : ' ') 				 
+										.ucwords(mb_strtolower($retTable[0]->brgyname, "UTF-8")).', '.ucwords(mb_strtolower($retTable[0]->cmname, "UTF-8")).', '
+										.ucwords(mb_strtolower($retTable[0]->provname, "UTF-8")).' '.strtoupper($retTable[0]->rgn_desc)
+									);
+								
+								$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
+							@endphp
+							:&nbsp;&nbsp;&nbsp;{{((isset($retTable[0])) ?	$loc	: 'No Location.')}}
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
