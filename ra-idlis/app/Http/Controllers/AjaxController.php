@@ -4887,9 +4887,18 @@ public static function checkConmem($appid)
 				$Cur_useData = AjaxController::getCurrentUserAllData();
 
 				if($Cur_useData['grpid'] == 'NA' || $Cur_useData['rgnid'] == 'HFSRB'){
-					$data = DB::table('mon_form')->join('registered_facility','mon_form.regfac_id','registered_facility.regfac_id')->join('hfaci_grp','mon_form.type_of_faci','hfaci_grp.hgpid')->distinct()->get();
+					$data = DB::table('mon_form')
+					->select('hfaci_grp.hgpdesc', 'trans_status.trns_desc', 'mon_form.*', 'registered_facility.*')
+					->leftJoin('registered_facility','mon_form.regfac_id','=','registered_facility.regfac_id')
+					->leftJoin('hfaci_grp','mon_form.type_of_faci','=','hfaci_grp.hgpid')
+					->leftJoin('trans_status','mon_form.status','=','trans_status.trns_id')
+					->get();
 				}else{
-					$data = DB::table('mon_form')->join('registered_facility','mon_form.regfac_id','registered_facility.regfac_id')->join('hfaci_grp','mon_form.type_of_faci','hfaci_grp.hgpid')
+					$data = DB::table('mon_form')
+					->select('hfaci_grp.hgpdesc', 'trans_status.trns_desc', 'mon_form.*', 'registered_facility.*')
+					->leftJoin('registered_facility','mon_form.regfac_id','=','registered_facility.regfac_id')
+					->leftJoin('hfaci_grp','mon_form.type_of_faci','=','hfaci_grp.hgpid')
+					->leftJoin('trans_status','mon_form.status','=','trans_status.trns_id')
 					->where('registered_facility.rgnid', $Cur_useData['rgnid'])
 					->get();
 				}
@@ -4897,7 +4906,6 @@ public static function checkConmem($appid)
 				// $data = DB::table('mon_form')->join('registered_facility','mon_form.regfac_id','registered_facility.regfac_id')->get();
 				// $data = DB::table('mon_form')->join('appform','appform.appid','mon_form.appid')->get(); 6-21-2021
 				
-				//dd($data);
 				return $data;
 			} catch (Exception $e) {
 				AjaxController::SystemLogs($e->getMessage());
@@ -8542,13 +8550,13 @@ public static function checkConmem($appid)
 			}
 		}
 
-		public static function getTransStatusById($id) // Get Facility Type
+		public static function getTransStatusById($id)
 		{
 			try 
 			{
 				$sql = "SELECT * FROM trans_status WHERE trns_id = '$id'";
 				$transStatus = DB::select($sql);
-
+				
 				return $transStatus;
 			}
 			catch (Exception $e) 
@@ -10797,7 +10805,7 @@ public static function forDoneHeadersNew($appid,$monid,$selfAssess,$isPtc = fals
 		if(in_array(true, AjaxController::isSessionExist(['employee_login']))){
 			// 6-21-2021
 			// $allDataSql = (session()->get("employee_login")->uid == 'ADMIN' ? "SELECT * FROM mon_form join appform on appform.appid = mon_form.appid join mon_team on mon_team.montid = mon_form.team WHERE team IS NOT NULL" : "SELECT mon_form.type_of_faci, mon_form.date_added, mon_form.novid, mon_team_members.uid ,monid, date_monitoring, date_monitoring_end, name_of_faci, isApproved, isFinePaid, recommendation, assessmentStatus, team, mon_form.appid, name_of_faci FROM mon_form join appform on appform.appid = mon_form.appid join mon_team on mon_team.montid = mon_form.team join mon_team_members on mon_team_members.montid = mon_form.team WHERE team IS NOT NULL and mon_team_members.uid = '".session()->get('employee_login')->uid."'");
-			$allDataSql = (session()->get("employee_login")->uid == 'ADMIN' ? 
+			/*$allDataSql = (session()->get("employee_login")->uid == 'ADMIN' ? 
 			"SELECT * FROM mon_form
 			 join registered_facility on registered_facility.regfac_id = mon_form.regfac_id 
 			 join mon_team on mon_team.montid = mon_form.team WHERE team IS NOT NULL and status = 'MFM'" 
@@ -10826,7 +10834,24 @@ public static function forDoneHeadersNew($appid,$monid,$selfAssess,$isPtc = fals
 			  join mon_team on mon_team.montid = mon_form.team 
 			  join mon_team_members on mon_team_members.montid = mon_form.team
 			  
+			 WHERE team IS NOT NULL and status = 'MFM' and mon_team_members.uid = '".session()->get('employee_login')->uid."'  ");*/
+			 $allDataSql = (session()->get("employee_login")->uid == 'ADMIN' ?
+			 "SELECT DISTINCT mon_form.type_of_faci, mon_form.date_added, mon_form.novid, mon_team_members.uid , monid, date_monitoring, date_monitoring_end, name_of_faci, mon_form.isApproved, isFinePaid, recommendation,  assessmentStatus, team, mon_form.appid,  name_of_faci, status, registered_facility.regfac_id, trans_status.trns_desc			 
+			 FROM mon_form 			  
+			 join registered_facility on registered_facility.regfac_id = mon_form.regfac_id 
+			 join mon_team on mon_team.montid = mon_form.team 
+			 join mon_team_members on mon_team_members.montid = mon_form.team
+			 LEFT JOIN trans_status ON mon_form.status=trans_status.trns_id
+			 WHERE team IS NOT NULL and status = 'MFM'  "
+			 : 
+			 "SELECT DISTINCT mon_form.type_of_faci, mon_form.date_added, mon_form.novid, mon_team_members.uid , monid, date_monitoring, date_monitoring_end, name_of_faci, mon_form.isApproved, isFinePaid, recommendation,  assessmentStatus, team, mon_form.appid,  name_of_faci, status, registered_facility.regfac_id, trans_status.trns_desc			 
+			 FROM mon_form 			  
+			 join registered_facility on registered_facility.regfac_id = mon_form.regfac_id 
+			 join mon_team on mon_team.montid = mon_form.team 
+			 join mon_team_members on mon_team_members.montid = mon_form.team
+			 LEFT JOIN trans_status ON mon_form.status=trans_status.trns_id
 			 WHERE team IS NOT NULL and status = 'MFM' and mon_team_members.uid = '".session()->get('employee_login')->uid."'  ");
+
 		
 			return DB::select($allDataSql);
 		}

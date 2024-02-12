@@ -11597,7 +11597,6 @@ namespace App\Http\Controllers;
 						$hgpgrp = DB::select("SELECT * FROM hfaci_grp");
 						$region = DB::table('region')->get();
 						// dd($faciName);
-                        //dd($allData);
 						//CDO
 						foreach($allData as $key => $value) {
 							if($value->novid != "") {
@@ -11856,7 +11855,6 @@ namespace App\Http\Controllers;
 					{
 
 						$allDataSql = AjaxController::getAllMonitoringForm(); // 7/23/2021
-
 					
 						$Cur_useData = AjaxController::getCurrentUserAllData();
 
