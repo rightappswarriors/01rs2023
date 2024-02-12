@@ -3473,24 +3473,29 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		$hgpid					= null;
 
 		//try {
-			if(count($data) > 0 && $user_data) 
+			if(count($data) > 0) 
 			{
 				$locRet 	= "dashboard.client.forms.request-for-change";
 				$hfser_id 	=  $data[0]->hfser_id;
-				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;	
+				$nameofcomp = ""; //DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;	
 				$regservices	= FunctionsClientController::get_view_reg_facility_services($reg_fac_id, 0);
 				$appform 	= $this->checkAppForm($reg_fac_id);	//CHECK APP id			
 				$appid = -1;
 				$savingStat = NULL;
+				$uid = "";
 
 				if (!is_null($appform)) { 
 					$appid 		= $appform->appid;
 					$savingStat = $appform->savingStat;
 					$hgpid		= $appform->hgpid;
+					$nameofcomp = $appform->owner;
+					$uid 		= $appform->uid;
 				}
 				else{
 					if (!is_null($data) && is_array($data)) { 
 						$hgpid		= $data[0]->hgpid;
+						$nameofcomp = $data[0]->owner;
+						$uid 		= $data[0]->uid;
 					}
 				}
 
@@ -3534,7 +3539,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'registered_facility'	=> (count($data) > 0) ? $data[0] : null,
 					'validity'				=> $validity,
 					'issued_date'			=> $issued_date,
-					'uid'					=> $user_data->uid,
+					'uid'					=> $uid,
 					'appform_changeaction'	=> $appform_changeaction,					
 					'regservices'			=> $regservices,
 					'chgfil_reg'			=> FunctionsClientController::getChargesByAppID($appid, "Facility Registration Fee", TRUE),
