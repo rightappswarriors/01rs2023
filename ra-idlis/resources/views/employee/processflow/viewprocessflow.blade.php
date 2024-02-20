@@ -51,8 +51,16 @@
                         <tr>
                           <td>
                             <center>
-                              
-                              <button type="button" title="View detailed information for {{$data->facilityname}}" class="btn btn-info form-control" onclick="showData({{$data->appid}},'{{$data->aptdesc}}', '{{$data->authorizedsignature}}','{{$data->brgyname}}', '{{$data->classname}}' ,'{{$data->cmname}}', '{{$data->email}}', '{{$data->facilityname}}','{{$data->hgpdesc}}', '{{$data->formattedDate}}', '{{$data->formattedTime}}', '{{$data->hfser_desc}}','{{$data->ocdesc}} - {{$data->classname}} - {{$data->subclassname}}', '{{$data->provname}}','{{$data->rgn_desc}}', '{{$data->street_name}}', '{{$data->zipcode}}', '{{$data->isrecommended}}', '{{$data->hfser_id}}', '{{$data->status}}', '{{$data->uid}}', '{{$data->trns_desc}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-eye"></i></button>
+                            @php  $arr_areacode = explode(',',trim(trim($data->areacode,'['), ']')); 
+                                  $areacode = "";
+
+                              if(count($arr_areacode) > 0) { $areacode = trim($arr_areacode[0], '"'); }
+
+                              $areacode = trim($areacode);
+                            
+                              if(!empty($areacode)){ $areacode = '(' . $areacode . ')'; }
+                            @endphp                            
+                              <button type="button" title="View detailed information for {{$data->facilityname}}" class="btn btn-info form-control" onclick="showData({{$data->appid}},'{{$data->aptdesc}}', '{{$data->authorizedsignature}}','{{$data->brgyname}}', '{{$data->classname}}' ,'{{$data->cmname}}', '{{$data->email}}', '{{$data->facilityname}}','{{$data->hgpdesc}}', '{{$data->formattedDate}}', '{{$data->formattedTime}}', '{{$data->hfser_desc}}','{{$data->ocdesc}} - {{$data->classname}} - {{$data->subclassname}}', '{{$data->provname}}','{{$data->rgn_desc}}', '{{$data->street_name}}', '{{$data->zipcode}}', '{{$data->isrecommended}}', '{{$data->hfser_id}}', '{{$data->status}}', '{{$data->uid}}', '{{$areacode}}', '{{$data->contact}}', '{{$data->landline}}', '{{$data->trns_desc}}');" data-toggle="modal" data-target="#GodModal"><i class="fa fa-fw fa-eye"></i></button>
                             </center>
                           </td>
                           <td style="text-align:center">
@@ -238,7 +246,7 @@
   </div>
   <script type="text/javascript">
     
-  	function showData(appid, aptdesc, authorizedsignature, brgyname, classname, cmname, email, facilityname, facname, formattedDate, formattedTime, hfser_desc, ocdesc, provname, rgn_desc, street_name, zipcode, isrecommended, hfser_id, statusX, uid, trns_status){
+  	function showData(appid, aptdesc, authorizedsignature, brgyname, classname, cmname, email, facilityname, facname, formattedDate, formattedTime, hfser_desc, ocdesc, provname, rgn_desc, street_name, zipcode, isrecommended, hfser_id, statusX, uid, areacode, contact, landline, trns_status){
           var status = '';
           // var paid = appid_payment;
           // if (statusX == 'P') {
@@ -277,6 +285,24 @@
                   '<div class="col-sm-4">Applying for:' +
                   '</div>' +
                   '<div class="col-sm-8">' + hfser_id + ' ('+hfser_desc+') - ' + aptdesc +
+                  '</div>' +
+              '</div>' +
+              '<div class="row">'+
+                  '<div class="col-sm-4">Email Address:' +
+                  '</div>' +
+                  '<div class="col-sm-8"> ' + email + 
+                  '</div>' +
+              '</div>' +
+              '<div class="row">'+
+                  '<div class="col-sm-4">Mobile Number:' +
+                  '</div>' +
+                  '<div class="col-sm-8"> ' + contact  + 
+                  '</div>' +
+              '</div>' +
+              '<div class="row">'+
+                  '<div class="col-sm-4">Landline Number:' +
+                  '</div>' +
+                  '<div class="col-sm-8"> ' + areacode + ' ' + landline  + 
                   '</div>' +
               '</div>' +
               '<div class="row">'+

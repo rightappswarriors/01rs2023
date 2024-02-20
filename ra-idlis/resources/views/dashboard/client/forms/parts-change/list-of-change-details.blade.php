@@ -7,7 +7,6 @@
         <table class="table display" id="example" style="overflow-x: scroll;">
             <thead>
                 <tr>
-                    <th style="white-space: nowrap; width: 50px;" class="sorting_disabled">Line No.</th>
                     <th style="white-space: nowrap; width: 235px;" class="sorting_disabled">Type of Change</th>
                     <th style="white-space: nowrap; width: 461.458px;" class="sorting_disabled">Remarks</th>
                 </tr>
@@ -17,14 +16,14 @@
                     @php $i=1;  @endphp
                     @foreach ($appform_changeaction as $data)
                     <tr class="odd" role="row">
-                        <td class="font-weight-bold">{{$i++}} [{{$data->cat_id}}]</td>
+                        
                         <td >{{$data->description}}</td>
                         <td >{{$data->remarks}}</td>
                     </tr> 
                     @endforeach
                 @else
                     <tr class="odd" role="row">
-                        <td colspan="3">No Changes made yet.</td>
+                        <td colspan="2">No Changes made yet.</td>
                     </tr> 
                 @endif        
             </tbody>
