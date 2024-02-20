@@ -2933,6 +2933,8 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 			DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 			DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed_old]);
+			
+			return redirect('client1/changerequest/'.$request->regfac_id.'/cs')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Service successfully saved.']);
 		}
 		//Increase/Decrease In Dialysis Clinic
 		else if($cat_id == 2)
@@ -3254,7 +3256,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 				//DB::table('appform')->where('appid',$appid)->update(['noofbed' => $request->noofbed_applied, 'noofbed_old'=>$request->noofbed]);
 			}
-
 			
 			return redirect('client1/changerequest/'.$request->regfac_id.'/hospital')->with('errRet', ['errAlt'=>'success', 'errMsg'=>'Hospital Service successfully saved.']);
 		}
@@ -3552,18 +3553,55 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				{
 					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
 					$data2 = $this->reg_annexa_COR($request, $reg_fac_id, $appid);
-
-					if(is_array($data2))
-					{
-						$data = array_merge($data, $data2);
+					// dd(is_array($data2));
+					if($request->isMethod('get')){
+						if(is_array($data2))
+						{
+							$data = array_merge($data, $data2);
+						}
+					} else if($request->isMethod('post')) 
+					{ 
+						if($data2 == "DONE")
+						{
+							$cat_id = "6";
+							$remarks = "Update In Personnel.";
+							DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
+							DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
+							
+							return "DONE";
+						}
+						else 
+						{
+							return "ERROR";
+						}
 					}
-					else return $data2;
 				}
 				else if($functype == 'annexb')
 				{
 					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
 					$data2 = $this->reg_annexb_COR($request, $appid);
-					$data = array_merge($data, $data2);
+					
+					if($request->isMethod('get')){
+						if(is_array($data2))
+						{
+							$data = array_merge($data, $data2);
+						}
+					} else if($request->isMethod('post')) { 
+
+						if($data2 == "DONE")
+						{
+							$cat_id = "7";
+							$remarks = "Update In Equipment.";
+							DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
+							DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
+							
+							return "DONE";
+						}
+						else 
+						{
+							return "ERROR";
+						}
+					}
 				}
 				else if($functype == 'av')
 				{				
@@ -4686,6 +4724,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					DB::table('cdrrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 					DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 				}
+
 				return ($returnToSender > 0 ? "DONE" : "ERROR");
 			}
 		/*} else {

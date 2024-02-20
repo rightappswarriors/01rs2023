@@ -33,8 +33,8 @@
 
                     <tr>
                       <td style="text-align:left"><strong>{{$data->prefix}}</strong></td>
-                      <td style="text-align:left"><strong>{{$data->surname}}, {{$data->firstname}} {{$data->middlename}} </strong></td>
-                      <td scope="col" style="text-align:center">{{$data->suffix}}</td>
+                      <td style="text-align:left"><strong>{{ucwords($data->surname)}}, {{ucwords($data->firstname)}} {{ucwords($data->middlename)}} </strong></td>
+                      <td scope="col" style="text-align:center">{{strtoupper($data->suffix)}}</td>
                       <td style="text-align:left"><strong>{{$data->prcno}}</strong><br/>{{$data->validityPeriodTo}}</td>
                       <td style="text-align:left"><strong>{{$data->profession_official}}</strong><br/>{{$data->speciality}}</td>
                       <td style="text-align:left"><strong>{{$data->pos}}</strong><br/>@php if(isset($data->noofbed)) echo 'Authorized No.Of Bed: '.$data->noofbed;  @endphp</td>                   
