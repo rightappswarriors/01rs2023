@@ -1702,7 +1702,7 @@ class NewClientController extends Controller {
 			$otherDetails = null;
 			$x08_ft = 0;
 			$arrayFaci = $arrayserv = array();
-			$retTable = FunctionsClientController::getUserDetailsByAppform($appid);
+			$retTable = FunctionsClientController::getUserDetailsByAppform($appid, "", 10);
 			
 			if(!empty($retTable))
 			{

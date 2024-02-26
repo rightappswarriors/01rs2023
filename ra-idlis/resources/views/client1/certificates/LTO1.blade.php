@@ -77,7 +77,8 @@
 						</div>
 						<div class="col-md-1" style="display: inline">:</div>
 						<div class="col-md-5 contr" style="float:left;display: inline;">
-							<strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}}</strong>
+							<strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}} </strong> 
+							<span style="font-size: small; font-style: italic;">{{((isset($retTable[0]->rename_dateapproved)) ? $retTable[0]->rename_dateapproved : "")}}</span>
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -89,7 +90,7 @@
 						</div>
 						<div class="col-md-1" style="display: inline">:</div>
 						<div class="col-md-5 contr" style="float:left;display: inline;">
-							{{((isset($facname)) ? strtoupper($facname)  : "No Health Service")}}
+							{{((isset($facname)) ? strtoupper($facname)  : "No Health Service")}} 
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -115,7 +116,16 @@
 								</div>
 								<div class="col-md-1" style="display: inline">:</div>
 								<div class="col-md-5 contr" style="float:left;display: inline;">
-									{{ $str_new  }}
+									{{ $str_new  }} 
+									<span style="font-size: small; font-style: italic;">
+										@if($retTable[0]->hgpid == "4")
+											<!---Classification -->
+											{{((isset($retTable[0]->classification_dateapproved)) ? $retTable[0]->classification_dateapproved : "")}}
+										@else
+											<!--- Service Capability -->
+											{{((isset($retTable[0]->changeonservice_dateapproved)) ? $retTable[0]->changeonservice_dateapproved : "")}}
+										@endif										
+									</span>
 								</div>
 								<div class="col-md-1" style="display: inline">&nbsp;</div>
 							</div>					
@@ -136,7 +146,10 @@
 											{{$retTable[0]->funcid == 1 ? 'General': ''}}
 											{{$retTable[0]->funcid == 2 ? 'Special': ''}}
 											{{$retTable[0]->funcid == 3 ? 'Not Applicable': ''}}
-										@endif
+										@endif 
+										<span style="font-size: small; font-style: italic;">
+											{{((isset($retTable[0]->classification_dateapproved)) ? $retTable[0]->classification_dateapproved : "")}}
+										</span>
 									</div>
 									<div class="col-md-1" style="display: inline">&nbsp;</div>
 								</div>					
@@ -159,7 +172,7 @@
 								
 								$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
 							@endphp
-							{{((isset($retTable[0])) ?	$loc	: 'No Location.')}}
+							{{((isset($retTable[0])) ?	$loc	: 'No Location.')}} 							
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -185,7 +198,10 @@
 								</div>
 								<div class="col-md-1" style="display: inline;float: left">:</div>
 								<div class="col-md-5 contr" style="float:left;display: inline;">			
-									<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong>
+									<strong>{{((isset($retTable[0]->noofbed)) ? $retTable[0]->noofbed : "NA")}}</strong> 
+									<span style="font-size: small; font-style: italic;">
+										{{((isset($retTable[0]->noofbed_dateapproved)) ? $retTable[0]->noofbed_dateapproved : "")}}
+									</span>
 								</div>
 								<div class="col-md-1" style="display: inline">&nbsp;</div>
 							</div>
@@ -201,7 +217,10 @@
 								</div>
 								<div class="col-md-1" style="display: inline;float: left">:</div>
 								<div class="col-md-5 contr" style="float:left;display: inline;">							
-									<strong>{{((isset($retTable[0]->noofdialysis)) ? $retTable[0]->noofdialysis : "NA")}}</strong>
+									<strong>{{((isset($retTable[0]->noofdialysis)) ? $retTable[0]->noofdialysis : "NA")}}</strong> 
+									<span style="font-size: small; font-style: italic;">
+										{{((isset($retTable[0]->noofdialysis_dateapproved)) ? $retTable[0]->noofdialysis_dateapproved : "")}}
+									</span>
 								</div>
 								<div class="col-md-1" style="display: inline">&nbsp;</div>
 							</div>
@@ -242,7 +261,10 @@
 								<div class="col-md-1" style="display: inline;float: left">
 									:</div>
 								<div class="col-md-5 contr" style="float:left;display: inline;">
-									@php echo $ambulance_display; @endphp
+									@php echo $ambulance_display; @endphp 
+									<span style="font-size: small; font-style: italic;">
+										{{((isset($retTable[0]->ambulance_dateapproved)) ? $retTable[0]->ambulance_dateapproved : "")}}
+									</span>
 								</div>
 								<div class="col-md-1" style="display: inline">&nbsp;</div>
 							</div>
@@ -272,7 +294,7 @@
 								{{date('j F Y', strtotime($retTable[0]->approvedDate))}} – {{date('j F Y',  strtotime($otherDetails[0]->valto))}}
 							@else
 								01 January {{date('Y', strtotime('+1 year', strtotime($retTable[0]->approvedDate)))}} – {{date('j F Y',  strtotime($retTable[0]->validDate))}}
-							@endif
+							@endif 
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -300,11 +322,14 @@
 										$ons = json_decode($retTable[0]->addonDesc);
 										$exadd = 'no';
 										$aowner = ' ';
-
-										foreach($ons as $o){
-											if($o->facid_name  == $add && $o->servtyp == 1){
-												$exadd = 'yes';
-												$aowner = $o->servowner;
+										
+										if($ons != null)
+										{											
+											foreach($ons as $o){
+												if($o->facid_name  == $add && $o->servtyp == 1){
+													$exadd = 'yes';
+													$aowner = $o->servowner;
+												}
 											}
 										}
 									@endphp
@@ -314,7 +339,15 @@
 									@else
 										{{$add}}
 									@endif									
-								@endforeach
+								@endforeach 
+								<span style="font-size: small; font-style: italic;">
+									@if(isset($retTable[0]->changeonservice_dateapproved))
+										{{$retTable[0]->changeonservice_dateapproved }}
+									@elseif(isset($retTable[0]->addonservice_dateapproved))
+										{{$retTable[0]->addonservice_dateapproved }}
+									@endif
+								</span>
+								
 							</div>
 						</div>
 					@endif
