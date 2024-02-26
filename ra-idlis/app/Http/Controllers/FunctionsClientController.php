@@ -174,7 +174,7 @@ class FunctionsClientController extends Controller {
 
 				switch ($choice) {
 					case 1:
-						$sql = "SELECT appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office, assRgn.address, assRgn.iso_desc, province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner,  CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA,assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime, fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos , addonDesc, savingStat, noofdialysis, con_number, appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation, appform.assignedRgn, appform.appComment, appform.approvedDate, appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name
+						$sql = "SELECT appform.regfac_id, appform.nhfcode, appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office, assRgn.address, assRgn.iso_desc, province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner,  CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA,assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime, fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos , addonDesc, savingStat, noofdialysis, con_number, appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation, appform.assignedRgn, appform.appComment, appform.approvedDate, appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name
 
 								FROM appform 
 								LEFT JOIN region ON region.rgnid = appform.rgnid 
@@ -193,9 +193,57 @@ class FunctionsClientController extends Controller {
 
 								WHERE appform.uid = '$curUser' AND appform.draft = 1"; 
 						break;
-					
+
+					case 10:
+							
+							$sql = "SELECT appform.regfac_id, appform.nhfcode,  appform.autoTimeDate, appform.appid, appform.uid, appform.facilityname, serv_capabilities, 
+							appform.owner, appform.email, appform.contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, 
+							appform.aptid, appform.ptcCode, appform.classid, classdesc, appform.subClassid, subClassdesc, appform.funcid, appform.facmode, appform.noofbed, draft, 
+							appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office, assRgn.address, assRgn.iso_desc,
+							
+							barangay.brgyid, barangay.brgyname, city_muni.cmid, city_muni.cmname, province.provid, province.provname, assRgn.rgn_desc AS assRgnDesc, appform.zipcode, 
+							CASE WHEN appform.street_name!='N/A' THEN appform.street_name ELSE '' END AS street_name,
+							CASE WHEN appform.street_number !='N/A' THEN appform.street_number  ELSE '' END AS street_number, 
+							
+							appform.landline, appform.faxNumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.mailingAddress, appform.areacode,
+							
+							appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, 
+							ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, appform.noofmain, appform.noofsatellite, appform.noofstation, appform.noofdialysis, 
+							clab, appform.cap_inv, appform.lot_area, appform.con_number, 
+							
+							appform.typeamb, appform.ambtyp, appform.noofamb, appform.plate_number, appform.ambOwner, 
+							
+							appform.validDate, appform.documentSent, appform.isApproveFDA, isNotified, appform.isPayEval, appform.isCashierApprove, appform.isrecommended, appform.isReadyForInspec, 
+							appform.isReadyForInspecFDA, appform.isrecommendedFDA, appform.FDAstatus, appform.pharCOC, appform.xrayCOC, 
+							appform.validDateFrom, appform.licenseNo, appform.HFERC_swork, appform.payEvalbyFDA, 
+							/*HFERC_comments,*/  appform.ishfep, 
+							appform.isAcceptedFP, appform.FPacceptedDate, appform.FPacceptedTime, appform.fpcomment, others_oanc, appform.hfep_funded, appform.proposedWeek, appform.appComment,
+							appform.addonDesc, appform.approvingauthority, appform.approvingauthoritypos, 
+							appform.savingStat, appform.hgpid, hfaci_grp.hgpdesc, appform.assignedRgn, 
+							appform.approvedDate, appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name,
+							registered_facility.noofbed_dateapproved, registered_facility.noofdialysis_dateapproved, registered_facility.personnel_dateapproved, registered_facility.equipment_dateapproved, registered_facility.hospital_lvl_dateapproved, 
+							registered_facility.addonservice_dateapproved, registered_facility.changeonservice_dateapproved, registered_facility.ambulance_dateapproved, registered_facility.classification_dateapproved, registered_facility.rename_dateapproved 
+								
+								FROM appform             
+								LEFT JOIN registered_facility ON appform.regfac_id=registered_facility.regfac_id 
+								LEFT JOIN region ON region.rgnid = appform.rgnid 
+								LEFT JOIN class ON class.classid = appform.classid 
+								LEFT JOIN province ON province.provid = appform.provid 
+								LEFT JOIN ownership ON ownership.ocid = appform.ocid 
+								LEFT JOIN funcapf ON funcapf.funcid = appform.funcid 
+								LEFT JOIN apptype ON apptype.aptid = appform.aptid 
+								LEFT JOIN city_muni ON city_muni.cmid = appform.cmid 
+								LEFT JOIN barangay ON barangay.brgyid = appform.brgyid 
+								LEFT JOIN hfaci_serv_type ON hfaci_serv_type.hfser_id = appform.hfser_id 
+								LEFT JOIN trans_status ON trans_status.trns_id = appform.status 
+								LEFT JOIN facmode ON facmode.facmid = appform.facmode 
+								LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid 
+								LEFT JOIN region AS assRgn ON assRgn.rgnid = appform.assignedRgn 
+								
+						WHERE appform.appid = '$appid' ";
+
 					default:
-						$sql = "SELECT autoTimeDate, appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office,assRgn.address,assRgn.iso_desc,province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner, CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA, /*HFERC_comments,*/ assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime,fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos ,addonDesc,savingStat,noofdialysis,con_number,appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation,appform.assignedRgn,appform.appComment,appform.approvedDate,appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name
+						$sql = "SELECT appform.regfac_id, appform.nhfcode,  autoTimeDate, appid, uid, facilityname, serv_capabilities, owner, email, contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, appform.aptid, appform.ptcCode, appform.classid, classdesc, subClassid, subClassdesc, appform.funcid, appform.facmode, noofbed, draft, appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office,assRgn.address,assRgn.iso_desc,province.provid, province.provname, city_muni.cmid, city_muni.cmname, barangay.brgyid, barangay.brgyname, appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, noofsatellite, clab, cap_inv, lot_area, typeamb, noofamb, plate_number, typeamb, ambOwner, CASE WHEN street_name!='N/A' THEN street_name ELSE '' END AS street_name, zipcode, landline, validDate, documentSent, isApproveFDA, isNotified, isPayEval, isCashierApprove, isrecommended, isReadyForInspec, CASE WHEN street_number !='N/A' THEN street_number  ELSE '' END AS street_number, isReadyForInspecFDA, isrecommendedFDA, FDAstatus, pharCOC, xrayCOC, landline, faxNumber, ownerMobile, ownerLandline, ownerEmail, mailingAddress, faxnumber, validDateFrom, licenseNo, HFERC_swork, payEvalbyFDA, /*HFERC_comments,*/ assRgn.rgn_desc AS assRgnDesc, ishfep, noofmain, ambtyp, areacode, isAcceptedFP, FPacceptedDate, FPacceptedTime,fpcomment, others_oanc, hfep_funded, proposedWeek, approvingauthority, approvingauthoritypos ,addonDesc,savingStat,noofdialysis,con_number,appform.hgpid, hfaci_grp.hgpdesc, appform.noofstation,appform.assignedRgn,appform.appComment,appform.approvedDate,appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name
 						
 						FROM appform 
 						LEFT JOIN region ON region.rgnid = appform.rgnid 

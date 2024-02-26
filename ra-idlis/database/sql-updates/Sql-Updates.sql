@@ -66,3 +66,64 @@ CREATE TABLE `reg_facility_archive` (
   `updated_by` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`rfa_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+/*************************/
+ALTER TABLE registered_facility
+ADD COLUMN noofbed_dateapproved date null,
+ADD COLUMN noofdialysis_dateapproved date null,
+ADD COLUMN personnel_dateapproved date null,
+ADD COLUMN equipment_dateapproved date null,
+ADD COLUMN hospital_lvl_dateapproved date null,
+ADD COLUMN addonservice_dateapproved date null,
+ADD COLUMN changeonservice_dateapproved date null,
+ADD COLUMN ambulance_dateapproved date null,
+ADD COLUMN classification_dateapproved date null,
+ADD COLUMN rename_dateapproved date null;
+
+
+/***************/SELECT appform.regfac_id, appform.nhfcode,  appform.autoTimeDate, appform.appid, appform.uid, appform.facilityname, serv_capabilities, 
+appform.owner, appform.email, appform.contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, 
+appform.aptid, appform.ptcCode, appform.classid, classdesc, appform.subClassid, subClassdesc, appform.funcid, appform.facmode, appform.noofbed, draft, 
+appid_payment, t_date, t_time, region.rgnid, region.rgn_desc, assRgn.office, assRgn.address, assRgn.iso_desc,
+
+barangay.brgyid, barangay.brgyname, city_muni.cmid, city_muni.cmname, province.provid, province.provname, assRgn.rgn_desc AS assRgnDesc, appform.zipcode, 
+CASE WHEN appform.street_name!='N/A' THEN appform.street_name ELSE '' END AS street_name,
+CASE WHEN appform.street_number !='N/A' THEN appform.street_number  ELSE '' END AS street_number, 
+
+appform.landline, appform.faxNumber, appform.ownerMobile, appform.ownerLandline, appform.ownerEmail, appform.mailingAddress, appform.areacode,
+
+appform.status, trans_status.trns_desc, trans_status.allowedpayment, trans_status.canapply, facmode.facmdesc, funcapf.funcdesc, 
+ownership.ocdesc, class.classname, apptype.aptdesc, appform.rgnid, appform.noofmain, appform.noofsatellite, appform.noofstation, appform.noofdialysis, 
+clab, appform.cap_inv, appform.lot_area, appform.con_number, 
+
+appform.typeamb, appform.ambtyp, appform.noofamb, appform.plate_number, appform.ambOwner, 
+
+appform.validDate, appform.documentSent, appform.isApproveFDA, isNotified, appform.isPayEval, appform.isCashierApprove, appform.isrecommended, appform.isReadyForInspec, 
+appform.isReadyForInspecFDA, appform.isrecommendedFDA, appform.FDAstatus, appform.pharCOC, appform.xrayCOC, 
+appform.validDateFrom, appform.licenseNo, appform.HFERC_swork, appform.payEvalbyFDA, 
+/*HFERC_comments,*/  appform.ishfep, 
+appform.isAcceptedFP, appform.FPacceptedDate, appform.FPacceptedTime, appform.fpcomment, others_oanc, appform.hfep_funded, appform.proposedWeek, appform.appComment,
+appform.addonDesc, appform.approvingauthority, appform.approvingauthoritypos, 
+appform.savingStat, appform.hgpid, hfaci_grp.hgpdesc, appform.assignedRgn, 
+appform.approvedDate, appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name,
+registered_facility.noofbed_dateapproved, registered_facility.noofdialysis_dateapproved, registered_facility.personnel_dateapproved, registered_facility.equipment_dateapproved, registered_facility.hospital_lvl_dateapproved, 
+registered_facility.addonservice_dateapproved, registered_facility.changeonservice_dateapproved, registered_facility.ambulance_dateapproved, registered_facility.classification_dateapproved, registered_facility.rename_dateapproved 
+	
+    FROM appform             
+	LEFT JOIN registered_facility ON appform.regfac_id=registered_facility.regfac_id 
+	LEFT JOIN region ON region.rgnid = appform.rgnid 
+	LEFT JOIN class ON class.classid = appform.classid 
+	LEFT JOIN province ON province.provid = appform.provid 
+	LEFT JOIN ownership ON ownership.ocid = appform.ocid 
+	LEFT JOIN funcapf ON funcapf.funcid = appform.funcid 
+	LEFT JOIN apptype ON apptype.aptid = appform.aptid 
+	LEFT JOIN city_muni ON city_muni.cmid = appform.cmid 
+	LEFT JOIN barangay ON barangay.brgyid = appform.brgyid 
+	LEFT JOIN hfaci_serv_type ON hfaci_serv_type.hfser_id = appform.hfser_id 
+	LEFT JOIN trans_status ON trans_status.trns_id = appform.status 
+	LEFT JOIN facmode ON facmode.facmid = appform.facmode 
+	LEFT JOIN hfaci_grp ON appform.hgpid=hfaci_grp.hgpid 
+	LEFT JOIN region AS assRgn ON assRgn.rgnid = appform.assignedRgn 
+WHERE appform.appid = '8056' 
