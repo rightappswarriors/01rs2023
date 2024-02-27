@@ -112,7 +112,7 @@
 			@if($canAdd)
 				<button class="btn btn-primary pl-3 mb-3" data-toggle="modal" data-target="#viewModal" data-backdrop="static" data-keyboard="false" onclick="$('#viewModal').on('shown.bs.modal', function () {addFunc()});">Add</button>
 			@endif
-				<button class="btn btn-primary pl-3 mb-3" data-toggle="modal" data-target="#viewModal" data-backdrop="static" data-keyboard="false" onclick="$('#viewModal').on('shown.bs.modal', function () {addFunc()});">Update Existing Records</button>
+				<!-- button class="btn btn-primary pl-3 mb-3" data-toggle="modal" data-target="#viewModal" data-backdrop="static" data-keyboard="false" onclick="$('#viewModal').on('shown.bs.modal', function () {addFunc()});">Update Existing Records</button -->
 
 				<div class="col-md-1 pt-1 dfn-hover" style="font-size: 30px; display: inline-block;">
 				<dfn data-info="For Radiology Personnel Requirements
