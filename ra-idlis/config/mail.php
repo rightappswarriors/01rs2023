@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME','doholrs@gmail.com'),
+    'username' => env('MAIL_USERNAME','doh.olrs.noreply@gmail.com'),  //doholrs@gmail.com
 
-    'password' => env('MAIL_PASSWORD','rrzbciveyxsczuxb'),
+    'password' => env('MAIL_PASSWORD','!Rightech777'),  //rrzbciveyxsczuxb
 
     /*
     |--------------------------------------------------------------------------
