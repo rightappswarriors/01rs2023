@@ -28,6 +28,19 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    |
+    | This value is the version of your application. This value is used when
+    | the framework needs to place the application's version in a notification
+    | or any other location as required by the application or its packages.
+    */
+    
+    'version' => env('APP_VERSION', '1.0.43'),  
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -46,13 +59,6 @@ return [
         '_SERVER' => array_keys($_SERVER),
         '_ENV'    => array_keys($_ENV),
     ],*/
-    /*
-    |--------------------------------------------------------------------------
-    | Application URL
-    |--------------------------------------------------------------------------
-    */
-    
-    'version' => env('APP_VERSION', '1.0.43'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +71,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/01rs2023'),
+    'url' => env('APP_URL', 'https://olrs.doh.gov.ph/beta'),  //http://localhost/01rs2023  //https://olrs.doh.gov.ph/beta
 
     /*
     |--------------------------------------------------------------------------
