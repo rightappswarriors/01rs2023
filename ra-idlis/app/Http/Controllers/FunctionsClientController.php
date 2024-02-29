@@ -170,7 +170,22 @@ class FunctionsClientController extends Controller {
 		try {
 			$retArr = [];
 			// if(! empty($appid)) {
-				$curUser = (! empty($curUid)) ? $curUid : (session()->has('uData') ? self::getSessionParamObj("uData", "uid") : DB::table('appform')->where('appid',$appid)->select('uid')->first()->uid);
+				//$curUser = (! empty($curUid)) ? $curUid : (session()->has('uData') ? self::getSessionParamObj("uData", "uid") : DB::table('appform')->where('appid',$appid)->select('uid')->first()->uid);
+
+				if(! empty($curUid)) { $curUser = $curUid; }
+				else
+				{
+					if(session()->has('uData')){ $curUser = self::getSessionParamObj("uData", "uid");	}
+					else
+					{
+						$tbl =  DB::table('appform')->where('appid',$appid)->select('uid')->first();
+
+						if($tbl != null)
+						{
+							$curUser = $tbl->uid;
+						}
+					}
+				}
 
 				switch ($choice) {
 					case 1:

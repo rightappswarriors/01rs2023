@@ -39,7 +39,20 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
+
+    /*'debug_blacklist' => [
+        '_COOKIE' => array_keys($_COOKIE),
+        '_SERVER' => array_keys($_SERVER),
+        '_ENV'    => array_keys($_ENV),
+    ],*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application URL
+    |--------------------------------------------------------------------------
+    */
+    
+    'version' => env('APP_VERSION', '1.0.43'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +65,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost/01rs2023'),
 
     /*
     |--------------------------------------------------------------------------
@@ -104,7 +117,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY', 'base64:T4ZSF3v49h1xuvTA046v3udu6QSPH2u+H/XpwXifkDk='),
 
     'cipher' => 'AES-256-CBC',
 
