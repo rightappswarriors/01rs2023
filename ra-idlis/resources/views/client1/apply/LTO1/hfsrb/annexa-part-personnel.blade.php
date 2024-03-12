@@ -1,5 +1,4 @@
 @if (session()->exists('uData'))  
-	@include('client1.cmp.requirementsSlider')
 	<style>
 		fieldset 
 		{
@@ -653,16 +652,13 @@
 			"use strict";
 			
 		</script>
-		<script>
-            onStep(3);
-            slider([],['hfsrb','annexb',{{$appid}}]);
-        </script>
+		
 		<script>
 			$(function(){
 				$("#tApp").dataTable();
 			})
 			$('[name=prefix],[name=suffix]').select2({ width: '100%', tags: true });
-			@if($canAdd)
+
 			function addFunc(){
 				$("#actionModalCRUD").empty().html('Add Personnel');
 				$("#toChange").val('add');
@@ -787,12 +783,11 @@
 			})
 			$(document).on('submit','#personnelAdd',function(event){
 				event.preventDefault();
-				let data = new FormData(this);
+				let data = $(this).serialize();
+				//let data = new FormData(this);
 				$.ajax({
 					type: 'POST',
 					data:data,
-					contentType: false,
-					processData: false,
 					success: function(a){
 						if(a == 'DONE'){
 							alert('Operation Successul');
@@ -805,7 +800,8 @@
 			})
 			$(document).on('submit','#personnelEdit',function(event){
 				event.preventDefault();
-				let data = new FormData(this);
+				let data = $(this).serialize();
+				//let data = new FormData(this);
 				$.ajax({
 					type: 'POST',
 					data:data,
@@ -852,7 +848,6 @@
 					}
 				});
 			})
-		@endif
 		</script>
 		
 

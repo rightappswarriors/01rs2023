@@ -157,7 +157,11 @@
 										</td>
 										<td class="text-center">
 											{{$each[0]->hfser_id}}R{{$each[0]->rgnid}}-{{$each[0]->appid}}
+											<br/>
 											@isset($each[0]->nhfcode)<br/><strong style="font-size:smaller">NHFR Code:<br/><strong>{{$each[0]->nhfcode}}</strong></span>
+											@endisset
+
+											@isset($each[0]->regfac_id)<br/><strong style="font-size:smaller">Registered ID:<br/><strong>{{$each[0]->regfac_id}}</strong></span>
 											@endisset
 										</td>
 										<td style="height: auto;" class="text-center">

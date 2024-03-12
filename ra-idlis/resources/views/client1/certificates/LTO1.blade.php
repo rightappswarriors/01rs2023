@@ -314,32 +314,33 @@
 							</script>
 							<div class="col-md-5 pl-5 mt-3 contr" >
 								
-								@if($disercap != 'level3' && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
+								@if($disercap != 'level3' && $retTable[0]->hgpid != "5" && isset($retTable[0]->noofdialysis) && $retTable[0]->noofdialysis > 0)
 									{{((isset($retTable[0]->noofdialysis)) ? "Dialysis Clinic (".$retTable[0]->noofdialysis."), " : "")}} 	
-								@endif
-								@foreach($addons as $add)
-									@php
-										$ons = json_decode($retTable[0]->addonDesc);
-										$exadd = 'no';
-										$aowner = ' ';
-										
-										if($ons != null)
-										{											
-											foreach($ons as $o){
-												if($o->facid_name  == $add && $o->servtyp == 1){
-													$exadd = 'yes';
-													$aowner = $o->servowner;
+								@endif		
+
+									@foreach($addons as $add)
+										@php
+											$ons = json_decode($retTable[0]->addonDesc);
+											$exadd = 'no';
+											$aowner = ' ';
+											
+											if($ons != null)
+											{											
+												foreach($ons as $o){
+													if($o->facid_name  == $add && $o->servtyp == 1){
+														$exadd = 'yes';
+														$aowner = $o->servowner;
+													}
 												}
 											}
-										}
-									@endphp
+										@endphp
 
-									@if($exadd == 'yes')
-										{{$add}} (Owner: {{$aowner}})
-									@else
-										{{$add}}
-									@endif									
-								@endforeach 
+										@if($exadd == 'yes')
+											{{$add}} (Owner: {{$aowner}})
+										@else
+											{{$add}}
+										@endif									
+									@endforeach 
 								<span style="font-size: small; font-style: italic;">
 									@if(isset($retTable[0]->changeonservice_dateapproved))
 										{{$retTable[0]->changeonservice_dateapproved }}
