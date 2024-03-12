@@ -71,8 +71,10 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://olrs.doh.gov.ph/beta'),  //http://localhost/01rs2023  //https://olrs.doh.gov.ph/beta
-
+    //'url' => env('APP_URL', 'http://localhost/01rs2023/'),
+    'url' => env('APP_URL', 'https://olrs.doh.gov.ph/beta'),
+    //'url' => env('APP_URL', 'https://olrs.doh.gov.ph/'),
+    
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

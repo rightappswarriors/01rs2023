@@ -746,9 +746,7 @@ class NewClientController extends Controller {
 
 			if($user_data){
 				$nameofcomp = DB::table('x08')->where([['uid', $user_data->uid]])->first()->nameofcompany;
-			}else{
-				$nameofcomp = null;
-			}
+			} else{	$nameofcomp = null;	}
 			//default client url
 			$hfLocs = [
 					'client1/apply/app/LTO/'.$appid, 
@@ -928,6 +926,7 @@ class NewClientController extends Controller {
 						'forAmbulance' => json_encode($proceesedAmb),
 						'apptypenew'=> $request->apptype ? $request->apptype : 'IN'
 					];
+					
 					 $locRet = "dashboard.client.license-to-operate";
 					//  $locRet = "client1.apply.LTO1.ltoapp";
 					break;
@@ -2865,7 +2864,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	public function __editAppCoRSubmit(Request $request) 
 	{
 		$remarks = "";
-		$hfser_id = $request->regfac_id;
 		$regfac_id = $request->regfac_id;
 		$cat_id = $request->cat_id;		
 		$uid = FunctionsClientController::getSessionParamObj("uData", "uid");
@@ -2882,9 +2880,17 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		}
 
 		if($appid < 1) {	$appid = $this->insertAppForm($regfac_id);	}
-		
+
+		//update List of Change Remarks
+		if($cat_id == 0)
+		{
+			$id = $request->id;
+			$remarks = $request->remarks;
+			
+			DB::table('appform_changeaction')->where(array('id' => $id))->update(['remarks' => $remarks]);
+		}		
 		//Increase/Decrease In Bed Capacity
-		if($cat_id == 1)
+		else if($cat_id == 1)
 		{
 			$amt = "0.00";
 			$facid = "";

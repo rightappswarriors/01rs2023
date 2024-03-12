@@ -82,7 +82,7 @@
 				</tbody>
 			</table> --}}
 			@if (session()->exists('uData'))
-			@php var_dump(isset($aptid)); empty($aptid); @endphp
+
 			@if(isset($aptid) && !empty($aptid))
 			
 
@@ -107,7 +107,7 @@
 					
 				@endif
 				</div>
-			}
+			
 			
 			@endif
 			{{-- </div> --}}

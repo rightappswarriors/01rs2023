@@ -856,10 +856,7 @@ function getFacServCharge (val = null){
         document.getElementById("hgpid6").appendChild(newDiv);
 
 
-        if (selected == 2) {
-
-
-          
+        if (selected == 2) {         
            
             var hlevel = [{
                 id: "H"
@@ -1654,23 +1651,20 @@ function getFacServCharge (val = null){
 
         var ta=[]; //appchargetemp
 
-
         var ambT1Ch = parseFloat(('{!!$ambcharges[0]->amt!!}'));
         var ambT2Ch = parseFloat(('{!!$ambcharges[1]->amt!!}'));    
 
         if(jQuery('#34').is(':checked')) { 
             ambT1Ch = (ambT1Ch * 3);
             ambT2Ch = (ambT2Ch * 3);
-
         }
 
         let sArr = ['_token=' + document.getElementsByName('_token')[0].value, 'appid=' + curAppid],
         theuseless = [],
-            ambtyp = document.getElementsByName('ambtyp'),
-            plate_number = document.getElementsByName('plate_number'),
-            ambOwner = document.getElementsByName('ambOwner'),
-            amount = 0;
-
+        ambtyp = document.getElementsByName('ambtyp'),
+        plate_number = document.getElementsByName('plate_number'),
+        ambOwner = document.getElementsByName('ambOwner'),
+        amount = 0;
 
         if (ambtyp != null || ambtyp != undefined) {
             for (let i = 0; i < ambtyp.length; i++) {
@@ -1690,15 +1684,12 @@ function getFacServCharge (val = null){
                 }
             }
 
-
-
             if(amount > 0 ){
                 let serv_chg_not = document.getElementById('serv_chg_not');
                 serv_chg_not.innerHTML = "";
                     
                 serv_chg_not.innerHTML += '<tr><td>' + "Ambulance Charge" + '</td><td>&#8369;&nbsp;<span>' + numberWithCommas(subclass == "ND" ? 0 :(parseInt(amount)).toFixed(2)) + '</span></td></tr>'
             }
-
 
             sArr.push('ambamt=' + amount);
         }
@@ -1713,7 +1704,7 @@ function getFacServCharge (val = null){
             }
         });
     }
-
+    
 //   INITIAL STATES
 @if(app('request')->input('cont') == 'yes')
 
@@ -1725,11 +1716,9 @@ function getFacServCharge (val = null){
             type_of_fac(id)
             if(id == 6){
                 var func = '{!!((count($fAddress) > 0) ? $fAddress[0]->funcid: "")!!}';
-            document.querySelector('select[data-funcid="duplicate"]').value = func;
-            sel_hosp_class(func)
-
-        
-        }
+                document.querySelector('select[data-funcid="duplicate"]').value = func;
+                sel_hosp_class(func)        
+            }
         }, 2000);
 
         setTimeout(function(){ 
