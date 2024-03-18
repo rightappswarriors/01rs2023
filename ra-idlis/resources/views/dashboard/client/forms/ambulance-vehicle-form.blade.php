@@ -70,27 +70,28 @@
                                 </thead>
                                 <tbody>
                                 @if (isset($appform_ambulance))
+                                    @php $aa = 0;  @endphp
                                     @foreach ($appform_ambulance as $d)
+                                    @php $aa++;   @endphp
                                         <tr>
-                                            <td class="text-center">@if($d->typeamb == "1") Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
-                                            <td class="text-center">@if($d->ambtyp == "1") Outsourced @else Owned @endif</td>
-                                            <td class="text-center">{{$d->plate_number}}</td>
-                                            <td class="text-center">{{$d->ambOwner}}</td>
+                                    
+                                            <td class="text-center">@if($d['typeamb'] == 1) Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
+                                            <td class="text-center">@if($d['ambtyp'] == "1") Outsourced @else Owned @endif</td>
+                                            <td class="text-center">{{$d['plate_number']}}</td>
+                                            <td class="text-center">{{$d['ambOwner']}}</td>
 
                                             @if($isupdate == 1)   
+
                                                 <td class="text-center">
                                                     
                                                     <button class="btn btn-primary" onclick="showDataAmb(
-                                                    '{{$d->id}}',
-                                                    '{{$d->typeamb}}','{{$d->ambtyp}}','{{$d->plate_number}}','{{$d->ambOwner}}',
-                                                    '0'
-                                                )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
+                                                    '{{$aa}}', '{{$d['typeamb']}}','{{$d['ambtyp']}}','{{$d['plate_number']}}','{{$d['ambOwner']}}','0')" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
                                                     <button class="btn btn-danger " onclick="showDataDelAmb(
-                                                    '{{$d->id}}','{{$d->typeamb}}','{{$d->ambtyp}}','{{$d->plate_number}}','{{$d->ambOwner}}',
-                                                    '0'
-                                                    )" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
+                                                    '{{$aa}}', '{{$d['typeamb']}}','{{$d['ambtyp']}}','{{$d['plate_number']}}','{{$d['ambOwner']}}','0')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
                                                     </button>
                                                     
+                                                </td>
+
                                             @endif 
                                         </tr>
                                     @endforeach	
@@ -134,18 +135,14 @@
                                             <td class="text-center">{{$d["ambOwner"]}}</td>
 
                                         @if($isupdate == 1)   
-                                            <td class="text-center">
-                                                
-                                            <button class="btn btn-primary" onclick="showDataAmb(
-                                                    '',
+                                            <td class="text-center">                                                
+                                                <button class="btn btn-primary" onclick="showDataAmb( '',
+                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}', '1' )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger " onclick="showDataDelAmb(
                                                     '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
-                                                    '1'
-                                                )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
-                                                    <button class="btn btn-danger " onclick="showDataDelAmb(
-                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
-                                                    '1'
-                                                    )" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
-                                                    </button>
+                                                    '1')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
+                                                </button>
                                             </td>
                                         @endif 
                                     </tr>
