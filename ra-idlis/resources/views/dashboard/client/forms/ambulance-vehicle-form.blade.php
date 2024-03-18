@@ -69,18 +69,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                @php    $colspan = 4;  @endphp
+                                @if($isupdate == 1) @php    $colspan = 5;  @endphp       @endif
                                 @if (isset($appform_ambulance))
                                     @php $aa = 0;  @endphp
                                     @foreach ($appform_ambulance as $d)
-<<<<<<< Updated upstream
-                                    @php $aa++;   @endphp
-                                        <tr>
-                                    
-                                            <td class="text-center">@if($d['typeamb'] == 1) Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
-                                            <td class="text-center">@if($d['ambtyp'] == "1") Outsourced @else Owned @endif</td>
-                                            <td class="text-center">{{$d['plate_number']}}</td>
-                                            <td class="text-center">{{$d['ambOwner']}}</td>
-=======
+
                                         @if(!empty($d->plate_number))
                                             @php $aa++;    @endphp
                                             <tr>
@@ -89,21 +84,10 @@
                                                 <td class="text-center">@if($d->ambtyp == "1") Outsourced @else Owned @endif</td>
                                                 <td class="text-center">{{$d->plate_number}}</td>
                                                 <td class="text-center">{{$d->ambOwner}}</td>
->>>>>>> Stashed changes
 
-                                            @if($isupdate == 1)   
 
-<<<<<<< Updated upstream
-                                                <td class="text-center">
-                                                    
-                                                    <button class="btn btn-primary" onclick="showDataAmb(
-                                                    '{{$aa}}', '{{$d['typeamb']}}','{{$d['ambtyp']}}','{{$d['plate_number']}}','{{$d['ambOwner']}}','0')" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i></button>
-                                                    <button class="btn btn-danger " onclick="showDataDelAmb(
-                                                    '{{$aa}}', '{{$d['typeamb']}}','{{$d['ambtyp']}}','{{$d['plate_number']}}','{{$d['ambOwner']}}','0')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
-                                                    </button>
-                                                    
-                                                </td>
-=======
+                                                @if($isupdate == 1)   
+
                                                     <td class="text-center">
                                                         
                                                         <button class="btn btn-primary" onclick="showDataAmb(
@@ -111,10 +95,12 @@
                                                         <button class="btn btn-danger " onclick="showDataDelAmb(
                                                         '{{$aa}}', '{{$d->typeamb}}','{{$d->ambtyp}}','{{$d->plate_number}}','{{$d->ambOwner}}','0')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
                                                         </button>
->>>>>>> Stashed changes
 
-                                            @endif 
-                                        </tr>
+                                                    </td>
+
+                                                @endif 
+                                            </tr>
+                                        @endif 
                                     @endforeach	
                                 @else
                                     <tr>
@@ -122,12 +108,10 @@
                                     </tr>
                                 @endif
                                 </tbody>
-<<<<<<< Updated upstream
-=======
                                 <tfoot>
                                     <tr><td colspan="{{$colspan}}" class="text-center">Total Number of Ambulance Apply: @if (isset($appform_ambulance)) {{count($appform_ambulance)}} @endif</td></tr>
                                 </tfoot>
->>>>>>> Stashed changes
+
                             </table>
                     </div>
 
@@ -153,33 +137,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if (isset($reg_ambulance))
-                                    @foreach ($reg_ambulance as $d)
-                                        <tr>
-                                            <td class="text-center">@if($d["typeamb"] == "1") Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
-                                            <td class="text-center">@if($d["ambtyp"] == "1") Outsourced @else Owned @endif</td>
-                                            <td class="text-center">{{$d["plate_number"]}}</td>
-                                            <td class="text-center">{{$d["ambOwner"]}}</td>
+                            
+                            @php    $colspan = 4;  @endphp
+                            @if($isupdate == 1) @php    $colspan = 5;  @endphp       @endif
 
-                                        @if($isupdate == 1)   
-                                            <td class="text-center">                                                
-                                                <button class="btn btn-primary" onclick="showDataAmb( '',
-                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}', '1' )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-danger " onclick="showDataDelAmb(
-                                                    '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
-                                                    '1')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
-                                                </button>
-                                            </td>
-                                        @endif 
-                                    </tr>
+                            @if (isset($reg_ambulance))
+                                @foreach ($reg_ambulance as $d)
+                                    @if(!empty($d['plate_number']))
+                                        <tr>
+                                                <td class="text-center">@if($d["typeamb"] == "1") Type 1 (Basic Life Support) @else Type 2 (Advance Life Support) @endif</td>
+                                                <td class="text-center">@if($d["ambtyp"] == "1") Outsourced @else Owned @endif</td>
+                                                <td class="text-center">{{$d["plate_number"]}}</td>
+                                                <td class="text-center">{{$d["ambOwner"]}}</td>
+
+                                            @if($isupdate == 1)   
+                                                <td class="text-center">                                                
+                                                    <button class="btn btn-primary" onclick="showDataAmb( '',
+                                                        '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}', '1' )" data-toggle="modal" data-target="#mainService"><i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger " onclick="showDataDelAmb(
+                                                        '{{$d["typeamb"]}}','{{$d["ambtyp"]}}','{{$d["plate_number"]}}','{{$d["ambOwner"]}}',
+                                                        '1')" data-toggle="modal" data-target="#delService"><i class="fa fa-minus-circle"></i>
+                                                    </button>
+                                                </td>
+                                            @endif 
+                                        </tr>
+                                    @endif 
                                 @endforeach	
                             @else
-                                <tr>
-                                    <td colspan="2" class="text-center">No Records found.</td>
+                                <tr> 
+                                    <td colspan="{{$colspan}}" class="text-center">No Records found.</td>
                                 </tr>
                             @endif
                             </tbody>
+                            <tfoot>
+                                <tr><td colspan="{{$colspan}}" class="text-center">Total Number of Registered Ambulance: @if (isset($reg_ambulance)) {{count($reg_ambulance)-1}} @endif</td></tr>
+                            </tfoot>
                         </table>
                     </div>
 

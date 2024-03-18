@@ -3641,7 +3641,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						];
 					}
 
-					//$appform_ambulance_temp= $reg_ambulance_temp;// DB::table('appform')->WHERE('appid','=',$appid )->get();
+					//$appform_ambulance_temp= DB::table('appform')->WHERE('appid','=',$appid )->get();
 					$appform_ambulance = null;
 					$reg_ambulance = null;
 					
