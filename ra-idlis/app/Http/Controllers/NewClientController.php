@@ -2999,7 +2999,13 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 
 			if($NoOfAmb > 0)
 			{				
-				$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+				if($hgpid == 34)
+				{
+					$amt = (($NoOfAmb) * 3000);
+				}
+				else{
+					$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+				}
 			}
 			
 			DB::table('chgfil')->where(array('appform_id'=>$appid, 'reference'=> 'Ambulance charge'))->delete();
@@ -3639,7 +3645,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$appform_ambulance = null;
 					$reg_ambulance = null;
 					
-					if(isset($appform_ambulance_temp))
+					/*if(isset($appform_ambulance_temp))
 					{
 						foreach( $appform_ambulance_temp as $key=>$val)
 						{
@@ -3672,7 +3678,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 									$appform_ambulance[$j]['ambOwner'] = $d[$j];
 							}
 						}
-					} 
+					} */
+
+					$appform_ambulance= DB::table('appform_ambulance')->select('typeamb', 'ambtyp', 'plate_number', 'ambOwner')->where('appid','=',$appid)->get();
 					
 					if(isset($reg_ambulance_temp))
 					{
