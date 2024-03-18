@@ -50,7 +50,7 @@
                     <form id="frmChangeRemarks" action="{{asset('/client1/changerequest/actionsubmit')}}" method="POST">
                         {{ csrf_field() }}
                         <input type="hidden" name="cat_id"value="0">        
-                        <input type="text" name="regfac_id" id="regfac_id" value="{{$regfac_id}}">   
+                        <input type="hidden" name="regfac_id" id="regfac_id" value="{{$regfac_id}}">   
                         <input type="hidden" name="id" id="id" value="">  
                         <input type="hidden" name="action" id="action" value="updremarks">
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display:none" id="AddErrorAlert" role="alert">
