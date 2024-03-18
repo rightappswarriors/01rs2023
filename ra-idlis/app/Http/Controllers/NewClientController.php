@@ -3004,17 +3004,27 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				{
 					$amt = (($NoOfAmb + $noOfRegAmbulance) * 3000);
 				}
+				else if($hgpid == 6)
+				{
+					$amt = (($NoOfAmb ) * 1000);
+				}
 				else{
 
 					$NoOfAmb = $NoOfAmb + $noOfRegAmbulance;
 					$amt = 0.00;
-					
-					if($NoOfAmb == 1)
+
+					if($noOfRegAmbulance == 0)
 					{
-						$amt = 5000.00;
+						if($NoOfAmb == 1)
+						{
+							$amt = 5000.00;
+						}
+						else if($NoOfAmb > 1){
+							$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+						}
 					}
-					else if($NoOfAmb > 1){
-						$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+					else{
+						$amt = (($NoOfAmb ) * 1000);
 					}
 				}
 			}
