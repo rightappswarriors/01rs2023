@@ -2984,6 +2984,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 		else if($cat_id == 3)
 		{
 			$id = $request->id;
+			$noOfRegAmbulance = $request->noOfRegAmbulance;
 			$amb_arr = [
 				'appid'	=> $appid,
 				'typeamb' => $request->typeamb,
@@ -3001,10 +3002,20 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			{				
 				if($hgpid == 34)
 				{
-					$amt = (($NoOfAmb) * 3000);
+					$amt = (($NoOfAmb + $noOfRegAmbulance) * 3000);
 				}
 				else{
-					$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+
+					$NoOfAmb = $NoOfAmb + $noOfRegAmbulance;
+					$amt = 0.00;
+					
+					if($NoOfAmb == 1)
+					{
+						$amt = 5000.00;
+					}
+					else if($NoOfAmb > 1){
+						$amt = 5000.00 + (($NoOfAmb -1) * 1000);
+					}
 				}
 			}
 			
