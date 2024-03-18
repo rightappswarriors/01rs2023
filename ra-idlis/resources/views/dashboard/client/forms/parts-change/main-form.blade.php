@@ -188,7 +188,7 @@
     @endif
 </div>
 
-<div class="col-md-4">
+<!-- div class="col-md-4">
     <label>Number of Ambulances:  
         <button id="submitAmbulanceVehicle"  class="btn btn-default btn-flat" type="button" value="ambulancevehicle" name="submit" data-toggle="modal" data-target="#changeAmbulanceVehicle">
             @if(isset($registered_facility->noofamb))
@@ -201,4 +201,4 @@
     @if($registered_facility->noofamb != $registered_facility->noofamb)
         <br/><label><i>Increase or Decrease in Ambulances to  <strong>{{$registered_facility->noofamb}}</strong></i></label>
     @endif
-</div>
+</div -->
