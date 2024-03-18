@@ -159,6 +159,9 @@
                                 </tr>
                             @endif
                             </tbody>
+                            <tfoot>
+                                <td colspan="{{$colspan}}" class="text-center"> Total Number of Registered Ambulance:  @if (isset($reg_ambulance)) {{count($reg_ambulance) -1}} @else 0 @endif</td>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -186,6 +189,7 @@
                         <input type="hidden" name="cat_id"value="{{$cat_id}}">
                         <input type="hidden" name="appid" value="{{$appid}}">         
                         <input type="hidden" name="regfac_id" value="{{$regfac_id}}">   
+                        <input type="hidden" name="noOfRegAmbulance" id="noOfRegAmbulance" value=" @if (isset($reg_ambulance)) {{count($reg_ambulance) -1}} @else 0 @endif">  
                         <input type="hidden" name="id" id="id" value="">  
                         <input type="hidden" name="action" id="action" value="add">
                         <div class="col-sm-12 alert alert-danger alert-dismissible fade show" style="display:none" id="AddErrorAlert" role="alert">
