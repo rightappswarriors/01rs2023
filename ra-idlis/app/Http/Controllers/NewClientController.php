@@ -3601,12 +3601,9 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 							DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
 							
-							return "DONE";
+							return $data2;
 						}
-						else 
-						{
-							return "ERROR";
-						}
+						return $data2;
 					}
 				}
 				else if($functype == 'annexb')
@@ -4584,19 +4581,16 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 			$pos = DB::table('position')->get();
 			$professions = DB::table('profession')->get();
 
-			if($appid <= 0) {$appid=null;}
+			if($appid <= 0) { $appid=null; }
 
 			if((isset($appid) && !empty($appid) && $appid!=null))
 			{
 				$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
-			}
-			else
-			{
+			} else {
 				$hgpid = DB::table('registered_facility')->where('regfac_id',$regfac_id)->select('facid')->first()->facid;
 			}
 
-			// dd($professions);
-			if($request->isMethod('get')){
+			if($request->isMethod('get')) {
 				$arrRet = [
 					'workstat' => AjaxController::getAllWorkStatus(),
 					'pos' => $pos,
@@ -4622,7 +4616,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					'canAdd' => true,
 					'appid' =>$appid
 				];
-				// dd($arrRet);
+				
 				return $arrRet;
 			} else if($request->isMethod('post')) {
 				$customInsertMach = $customInsertPhar = false;
@@ -4661,11 +4655,6 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				$pharma = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'tin' => $request->tin, 'email' => $request->email, 'area' => $request->assignment];
 				$mach = ['appid' => $appid, 'name' => strtolower($request->prefix . ' ' . $request->fname . ' ' . $request->mname . ' ' . $request->sur_name . ' ' . $request->suffix ), 'designation' => $request->position, 'qualification' => $request->qual, 'prcno' => $request->prcno, 'faciassign' => $request->assignment, 'validity' => $request->vto];
 
-				// for custom addition to FDA
-				// if($request->po == 1 || $request->head == 1){
-				// 	$customInsertMach = true;
-				// }
-
 				if($request->po1 == 1 || $request->head1 == 1 || $request->xtech == 1 || $request->chiefrt == 1){
 					$customInsertMach = true;
 				}
@@ -4698,6 +4687,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					}
 				}
 				$filename = array_combine($arrName, $arrFiles);
+				
 				if(count($filename) > 0){
 					foreach($filename as $key => $value){
 						$toInsert[$key]  = $value;
