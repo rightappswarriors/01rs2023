@@ -23,12 +23,12 @@
 
 
                     <div class="form-group col-md-12">
-                        <label for="facility_name">Authorized No. of Dialysis Station : <span class="text-danger">*</span> </label>
+                        <label for="facility_name">From Authorized No. of Dialysis Station : <span class="text-danger">*</span> </label>
                         <label><strong>{{number_format($registered_facility->noofdialysis,0)}}</strong></label>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="facility_name">Increaase or Decrease in Number of Dialysis Station<span class="text-danger">*</span></label>
+                        <label for="facility_name">To New Number of Dialysis Station<span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input class="form-control" type="number" name="noofdialysis" id="noofdialysis" placeholder="No. of Dialysis Station" min="0" autocomplete="off" value="{{$registered_facility->noofdialysis}}">
                         </div>

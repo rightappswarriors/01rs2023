@@ -28,8 +28,6 @@
                     @include('dashboard.client.forms.parts.license-to-operate.for-ambulance-details')
                   
 
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger action-btn" data-dismiss="modal">
