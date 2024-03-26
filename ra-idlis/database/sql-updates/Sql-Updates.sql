@@ -83,6 +83,20 @@ ADD COLUMN classification_dateapproved date null,
 ADD COLUMN rename_dateapproved date null;
 
 
+/**************2024-03-26***********/
+ALTER TABLE appform
+ADD COLUMN noofbed_dateapproved date null,
+ADD COLUMN noofdialysis_dateapproved date null,
+ADD COLUMN personnel_dateapproved date null,
+ADD COLUMN equipment_dateapproved date null,
+ADD COLUMN hospital_lvl_dateapproved date null,
+ADD COLUMN addonservice_dateapproved date null,
+ADD COLUMN changeonservice_dateapproved date null,
+ADD COLUMN ambulance_dateapproved date null,
+ADD COLUMN classification_dateapproved date null,
+ADD COLUMN rename_dateapproved date null;
+
+
 /***************/SELECT appform.regfac_id, appform.nhfcode,  appform.autoTimeDate, appform.appid, appform.uid, appform.facilityname, serv_capabilities, 
 appform.owner, appform.email, appform.contact, appform.hfser_id, hfaci_serv_type.hfser_desc, appform.facid, appform.ocid, appform.ocdesc as appformocdesc, 
 appform.aptid, appform.ptcCode, appform.classid, classdesc, appform.subClassid, subClassdesc, appform.funcid, appform.facmode, appform.noofbed, draft, 
