@@ -91,6 +91,7 @@
 						<div class="col-md-1" style="display: inline">:</div>
 						<div class="col-md-5 contr" style="float:left;display: inline;">
 							{{((isset($facname)) ? strtoupper($facname)  : "No Health Service")}} 
+							
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -172,7 +173,7 @@
 								
 								$stringloc = preg_replace_callback('/\b(?=[LXIVCDM]+\b)([a-z]+)\b/i', function($matches) {   return strtoupper($matches[0]); }, $loc);	
 							@endphp
-							{{((isset($retTable[0])) ?	$loc	: 'No Location.')}} 							
+							{{((isset($retTable[0])) ?	$loc	: 'No Location.')}}		
 						</div>
 						<div class="col-md-1" style="display: inline">&nbsp;</div>
 					</div>
@@ -219,6 +220,7 @@
 								<div class="col-md-5 contr" style="float:left;display: inline;">							
 									<strong>{{((isset($retTable[0]->noofdialysis)) ? $retTable[0]->noofdialysis : "NA")}}</strong> 
 									<span style="font-size: small; font-style: italic;">
+										
 										{{((isset($retTable[0]->noofdialysis_dateapproved)) ? $retTable[0]->noofdialysis_dateapproved : "")}}
 									</span>
 								</div>

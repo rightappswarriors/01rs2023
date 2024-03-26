@@ -71,7 +71,7 @@
 						Name of Facility 
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family:  Arial; font-size: 13pt">
-						:&nbsp;&nbsp;&nbsp;<strong><strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}}</strong></strong>
+						:&nbsp;&nbsp;&nbsp;<strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}}</strong>
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>

@@ -10852,8 +10852,48 @@ namespace App\Http\Controllers;
 										'approvedTime' =>  $Cur_useData['time'],
 										'approvedIpAdd' => $Cur_useData['ip'],
 										'approvedRemark' => $request->desc,
-										'status' => $status
+										'status' => $status,
+										'noofbed_dateapproved' => null,
+										'noofdialysis_dateapproved' => null,
+										'personnel_dateapproved' => null,
+										'equipment_dateapproved' => null,
+										'hospital_lvl_dateapproved' => null,
+										'addonservice_dateapproved' => null,
+										'changeonservice_dateapproved' => null,
+										'ambulance_dateapproved' => null,
+										'classification_dateapproved' => null,
+										'rename_dateapproved' => null
 							);
+							
+							//find the action types
+							$appform_changeaction = DB::table('appform_changeaction')->select('cat_id')->where('appid','=',$appid)->get();
+							
+							//set dates per column of action types
+							foreach ($appform_changeaction AS $key => $value) {
+
+								if($value->cat_id == "1"){
+									$data['noofbed_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "2"){
+									$data['noofdialysis_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "3"){
+									$data['ambulance_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "4"){
+									$data['changeonservice_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "5"){
+									$data['addonservice_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "6"){
+									$data['personnel_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "7"){
+									$data['equipment_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "8"){
+									$data['classification_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "9"){
+									$data['hospital_lvl_dateapproved'] = $Cur_useData['date'];
+								} else if($value->cat_id == "10"){
+									$data['rename_dateapproved'] = $Cur_useData['date'];
+								}    
+							}
+
 						}
 						else
 						{							
@@ -11020,10 +11060,10 @@ namespace App\Http\Controllers;
 						}						
 						if ($success) 
 						{
-							if($aptid == "IC")
+							/*if($aptid == "IC")
 							{
 								update_approveddates_registered_facility_forchange ($exists_regfac_id, $appform->appid);
-							}
+							}*/
 							//Increment Sequential Number for Certificate
 							$selected = AjaxController::getUidFrom( $appform->appid);
 							AjaxController::notifyClient( $appform->appid,$selected,($request->isOk == 1 ? 21 : 22));
