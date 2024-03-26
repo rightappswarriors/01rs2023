@@ -71,7 +71,8 @@
 						Name of Facility 
 					</div>
 					<div class="col-md-5" style="float:left;display: inline;font-family:  Arial; font-size: 13pt">
-						:&nbsp;&nbsp;&nbsp;<strong><strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}}</strong></strong>
+						:&nbsp;&nbsp;&nbsp;<strong>{{((isset($retTable[0]->facilityname)) ? $retTable[0]->facilityname : "CURRENT_FACILITY")}}</strong>
+						<span style="font-size: small; font-style: italic;">{{((isset($retTable[0]->rename_dateapproved)) ? $retTable[0]->rename_dateapproved : "")}}</span>
 					</div>
 					<div class="col-md-1" style="display: inline">
 						&nbsp;</div>
@@ -155,6 +156,10 @@
 						<div class="col-md-5" style="float:left;display: inline;font-family: Arial; font-size: 13pt">
 							:&nbsp;&nbsp;&nbsp;
 							{{ $str_new  }}
+							<span style="font-size: small; font-style: italic;">
+									<!---Classification -->
+									{{((isset($retTable[0]->classification_dateapproved)) ? $retTable[0]->classification_dateapproved : "")}}										
+							</span>
 						</div>
 						<div class="col-md-1" style="display: inline">
 							&nbsp;</div>

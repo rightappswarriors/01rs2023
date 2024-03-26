@@ -3350,7 +3350,26 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				
 		if (!is_null($id)) { return $id;	}
 
-		return null;	
+		// insert new appform
+		DB::Statement("INSERT INTO appform (aptid, regfac_id, uid, facilityname, hgpid, assignedRgn, rgnid, provid, cmid, brgyid, street_number, street_name, zipcode,
+			contact, areacode, landline, faxnumber, email, ocid, classid, subClassid, facmode, funcid, owner, ownerMobile, ownerLandline, ownerEmail, mailingAddress, approvingauthoritypos, approvingauthority, hfep_funded,
+			noofbed, noofstation, noofsatellite, noofdialysis, noofmain, cap_inv, lot_area, typeamb, ambtyp, plate_number, ambOwner, HFERC_swork, noofamb, pharCOC, xrayCOC, isApprove)
+
+			SELECT 'IC' AS aptid, regfac_id, uid, facilityname, facid  AS hgpid, assignedRgn, rgnid, provid, cmid, brgyid, street_number, street_name, zipcode,
+			contact, areacode, landline, faxnumber, email, ocid, classid, subClassid, facmode, funcid, owner, ownerMobile, ownerLandline, ownerEmail, mailingAddress, approvingauthoritypos, approvingauthority, hfep_funded,
+			noofbed, noofstation, noofsatellite, noofdialysis, noofmain, cap_inv, lot_area, typeamb, ambtyp, plate_number, ambOwner, HFERC_swork, noofamb, pharCOC, xrayCOC, NULL AS isApprove
+			FROM registered_facility WHERE regfac_id='$regfac_id'");
+
+			$id = DB::table('appform')->select('*')
+							->where('regfac_id','=',$regfac_id)
+							->where('aptid','=','IC')
+							->where('isApprove',NULL)
+							->orderby('appid', 'DESC')
+							->first();
+		
+		if (!is_null($id)) { return $id;	}
+
+		return null;
 	}
 
 	public function insertAppForm($regfac_id){
@@ -3525,6 +3544,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					$nameofcomp = $appform->owner;
 					$uid 		= $appform->uid;
 				}
+
 				else{
 					if (!is_null($data) && is_array($data)) { 
 						$hgpid		= $data[0]->hgpid;
