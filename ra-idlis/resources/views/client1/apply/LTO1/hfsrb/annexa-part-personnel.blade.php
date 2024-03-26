@@ -115,7 +115,16 @@
 		dfn:hover::after {top: 40px;}
 		dfn:hover::before {top: 30px;}
 	</style>
-
+		<div class="container-fluid mt-5">
+			<!-- div class="row">
+				<div class="col-md-6 d-flex justify-content-start" id="prevDiv">
+					<a href="#" class="inactiveSlider slider">&laquo; Previous</a>
+				</div>
+				<div class="col-md-6 d-flex justify-content-end" id="nextDiv">
+					<a href="#" class="activeSlider slider">Next &raquo;</a>
+				</div>
+			</div --->
+		</div>
 		<div class="container text-center font-weight-bold mt-5">List of Personnel Annex A</div>
 		<div class="container-fluid table-responsive pb-3">
 			@if($canAdd)
@@ -694,6 +703,7 @@
 			});
 
 			"use strict";
+
 		</script>
 		{{-- @include('client1.cmp.footer')  --}}
 
