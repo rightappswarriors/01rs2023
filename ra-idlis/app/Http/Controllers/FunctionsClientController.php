@@ -240,7 +240,7 @@ class FunctionsClientController extends Controller {
 							appform.approvedDate, appform.savedRenewalOpt, signatoryname, signatorypos, appform.license_number, appform.license_validity, appform.head_of_facility_name,
 
 							appform.noofbed_dateapproved, appform.noofdialysis_dateapproved, appform.personnel_dateapproved, appform.equipment_dateapproved, appform.hospital_lvl_dateapproved, appform.addonservice_dateapproved, appform.changeonservice_dateapproved, appform.ambulance_dateapproved, appform.classification_dateapproved, appform.rename_dateapproved
-
+ 
 								
 								FROM appform             
 								LEFT JOIN registered_facility ON appform.regfac_id=registered_facility.regfac_id 

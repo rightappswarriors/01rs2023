@@ -3606,24 +3606,23 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 				{
 					//$locRet = "client1.apply.LTO1.hfsrb.annexa-part-personnel";
 					$data2 = $this->reg_annexa_COR($request, $reg_fac_id, $appid);
-					// dd(is_array($data2));
-					if($request->isMethod('get')){
-						if(is_array($data2))
-						{
-							$data = array_merge($data, $data2);
-						}
-					} else if($request->isMethod('post')) 
-					{ 
+					
+					if($request->isMethod('post')) { 
+
 						if($data2 == "DONE")
 						{
 							$cat_id = "6";
 							$remarks = "Update In Personnel.";
 							DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 							DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-							
-							return $data2;
 						}
+
 						return $data2;
+					}
+
+					if(is_array($data2))
+					{
+						$data = array_merge($data, $data2);
 					}
 				}
 				else if($functype == 'annexb')
@@ -3644,18 +3643,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 							$remarks = "Update In Equipment.";
 							DB::table('appform_changeaction')->where(array('cat_id' => $cat_id, 'appid' => $appid))->delete();
 							DB::table('appform_changeaction')->insert(['cat_id' => $cat_id, 'appid' => $appid, 'remarks' => $remarks]);
-							
-							return "DONE";
 						}
-						else 
-						{
-							return "ERROR";
-						}
+						return $data2;
 					}
 				}
 				else if($functype == 'av')
-				{				
-					
+				{					
 					$data_reg 	= DB::table('view_registered_facility_for_change')->WHERE('regfac_id','=',$reg_fac_id )->first();
 					$isaddnew 		= 1;
 					$isupdate 		= 1;
@@ -4597,20 +4590,18 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 	//hfsrb requirements for initial change
 	public function reg_annexa_COR(Request $request, $regfac_id, $appid=null){
 		//if(FunctionsClientController::isUserApplication($appid)){
-			$hgpid = null;
-			$pos = DB::table('position')->get();
+			$hgpid = null; $pos = DB::table('position')->get();
 			$professions = DB::table('profession')->get();
 
 			if($appid <= 0) { $appid=null; }
 
-			if((isset($appid) && !empty($appid) && $appid!=null))
-			{
+			if((isset($appid) && !empty($appid) && $appid!=null)) {
 				$hgpid = DB::table('appform')->where('appid',$appid)->select('hgpid')->first()->hgpid;
 			} else {
 				$hgpid = DB::table('registered_facility')->where('regfac_id',$regfac_id)->select('facid')->first()->facid;
 			}
 
-			if($request->isMethod('get')) {
+			//if($request->isMethod('get')) {
 				$arrRet = [
 					'workstat' => AjaxController::getAllWorkStatus(),
 					'pos' => $pos,
@@ -4634,11 +4625,12 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					->doesntExist()],
 					// 'canAdd' => DB::table('appform')->where([['appid',$appid],['isReadyForInspec',0]])->exists()
 					'canAdd' => true,
-					'appid' =>$appid
+					'appid' =>$appid,
+					'_isSuccess' => null
 				];
 				
-				return $arrRet;
-			} else if($request->isMethod('post')) {
+			//} else 
+			if($request->isMethod('post')) {
 				$customInsertMach = $customInsertPhar = false;
 				$filename = $returnToSender = null;
 				$arrName = $arrFiles = $arrPharma = $arrMach = array();
@@ -4695,7 +4687,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 						}
 					}
 				}				
-				if($request->has('req')){
+				/*if($request->has('req')){
 					foreach ($request->file('req') as $key => $value) {
 						$filename = FunctionsClientController::uploadFile($value);
 						if($key == 'prc1'){
@@ -4712,7 +4704,7 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					foreach($filename as $key => $value){
 						$toInsert[$key]  = $value;
 					}
-				}
+				}*/
 				if($request->action == 'add'){
 					$returnToSender = DB::table('hfsrbannexa')->insertGetId($toInsert);
 					if($returnToSender){
@@ -4772,8 +4764,30 @@ public function fdacertN(Request $request, $appid, $requestOfClient = null) {
 					DB::table('cdrrhrpersonnel')->where('hfsrbannexaID',$request->id)->delete();
 				}
 
-				return ($returnToSender > 0 ? "DONE" : "ERROR");
+				$arrRet['_isSuccess'] = ($returnToSender > 0 ? "DONE" : "ERROR");
+
+				return $arrRet['_isSuccess'];
 			}
+			
+				$arrRet['hfsrbannexa'] = [DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where('appid',$appid)->get(),
+					
+					DB::table('hfsrbannexa')->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['isMainRadio',1]])
+					->doesntExist(),DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['isMainRadioPharma',1]])
+					->doesntExist(),DB::table('hfsrbannexa')
+					->leftJoin('pwork_status','pwork_status.pworksid','hfsrbannexa.employement')
+					->leftJoin('position','position.posid','hfsrbannexa.prof')
+					->where([['appid',$appid],['ismainpo',1]])
+					->doesntExist()];
+			
+			return $arrRet;
 		/*} else {
 			return redirect('client1/home')->with('errRet', ['errAlt'=>'danger', 'errMsg'=>'Something went wrong. Please try again later.']);
 		}*/

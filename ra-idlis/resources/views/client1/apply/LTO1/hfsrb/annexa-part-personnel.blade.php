@@ -1,4 +1,5 @@
 @if (session()->exists('uData'))  
+	@include('client1.cmp.msg')
 	<style>
 		fieldset 
 		{
@@ -702,25 +703,15 @@
 			});
 
 			"use strict";
-			// var ___div = document.getElementById('__applyBread'), ___wizardcount = document.getElementsByClassName('wizardcount');
-			// document.getElementById('stepDetails').innerHTML = 'Step 3.b: HFSRB Requirement';
-			// if(___wizardcount != null || ___wizardcount != undefined) {
-			// 	for(let i = 0; i < ___wizardcount.length; i++) {
-			// 		if(i < 2) {
-			// 			___wizardcount[i].parentNode.classList.add('past');
-			// 		}
-			// 		if(i == 2) {
-			// 			___wizardcount[i].parentNode.classList.add('active');
-			// 		}
-			// 	}
-			// }
-			// if(___div != null || ___div != undefined) {
-			// 	___div.classList.remove('active');	___div.classList.add('text-primary');
-			// }
-		</script>
 
-				
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+		</script>
+		{{-- @include('client1.cmp.footer')  --}}
+
+		{{-- start of from footer --}}	
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+		{{-- end of from footer --}}
 
 		<script>
             onStep(3);
